@@ -1,13 +1,16 @@
-function Beginner(){
-    setAllLevel.call(null, 5);
+function setBeginnerMode(){
+    const level = 5;
+    setAllLevel(level);
 }
 
-function Good_driver(){
-    setAllLevel.call(null, 3);
+function setGoodDriverMode(){
+    const level = 3;
+    setAllLevel(level);
 }
 
-function Maniac(){
-    setAllLevel.call(null, 1);
+function setManiacMode(){
+    const level = 1;
+    setAllLevel(level);
 }
 
 function setAllLevel(level){
