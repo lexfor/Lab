@@ -7,7 +7,7 @@ const a = {
 };
 
 // начало блока изменений
-function temp() {
+function modifyCrasher() {
     let b = {};
     Object.assign(b,a);
     crasher(b);
