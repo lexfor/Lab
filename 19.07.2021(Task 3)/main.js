@@ -11,7 +11,7 @@ function temp() {
     let b = {};
     Object.assign(b,a);
     crasher(b);
-    console.log(a);
 }
 // конец блока изменений
 
+console.log(a);
