@@ -1,4 +1,10 @@
 function createSquare(squareSize) {
+    if(squareSize === 1){
+        return [1];
+    }
+    if(squareSize === 2){
+        return "impossible";
+    }
     let resultArr = [];
     let elemSumm = squareSize * (squareSize * squareSize + 1) / 2;
     const max = squareSize * squareSize;
