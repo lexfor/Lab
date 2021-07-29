@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 const fetch = require('node-fetch');
 
 export default class Users {
@@ -9,13 +8,18 @@ export default class Users {
   }
 
   async getUsers() {
+    let results = [];
+    let jsons = [];
     for (let i = 0; i < this.amountOfUsers; i += 1) {
-      const response = await fetch(this.url);
-      const json = await response.json();
-      const parser = JSON.stringify(json);
-      this.users.push(JSON.parse(parser));
-      this.showInfo(this.users[i]);
+      results.push(fetch(this.url));
     }
+    results = await Promise.all(results);
+    jsons = results.map((item) => item.json());
+    jsons = await Promise.all(jsons);
+    jsons.forEach((item) => {
+      this.users.push(item);
+    });
+    this.showInfo();
   }
 
   showInfo() {
