@@ -42,7 +42,7 @@ export default class Numbers {
     return romanNumber.split('').reverse().join('');
   }
 
-  static fromSybbolToMorze(symbol) {
+  fromSybbolToMorze(symbol) {
     switch (symbol) {
       case '0':
         return '-----';
