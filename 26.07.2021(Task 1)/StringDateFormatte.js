@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 import StringFormatte from './StringFormatte';
 
 export default class StringDateFormatte extends StringFormatte {
