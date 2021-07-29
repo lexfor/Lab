@@ -1,5 +1,3 @@
-/* eslint no-underscore-dangle: ["error", { "allow": ["_instance",] }] */
-
 export default class StringFormatte {
   constructor(inputString) {
     if (!StringFormatte._instance) {
