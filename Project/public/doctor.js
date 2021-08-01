@@ -1,15 +1,14 @@
-async function next() {
-  const response = await fetch('/doctor/next');
-  const result = await response.json();
-  if (!result) {
-    alert('Wait for new patient');
-  }
-  await getCurrent();
-}
-
 async function getCurrent() {
   const response = await fetch('/get_current');
-  document.getElementById('currentNumber').innerHTML = await response.json();
+  const result = await response.json();
+  console.log(result);
+  document.getElementById('currentNumber').innerHTML = result;
+}
+
+async function next() {
+  const response = await fetch('/doctor/next');
+  await response.json();
+  await getCurrent();
 }
 
 async function setCurrentResolution() {

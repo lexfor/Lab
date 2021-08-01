@@ -1,3 +1,15 @@
+async function getAllValue() {
+  let response = await fetch('/get_all_value');
+  response = await response.json();
+  const select = document.getElementById('valueSelect');
+  select.options.length = 0;
+  select.append(new Option('Выберите', 'Выберите'));
+  response.forEach((item) => {
+    const option = new Option(item, item);
+    select.append(option);
+  });
+}
+
 async function Add() {
   const inputValue = document.getElementById('inputValue');
   const response = await fetch('/add_patient', {
@@ -14,15 +26,6 @@ async function Add() {
 async function getCurrent() {
   const response = await fetch('/get_current');
   document.getElementById('currentNumber').innerHTML = await response.json();
-}
-
-async function getAllValue() {
-  let response = await fetch('/get_all_value');
-  response = await response.json();
-  response.forEach((item) => {
-    const option = new Option(item, item);
-    document.getElementById('valueSelect').append(option);
-  });
 }
 
 async function getSelectedResolution() {

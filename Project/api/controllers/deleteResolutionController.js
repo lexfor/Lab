@@ -1,24 +1,22 @@
 import fs from 'fs';
-import Queue from '../Queue.js';
+import Clinic from '../Clinic.js';
 
 export default function deleteResolution(value) {
-  let queue;
+  const clinic = new Clinic();
   try {
     const data = fs.readFileSync('queue.json', 'utf8');
     const result = JSON.parse(data);
-    queue = new Queue();
-    queue.copy(result);
+    clinic.copy(result);
   } catch (err) {
     console.log(`Error reading file from disk: ${err}`);
-    queue = new Queue();
   }
-  queue.deleteResolution(value);
+  clinic.deleteResolution(value);
   try {
-    const data = JSON.stringify(queue);
+    const data = JSON.stringify(clinic);
     fs.writeFileSync('queue.json', data, 'utf8');
     console.log('File is written successfully!');
   } catch (err) {
     console.log(`Error writing file: ${err}`);
   }
-  return queue.findResolution(value);
+  return clinic.findResolution(value);
 }

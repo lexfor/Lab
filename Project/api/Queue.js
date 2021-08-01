@@ -1,63 +1,22 @@
-import Patient from './Patient.js';
-
 export default class Queue {
   constructor() {
-    this.queue = [];
-    this.current = -1;
+    this.fifo = [];
   }
 
-  push(value, resolution) {
-    const patient = new Patient();
-    patient.setValue(value);
-    patient.setResolution(resolution);
-    this.queue.push(patient);
+  Add(value) {
+    this.fifo.push(value);
   }
 
-  getCurrentValue() {
-    if (this.current === -1) {
-      return 'Wait for a doctor';
-    }
-    return this.queue[this.current].getValue();
-  }
-
-  setCurrentResolution(resolution) {
-    this.queue[this.current].setResolution(resolution);
-  }
-
-  next() {
-    if (this.current + 1 === this.queue.length) {
+  Get() {
+    if (this.fifo.length === 0) {
       return false;
     }
-    this.current += 1;
-    return true;
+    const result = this.fifo[0];
+    this.fifo.shift();
+    return result;
   }
 
-  getAllValue() {
-    return this.queue.map((item) => item.getValue());
-  }
-
-  findResolution(value) {
-    let res = 'Patient N/A';
-    this.queue.forEach((item) => {
-      if (value === item.getValue()) {
-        res = item.getResolution();
-      }
-    });
-    return res;
-  }
-
-  deleteResolution(value) {
-    this.queue.forEach((item) => {
-      if (value === item.getValue()) {
-        item.setResolution('N/A');
-      }
-    });
-  }
-
-  copy(restoredQueue) {
-    restoredQueue.queue.forEach((item) => {
-      this.push(item.value, item.resolution);
-      this.current = restoredQueue.current;
-    });
+  clone(restoredData) {
+    this.fifo = restoredData.fifo;
   }
 }

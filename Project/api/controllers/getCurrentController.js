@@ -1,16 +1,14 @@
 import fs from 'fs';
-import Queue from '../Queue.js';
+import Clinic from '../Clinic.js';
 
 export default function getCurrent() {
-  let queue;
+  const clinic = new Clinic();
   try {
     const data = fs.readFileSync('queue.json', 'utf8');
     const result = JSON.parse(data);
-    queue = new Queue();
-    queue.copy(result);
+    clinic.copy(result);
   } catch (err) {
     console.log(`Error reading file from disk: ${err}`);
-    queue = new Queue();
   }
-  return queue.getCurrentValue();
+  return clinic.getCurrentValue();
 }
