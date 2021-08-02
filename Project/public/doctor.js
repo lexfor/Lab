@@ -39,16 +39,15 @@ async function findResolution() {
 
 async function deleteResolution() {
   const input = document.getElementById('valueInput');
-  const response = await fetch('/doctor/delete_resolution', {
+  await fetch('/doctor/delete_resolution', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
     },
     body: JSON.stringify(input.value),
   });
-  const resolution = await response.json();
   const output = document.getElementById('resolutionOutput');
-  output.value = resolution;
+  output.value = "N/A";
 }
 
 getCurrent();

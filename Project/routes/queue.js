@@ -11,9 +11,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/add_patient', (req, res) => {
-  console.log(req.body);
-  add(req.body);
-  res.send(JSON.stringify(200));
+  res.send(JSON.stringify(add(req.body)));
 });
 
 router.get('/get_current', (req, res) => {

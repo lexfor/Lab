@@ -10,8 +10,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/next', (req, res) => {
-  setNext();
-  res.send(JSON.stringify(200));
+  res.send(JSON.stringify(setNext()));
 });
 
 router.post('/set_resolution', (req, res) => {

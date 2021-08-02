@@ -3,3 +3,6 @@
 .eslintrc.*
 package.*
 package-lock.*
+.dockerignore
+Dockerfile
+webpack.config.js

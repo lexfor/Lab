@@ -15,7 +15,9 @@ export default function addPatient(value) {
     const data = JSON.stringify(clinic);
     fs.writeFileSync('queue.json', data, 'utf8');
     console.log('File is written successfully!');
+    return 200;
   } catch (err) {
     console.log(`Error writing file: ${err}`);
+    return 500;
   }
 }

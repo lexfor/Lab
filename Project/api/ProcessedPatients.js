@@ -35,7 +35,7 @@ export default class ProcessedPatients {
   Delete(value) {
     this.taken.forEach((item, index) => {
       if (item.getValue() === value) {
-        this.taken.splice(index);
+        this.taken[index] = "N/A";
       }
     });
   }
