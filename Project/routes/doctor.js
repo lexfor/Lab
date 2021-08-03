@@ -1,24 +1,49 @@
 import express from 'express';
-import setNext from '../api/controllers/setNextController.js';
-import setResolution from '../api/controllers/setResolutionController.js';
-import deleteResolution from '../api/controllers/deleteResolutionController.js';
+import Clinic from '../api/controllers/ClinicController.js';
+import { STATUSES } from './ResultStatuses.js';
 
 const router = express();
 
+const clinic = new Clinic();
+
 router.get('/', (req, res) => {
-  res.sendFile('./public/doctor.html', { root: '../Project' });
+  res.status(STATUSES.OK).sendFile('./public/doctor.html', { root: '../Project' });
 });
 
-router.get('/next', (req, res) => {
-  res.send(JSON.stringify(setNext()));
+router.post('/next', (req, res) => {
+  clinic.readFile();
+  if (clinic.next()) {
+    if (clinic.writeFile()) {
+      res.status(STATUSES.OK);
+    } else {
+      res.status(STATUSES.ServerError);
+    }
+  } else {
+    res.status(STATUSES.Unavaible);
+  }
+  res.send();
 });
 
 router.post('/set_resolution', (req, res) => {
-  res.send(JSON.stringify(setResolution(req.body)));
+  clinic.readFile();
+  clinic.setCurrentResolution(req.body);
+  if (clinic.writeFile()) {
+    res.status(STATUSES.OK);
+  } else {
+    res.status(STATUSES.ServerError);
+  }
+  res.send();
 });
 
 router.post('/delete_resolution', (req, res) => {
-  res.send(JSON.stringify(deleteResolution(req.body)));
+  clinic.readFile();
+  clinic.deleteResolution(req.body);
+  if (clinic.writeFile()) {
+    res.status(STATUSES.OK);
+  } else {
+    res.status(STATUSES.ServerError);
+  }
+  res.send();
 });
 
 export default router;

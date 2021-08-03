@@ -6,8 +6,13 @@ async function getCurrent() {
 }
 
 async function next() {
-  const response = await fetch('/doctor/next');
-  await response.json();
+  await fetch('/doctor/next',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify("next"),
+  });
   await getCurrent();
 }
 

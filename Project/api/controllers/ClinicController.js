@@ -1,12 +1,35 @@
-import Queue from './Queue.js';
-import ProcessedPatients from './ProcessedPatients.js';
+import fs from 'fs';
+import Queue from '../Queue.js';
+import ProcessedPatients from '../ProcessedPatients.js';
 
-export default class Clinic {
+export default class ClinicController {
   constructor() {
     this.queue = new Queue();
     this.takenPatients = new ProcessedPatients();
     this.currentValue = 'Wait for a doctor';
     this.currentResolution = '';
+  }
+
+  readFile() {
+    try {
+      const data = fs.readFileSync('queue.json', 'utf8');
+      const result = JSON.parse(data);
+      this.copy(result);
+    } catch (err) {
+      console.log(`Error reading file from disk: ${err}`);
+    }
+  }
+
+  writeFile() {
+    try {
+      const data = JSON.stringify(this);
+      fs.writeFileSync('queue.json', data, 'utf8');
+      console.log('File is written successfully!');
+      return true;
+    } catch (err) {
+      console.log(`Error writing file: ${err}`);
+      return false;
+    }
   }
 
   push(value) {
@@ -27,14 +50,15 @@ export default class Clinic {
       if (!(this.currentValue === 'Wait for a doctor') && !(this.currentValue === 'Wait for a patient')) {
         this.takenPatients.Set(this.currentValue, this.currentResolution);
       }
+
       this.currentValue = nextPatient;
       this.currentResolution = '';
       return true;
     }
-    console.log('Nothing');
     if (!(this.currentValue === 'Wait for a doctor') && !(this.currentValue === 'Wait for a patient')) {
       this.takenPatients.Set(this.currentValue, this.currentResolution);
     }
+
     this.currentValue = 'Wait for a patient';
     this.currentResolution = '';
     return true;

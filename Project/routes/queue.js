@@ -1,29 +1,39 @@
 import express from 'express';
-import add from '../api/controllers/addPatientController.js';
-import getCurrent from '../api/controllers/getCurrentController.js';
-import getAllValue from '../api/controllers/getAllValueController.js';
-import getResolution from '../api/controllers/getResolutionController.js';
+import Clinic from '../api/controllers/ClinicController.js';
+import { STATUSES } from './ResultStatuses.js';
 
 const router = express();
 
+const clinic = new Clinic();
+
 router.get('/', (req, res) => {
-  res.sendFile('./public/queue.html', { root: '../Project' });
+  res.status(STATUSES.OK).sendFile('./public/queue.html', { root: '../Project' });
 });
 
 router.post('/add_patient', (req, res) => {
-  res.send(JSON.stringify(add(req.body)));
+  clinic.readFile();
+  clinic.push(req.body);
+  if (clinic.writeFile()) {
+    res.status(STATUSES.OK);
+  } else {
+    res.status(STATUSES.ServerError);
+  }
+  res.send();
 });
 
 router.get('/get_current', (req, res) => {
-  res.send(JSON.stringify(getCurrent()));
+  clinic.readFile();
+  res.status(STATUSES.OK).send(JSON.stringify(clinic.getCurrentValue()));
 });
 
 router.get('/get_all_value', (req, res) => {
-  res.send(JSON.stringify(getAllValue()));
+  clinic.readFile();
+  res.status(STATUSES.OK).send(JSON.stringify(clinic.getAllValue()));
 });
 
 router.post('/get_resolution', (req, res) => {
-  res.send(JSON.stringify(getResolution(req.body)));
+  clinic.readFile();
+  res.status(STATUSES.OK).send(JSON.stringify(clinic.findResolution(req.body)));
 });
 
 export default router;

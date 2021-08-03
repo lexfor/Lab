@@ -1,8 +1,5 @@
 *.idea
 /node_modules
 .eslintrc.*
-package.*
 package-lock.*
-.dockerignore
-Dockerfile
 webpack.config.js

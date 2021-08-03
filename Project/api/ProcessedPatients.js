@@ -35,7 +35,7 @@ export default class ProcessedPatients {
   Delete(value) {
     this.taken.forEach((item, index) => {
       if (item.getValue() === value) {
-        this.taken[index] = "N/A";
+        this.taken[index].setResolution("N/A");
       }
     });
   }
@@ -45,6 +45,7 @@ export default class ProcessedPatients {
   }
 
   clone(restoredData) {
+    this.taken.length = 0;
     restoredData.taken.forEach((item) => {
       this.Set(item.value, item.resolution);
     });
