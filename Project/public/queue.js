@@ -1,6 +1,7 @@
 async function getAllValue() {
   let response = await fetch('/get_all_value');
   response = await response.json();
+
   const select = document.getElementById('valueSelect');
   select.options.length = 0;
   select.append(new Option('Выберите', 'Выберите'));
@@ -10,15 +11,23 @@ async function getAllValue() {
   });
 }
 
-async function Add() {
-  const inputValue = document.getElementById('inputValue');
-  const response = await fetch('/add_patient', {
+async function CreatePostRequest(url, value) {
+  const Body = {};
+  Body.time = new Date();
+  Body.time = Body.time.getTime();
+  Body.value = value;
+  return fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
     },
-    body: JSON.stringify(inputValue.value),
+    body: JSON.stringify(Body),
   });
+}
+
+async function Add() {
+  const inputValue = document.getElementById('inputValue');
+  const response = await CreatePostRequest('/add_patient', inputValue.value);
   await response.json();
   await getAllValue();
 }
@@ -30,13 +39,7 @@ async function getCurrent() {
 
 async function getSelectedResolution() {
   const select = document.getElementById('valueSelect');
-  let response = await fetch('/get_resolution', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-    },
-    body: JSON.stringify(select.value),
-  });
+  let response = await CreatePostRequest('/get_resolution', select.value);
   response = await response.json();
   const textarea = document.getElementById('resolution');
   textarea.value = response;

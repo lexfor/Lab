@@ -5,7 +5,16 @@ export default class ProcessedPatients {
     this.taken = [];
   }
 
-  Set(value, resolution) {
+  checkTime(reqTime) {
+    const time = new Date();
+    const res = time.getTime() - reqTime;
+    return res <= 30 * 1000;
+  }
+
+  Set(value, resolution, reqTime) {
+    if (!this.checkTime(reqTime)) {
+      return false;
+    }
     let has = false;
     this.taken.forEach((item, index) => {
       if (value === item.getValue()) {
@@ -19,11 +28,14 @@ export default class ProcessedPatients {
       patient.setResolution(resolution);
       this.taken.push(patient);
     }
+    return true;
   }
 
-  Get(value) {
+  Get(value, reqTime) {
+    if (!this.checkTime(reqTime)) {
+      return false;
+    }
     let res = 'Patient N/A';
-    console.log(value);
     this.taken.forEach((item) => {
       if (item.getValue() === value) {
         res = item.getResolution();
@@ -32,12 +44,18 @@ export default class ProcessedPatients {
     return res;
   }
 
-  Delete(value) {
+  Delete(value, reqTime) {
+    let res = 'not found';
+    if (!this.checkTime(reqTime)) {
+      return false;
+    }
     this.taken.forEach((item, index) => {
       if (item.getValue() === value) {
-        this.taken[index].setResolution("N/A");
+        this.taken[index].setResolution('N/A');
+        res = 'deleted';
       }
     });
+    return res;
   }
 
   getAllValue() {
@@ -47,7 +65,7 @@ export default class ProcessedPatients {
   clone(restoredData) {
     this.taken.length = 0;
     restoredData.taken.forEach((item) => {
-      this.Set(item.value, item.resolution);
+      this.Set(item.value, item.resolution, new Date().getTime());
     });
   }
 }
