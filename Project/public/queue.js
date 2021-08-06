@@ -11,17 +11,13 @@ async function getAllValue() {
   });
 }
 
-async function CreatePostRequest(url, value) {
-  const Body = {};
-  Body.time = new Date();
-  Body.time = Body.time.getTime();
-  Body.value = value;
+async function CreatePostRequest(url, body) {
   return fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
     },
-    body: JSON.stringify(Body),
+    body: JSON.stringify(body),
   });
 }
 

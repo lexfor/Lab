@@ -3,17 +3,13 @@ async function getCurrent() {
   document.getElementById('currentNumber').innerHTML = await response.json();
 }
 
-async function CreatePostRequest(url, value) {
-  const Body = {};
-  Body.time = new Date();
-  Body.time = Body.time.getTime();
-  Body.value = value;
+async function CreatePostRequest(url, body) {
   return fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
     },
-    body: JSON.stringify(Body),
+    body: JSON.stringify(body),
   });
 }
 
@@ -24,7 +20,9 @@ async function next() {
 
 async function setCurrentResolution() {
   const resolution = document.getElementById('resolutionText');
-  const response = await CreatePostRequest('/doctor/set_resolution', resolution.value);
+  const body = {};
+  body.value = resolution.value;
+  const response = await CreatePostRequest('/doctor/set_resolution', body);
   await response.json();
 }
 

@@ -1,31 +1,30 @@
 import express from 'express';
-import Clinic from '../api/controllers/ClinicController.js';
+import * as queue from '../api/controllers/queueController.js';
+import * as resolution from '../api/controllers/resolutionController.js';
 
 const router = express();
-
-const clinic = new Clinic();
 
 router.get('/', (req, res) => {
   res.sendFile('./public/queue.html', { root: '../Project' });
 });
 
 router.post('/add_patient', (req, res) => {
-  const result = clinic.push(req.body);
+  const result = queue.addInQueue(req.body);
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 
 router.get('/get_current', (req, res) => {
-  const result = clinic.getCurrentValue(req.body);
+  const result = queue.getCurrentInQueue();
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 
 router.get('/get_all_value', (req, res) => {
-  const result = clinic.getAllValue();
+  const result = resolution.getAll();
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 
 router.post('/get_resolution', (req, res) => {
-  const result = clinic.findResolution(req.body);
+  const result = resolution.getResolution(req.body);
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 

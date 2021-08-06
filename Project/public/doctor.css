@@ -95,3 +95,11 @@
     bottom: 7em;
     left: 92em;
 }
+
+.to-patients{
+    position: relative;
+    top: 1em;
+    left: 83em;
+    color: #714399;
+    text-decoration: none;
+}
