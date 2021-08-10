@@ -1,6 +1,26 @@
 # Lab ITRex
 Homework for lessons
 
+*How to run?*
+
+clone project:
+
+    git clone https://github.com/lexfor/Lab.git
+    cd Lab
+    git checkout Lesson-4_Project
+
+install all dependencies:
+
+    npm install
+
+run project:
+
+    npm start
+
+Then open:
+
+    http://localhost:3000/
+
 *How to use?*
 
 add someone in queue:  

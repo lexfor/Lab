@@ -7,8 +7,8 @@ import queueRouter from './routes/queue.js';
 const app = express();
 const port = 3000;
 
-app.use(express.static('./Project/public'));
-app.use(express.static('./Project/api'));
+app.use(express.static('./public'));
+app.use(express.static('./api'));
 
 app.use(bodyParser.json({ strict: false }));
 
