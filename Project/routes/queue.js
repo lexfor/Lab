@@ -10,7 +10,7 @@ const router = express();
 const ajv = new Ajv();
 
 router.get('/', (req, res) => {
-  res.sendFile('./public/queue.html', { root: '../Project' });
+  res.sendFile('./public/queue.html', { root: './Project' });
 });
 
 router.post('/add-patient', (req, res, next) => {
