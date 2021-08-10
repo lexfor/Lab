@@ -57,6 +57,11 @@
     bottom: 3em;
     left: 8.5em;
 }
+
+.resolution-add:active{
+    background-color: #714399;
+}
+
 .find{
     background-color: #FFFFFF;
     width: 10%;
@@ -98,7 +103,6 @@
 
 .to-patients{
     position: relative;
-    top: 1em;
     left: 83em;
     color: #714399;
     text-decoration: none;

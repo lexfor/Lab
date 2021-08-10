@@ -4,10 +4,6 @@ class Queue {
   }
 
   Push(value) {
-    if (this.fifo.indexOf(value) !== -1) {
-      return false;
-    }
-
     try {
       this.fifo.push(value);
     } catch (e) {
@@ -17,10 +13,6 @@ class Queue {
   }
 
   Pop() {
-    if (this.fifo.length === 0) {
-      return 'not available';
-    }
-
     try {
       this.fifo.shift();
     } catch (e) {
@@ -30,10 +22,6 @@ class Queue {
   }
 
   Get() {
-    if (this.fifo.length === 0) {
-      return 'not available';
-    }
-
     try {
       return this.fifo[0];
     } catch (e) {

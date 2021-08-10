@@ -1,6 +1,6 @@
 export default class requestResult {
   constructor() {
-    this.status = 0;
+    this.status = 200;
     this.value = '';
   }
 

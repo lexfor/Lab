@@ -34,6 +34,10 @@
     right: 11.5em;
 }
 
+.add-button:active{
+    background-color: #714399;
+}
+
 .add{
     position: relative;
     left: 73em;

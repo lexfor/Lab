@@ -17,7 +17,7 @@ class ProcessedPatients {
   }
 
   Get(value) {
-    let timeResult = false;
+    let timeResult = true;
     this.TTL.forEach((item) => {
       if (item.getKey === value) {
         timeResult = item.checkTime();
