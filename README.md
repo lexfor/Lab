@@ -21,6 +21,10 @@ Then open:
 
     http://localhost:3000/
 
+*How to run tests?*
+
+    npm run test
+
 *How to use?*
 
 add someone in queue:  

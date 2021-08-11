@@ -13,7 +13,7 @@ class ProcessedPatients {
     } catch (e) {
       return 'error';
     }
-    return 'added';
+    return 'pushed';
   }
 
   Get(value) {
@@ -42,10 +42,12 @@ class ProcessedPatients {
 
   Delete(value) {
     try {
-      if (this.taken.set(value, 'N/A')) {
+      if(this.taken.has(value)){
+        this.taken.set(value, 'N/A');
         return 'deleted';
+      }else{
+        return 'not found';
       }
-      return 'not found';
     } catch (e) {
       return 'error';
     }

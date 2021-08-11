@@ -40,7 +40,7 @@ class QueueController {
     return checkOutputStatus(res);
   }
 
-  takeNextPatient() {
+  takeNextValueInQueue() {
     const res = this.checkLength();
     if (res.getStatus !== STATUSES.OK) {
       return res;

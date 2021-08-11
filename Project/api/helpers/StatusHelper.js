@@ -15,7 +15,7 @@ export function checkOutputStatus(res) {
       res.setValue = 'N/A';
       break;
     case 'not available':
-      res.setStatus = STATUSES.NotFound;
+      res.setStatus = STATUSES.Unavailable;
       res.setValue = 'N/A';
       break;
     case 'pushed':

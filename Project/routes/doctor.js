@@ -10,11 +10,11 @@ const router = express();
 const ajv = new Ajv();
 
 router.get('/', (req, res) => {
-  res.sendFile('./public/doctor.html', { root: '../Project' });
+  res.sendFile('./public/doctor.html', { root: './Project' });
 });
 
 router.get('/next', (req, res) => {
-  const result = queueController.takeNextPatient();
+  const result = queueController.takeNextValueInQueue();
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 
