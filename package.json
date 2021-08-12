@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "webpack",
-    "start": "node Project/index.js",
+    "start": "NODE_ENV=dev node Project/index.js",
     "test": "jest"
   },
   "jest": {
@@ -36,6 +36,7 @@
   "dependencies": {
     "ajv": "^6.12.6",
     "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "node-fetch": "^2.6.1",

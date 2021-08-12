@@ -1,8 +1,7 @@
 FROM node:14
-RUN mkdir -p /home/node/node_modules && chown -R node:node /home/node/
-WORKDIR /home/node/Project
+WORKDIR /home/Lab
 COPY package*.json ./
 RUN npm install
-COPY ./Project .
+COPY .. .
 EXPOSE 3000
-CMD [ "node", "index.js" ]
+CMD [ "node", "Project/index.js" ]
