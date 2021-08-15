@@ -1,4 +1,4 @@
-export default class requestResult {
+export default class RequestResult {
   constructor() {
     this.status = 200;
     this.value = '';

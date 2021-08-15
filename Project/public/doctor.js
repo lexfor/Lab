@@ -13,7 +13,7 @@ async function setCurrentResolution() {
   const body = {};
   body.value = resolution.value;
   const response = await fetch('/doctor/set-resolution', {
-    method: 'POST',
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
     },
@@ -24,11 +24,7 @@ async function setCurrentResolution() {
 
 async function findResolution() {
   const input = document.getElementById('valueInput');
-  let url = new URL('/resolution', document.location.origin);
-  let params = new URLSearchParams();
-  params.append("value", input.value);
-  url.search = params.toString();
-  const response = await fetch(url.href);
+  const response = await fetch(`/resolution/${input.value}`);
   const resolution = await response.json();
   const output = document.getElementById('resolutionOutput');
   output.value = resolution;
@@ -36,15 +32,11 @@ async function findResolution() {
 
 async function deleteResolution() {
   const input = document.getElementById('valueInput');
-  let url = new URL('/doctor/resolution', document.location.origin);
-  let params = new URLSearchParams();
-  params.append("value", input.value);
-  url.search = params.toString();
-  await fetch(url.href, {
+  await fetch(`/doctor/resolution/${input.value}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
-    }
+    },
   });
   const output = document.getElementById('resolutionOutput');
   output.value = 'N/A';

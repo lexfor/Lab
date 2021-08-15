@@ -1,54 +1,56 @@
-import { queue } from '../service/Queue.js';
 import RequestResult from '../RequestResult.js';
 import { checkOutputStatus } from '../helpers/StatusHelper.js';
 import { STATUSES } from '../constants.js';
 
-class QueueController {
-  checkLength() {
+export default class QueueController {
+  constructor(queue, patients) {
+    this.queueService = queue;
+    this.patientsService = patients;
+  }
+
+  async checkLength() {
     const res = new RequestResult();
-    if (queue.fifo.length === 0) {
+    if (await this.queueService.isEmpty()) {
       res.setValue = 'N/A';
       res.setStatus = STATUSES.Unavailable;
     }
     return res;
   }
 
-  checkIsExistValue(body) {
+  async checkIsExistValue(body) {
     const res = new RequestResult();
-    if (queue.fifo.indexOf(body) !== -1) {
+    if (await this.queueService.isExist(body)) {
       res.setValue = 'N/A';
       res.setStatus = STATUSES.BadRequest;
     }
     return res;
   }
 
-  addValueInQueue(body) {
-    const res = this.checkIsExistValue(body);
+  async addValueInQueue(body) {
+    const res = await this.checkIsExistValue(body);
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = queue.Push(body);
+    await this.patientsService.createResolution(body);
+    res.setValue = await this.queueService.push(body);
     return checkOutputStatus(res);
   }
 
-  getCurrentInQueue() {
-    const res = this.checkLength();
+  async getCurrentInQueue() {
+    const res = await this.checkLength();
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = queue.Get();
+    res.setValue = await this.queueService.getCurrent();
     return checkOutputStatus(res);
   }
 
-  takeNextValueInQueue() {
-    const res = this.checkLength();
+  async takeNextValueInQueue() {
+    const res = await this.checkLength();
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = queue.Pop();
+    res.setValue = await this.queueService.pop();
     return checkOutputStatus(res);
   }
 }
-
-const queueController = new QueueController();
-export { queueController };

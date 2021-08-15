@@ -1,51 +1,57 @@
-import { patients } from '../api/service/ProcessedPatients.js';
+import PatientsResolutionsService from '../api/service/PatientsResolutionsService.js';
+import { resolutionInMemoryStorage } from '../api/repositories/resolutionStorage.js';
+import { resolutionInRedisStorage } from '../api/repositories/resolutionRedis.js';
+import { envConfig } from '../config.js';
+
+let resolutionStorage;
+
+switch (envConfig.storage.name) {
+  case 'redis':
+    resolutionStorage = resolutionInRedisStorage;
+    break;
+  default:
+    resolutionStorage = resolutionInMemoryStorage;
+}
 
 describe('patient service', () => {
-  test('add patient in key-value storage without TTL', () => {
-    const result = patients.Set('Timofei', 'good');
+  const patients = new PatientsResolutionsService(resolutionStorage);
+  test('Create patient resolution', async () => {
+    const result = await patients.createResolution('Timofei');
     expect(result).toEqual('pushed');
   });
 
-  test('add patient in key-value storage with TTL', () => {
-    const result = patients.Set('Dima', 'All fine', 300);
-    expect(result).toEqual('pushed');
+  test('Update patient resolution', async () => {
+    const result = await patients.updateResolution('Timofei', 'All fine');
+    expect(result).toEqual('updated');
   });
 
-  test('get patient from key-value storage without TTL', () => {
-    const result = patients.Get('Timofei');
-    expect(result).toEqual('good');
-  });
-
-  test('get not existed patient from key-value storage', () => {
-    const result = patients.Get('Andrei');
-    expect(result).toEqual('not found');
-  });
-
-  test('get patient from key-value storage with TTL in time', () => {
-    const result = patients.Get('Dima');
+  test('get patient resolution', async () => {
+    const result = await patients.getResolution('Timofei');
     expect(result).toEqual('All fine');
   });
 
-  test('get all patients from key-value storage', () => {
-    const result = patients.getAllValue();
-    expect(result).toEqual(['Timofei', 'Dima']);
+  test('get not existed patient resolution', async () => {
+    const result = await patients.getResolution('Andrei');
+    expect(result).toEqual('not found');
   });
 
-  test('get patient from key-value storage with TTL not in time', (done) => {
-    setTimeout(() => {
-      const result = patients.Get('Dima');
-      expect(result).toEqual('timeout');
-      done();
-    }, 500);
+  test('get all patients resolution', async () => {
+    const result = await patients.getAllValue();
+    expect(result).toEqual(['Timofei']);
   });
 
-  test('delete patient resolution from key-value storage', () => {
-    const result = patients.Delete('Timofei');
+  test('delete patient resolution', async () => {
+    const result = await patients.deleteResolution('Timofei');
     expect(result).toEqual('deleted');
   });
 
-  test('delete not existed patient resolution from key-value storage', () => {
-    const result = patients.Delete('Andrei');
+  test('delete not existed patient resolution', async () => {
+    const result = await patients.deleteResolution('Andrei');
     expect(result).toEqual('not found');
+  });
+
+  test('get deleted patient resolution', async () => {
+    const result = await patients.getResolution('Timofei');
+    expect(result).toEqual('N/A');
   });
 });

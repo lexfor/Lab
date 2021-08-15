@@ -22,6 +22,10 @@ export function checkOutputStatus(res) {
       res.setStatus = STATUSES.Created;
       res.setValue = 'Added';
       break;
+    case 'updated':
+      res.setStatus = STATUSES.Accepted;
+      res.setValue = 'Accepted';
+      break;
     default:
       res.setStatus = STATUSES.OK;
       break;

@@ -1,62 +1,78 @@
-import { resolutionController } from '../api/controllers/resolutionController.js';
-import { queue } from '../api/service/Queue';
+import ResolutionController from '../api/controllers/resolutionController.js';
+import QueueService from '../api/service/QueueService.js';
+import PatientsResolutionsService from '../api/service/PatientsResolutionsService.js';
+import { queueInMemoryStorage } from '../api/repositories/queueStorage.js';
+import { queueInRedisStorage } from '../api/repositories/queueRedis.js';
+import { resolutionInRedisStorage } from '../api/repositories/resolutionRedis';
+import { resolutionInMemoryStorage } from '../api/repositories/resolutionStorage';
+import { envConfig } from '../config.js';
+
+let queueStorage;
+let resolutionStorage;
+
+switch (envConfig.storage.name) {
+  case 'redis':
+    queueStorage = queueInRedisStorage;
+    resolutionStorage = resolutionInRedisStorage;
+    break;
+  default:
+    queueStorage = queueInMemoryStorage;
+    resolutionStorage = resolutionInMemoryStorage;
+}
 
 describe('Resolution controller', () => {
-  test('get all processed patients vale with empty storage', () => {
-    const result = resolutionController.getAllProcessedPatientsValue();
+
+  const queueService = new QueueService(queueStorage);
+  const resolutionService = new PatientsResolutionsService(resolutionStorage);
+  const resolutionController = new ResolutionController(queueService, resolutionService);
+
+  test('get all processed patients vale with empty storage', async () => {
+    const result = await resolutionController.getAllProcessedPatientsValue();
     expect(result.getValue).toEqual('N/A');
     expect(result.getStatus).toEqual(503);
   });
 
-  test('set resolution without TTL', () => {
-    queue.Push('Tim');
-    const result = resolutionController.setResolutionForCurrentPatient({ value: 'All good' });
-    expect(result.getValue).toEqual('Added');
-    expect(result.getStatus).toEqual(201);
+  test('set resolution', async () => {
+    await queueService.push('Tim');
+    const result = await resolutionController.setResolutionForCurrentPatient({ value: 'All good' });
+    expect(result.getValue).toEqual('Accepted');
+    expect(result.getStatus).toEqual(202);
   });
 
-  test('set resolution with TTL', () => {
-    queue.Push('Dima');
-    queue.Pop();
-    const result = resolutionController.setResolutionForCurrentPatient({ value: 'All fine', time: 3000 });
-    expect(result.getValue).toEqual('Added');
-    expect(result.getStatus).toEqual(201);
-  });
-
-  test('set resolution without any patients in queue', () => {
-    queue.Pop();
-    const result = resolutionController.setResolutionForCurrentPatient('All fine');
+  test('set resolution without any patients in queue', async () => {
+    await queueService.pop();
+    const result = await resolutionController.setResolutionForCurrentPatient('All fine');
     expect(result.getValue).toEqual('N/A');
     expect(result.getStatus).toEqual(503);
   });
 
-  test('get all processed patients vale', () => {
-    const result = resolutionController.getAllProcessedPatientsValue();
-    expect(result.getValue).toEqual(['Tim', 'Dima']);
+  test('get all processed patients vale', async () => {
+    const result = await resolutionController.getAllProcessedPatientsValue();
+    expect(result.getValue).toEqual(['Tim']);
     expect(result.getStatus).toEqual(200);
   });
 
-  test('find patient resolution', () => {
-    const result = resolutionController.findResolution('Dima');
-    expect(result.getValue).toEqual('All fine');
+  test('find patient resolution', async () => {
+    const result = await resolutionController.findResolution('Tim');
+    expect(result.getValue).toEqual('All good');
     expect(result.getStatus).toEqual(200);
   });
 
-  test('find not existed patient resolution', () => {
-    const result = resolutionController.findResolution('Anton');
+  test('find not existed patient resolution', async () => {
+    const result = await resolutionController.findResolution('Anton');
     expect(result.getValue).toEqual('N/A');
     expect(result.getStatus).toEqual(404);
   });
 
-  test('delete patient resolution', () => {
-    resolutionController.deleteResolution('Tim');
-    const result = resolutionController.findResolution('Tim');
+  test('delete patient resolution', async () => {
+    await resolutionController.deleteResolution('Tim');
+    const result = await resolutionController.findResolution('Tim');
     expect(result.getValue).toEqual('N/A');
     expect(result.getStatus).toEqual(200);
   });
 
-  test('delete not existed patient resolution', () => {
-    const result = resolutionController.deleteResolution('Anton');
+  test('delete not existed patient resolution', async () => {
+    const result = await resolutionController.deleteResolution('Anton');
     expect(result.getValue).toEqual('N/A');
     expect(result.getStatus).toEqual(404);
   });

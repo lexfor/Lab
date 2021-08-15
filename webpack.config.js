@@ -2,7 +2,7 @@ const path = require('path')
 
 module.exports = {
     entry: {
-        main: path.resolve(__dirname, './Project/api/Queue.js'),
+        main: path.resolve(__dirname, './Project/api/QueueService.js'),
     },
     output: {
         path: path.resolve(__dirname, './Project/public'),
