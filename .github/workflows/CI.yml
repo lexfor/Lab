@@ -18,7 +18,7 @@ jobs:
         uses: GsActions/commit-message-checker@v1
         with:
           # A regex pattern to check if a commit message is valid.
-          pattern: "((Lesson-)([0-9]+): [a-z]+(.)+)|(Review fixes(.)*)$"
+          pattern: "((Lesson-)([0-9]+): [a-zA-Z]+(.)+)|(Review fixes(.)*)$"
           # Expression flags change how the expression is interpreted.
           flags: # optional, default is gm
           # A error message which will be returned in case of an error.
