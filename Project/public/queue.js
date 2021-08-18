@@ -39,4 +39,4 @@ async function getSelectedResolution() {
 
 getCurrent();
 getAllValue();
-setInterval(getCurrent, 3000)
+setInterval(getCurrent, 3000);

@@ -27,18 +27,18 @@ router.get('/patient/next', async (req, res) => {
 });
 
 router.get('/patient/:value/resolution', async (req, res, next) => {
-    const validationResult = ajv.validate(GetPatientSchema, req.params);
-    if (validationResult) {
-      await next();
-    } else {
-      res.status(STATUSES.BadRequest).send(JSON.stringify(NOT_AVAILABLE));
-    }
-  },
+  const validationResult = ajv.validate(GetPatientSchema, req.params);
+  if (validationResult) {
+    await next();
+  } else {
+    res.status(STATUSES.BadRequest).send(JSON.stringify(NOT_AVAILABLE));
+  }
+},
 
-  async (req, res) => {
-    const result = await resolutionController.findResolution(req.params.value);
-    res.status(result.getStatus).send(JSON.stringify(result.getValue));
-  });
+async (req, res) => {
+  const result = await resolutionController.findResolution(req.params.value);
+  res.status(result.getStatus).send(JSON.stringify(result.getValue));
+});
 
 router.put('/patient/current/resolution', async (req, res, next) => {
   const validationResult = ajv.validate(SetResolutionSchema, req.body);

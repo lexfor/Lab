@@ -16,6 +16,6 @@ export const STATUSES = {
 export const STORAGE_NAME = {
   REDIS: 'redis',
   MEMORY: 'memory',
-}
+};
 
 export const NOT_AVAILABLE = 'N/A';

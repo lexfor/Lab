@@ -7,6 +7,7 @@
   "scripts": {
     "build": "webpack",
     "start": "node Project/index.js",
+    "lint": "eslint ./Project/api/**/*.js ./Project/routes/*.js --fix",
     "test": "jest --runInBand"
   },
   "jest": {

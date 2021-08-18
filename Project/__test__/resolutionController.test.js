@@ -22,7 +22,6 @@ switch (envConfig.storage.name) {
 }
 
 describe('Resolution controller', () => {
-
   const queueService = new QueueService(queueStorage);
   const resolutionService = new PatientsResolutionsService(resolutionStorage);
   const resolutionController = new ResolutionController(queueService, resolutionService);

@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { STORAGE_NAME } from './constants.js'
+import { STORAGE_NAME } from './constants.js';
 
 dotenv.config();
 
