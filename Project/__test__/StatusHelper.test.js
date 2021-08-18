@@ -1,11 +1,12 @@
 import { checkOutputStatus } from '../api/helpers/StatusHelper.js';
 import RequestResult from '../api/RequestResult.js';
+import { STATUSES } from '../constants.js';
 
 describe('Status helper', () => {
   test('empty RequestResult', () => {
     const res = new RequestResult();
     expect(res.getValue).toEqual('');
-    expect(res.getStatus).toEqual(200);
+    expect(res.getStatus).toEqual(STATUSES.OK);
   });
 
   test('not found result', () => {
@@ -13,7 +14,7 @@ describe('Status helper', () => {
     res.setValue = 'not found';
     res = checkOutputStatus(res);
     expect(res.getValue).toEqual('N/A');
-    expect(res.getStatus).toEqual(404);
+    expect(res.getStatus).toEqual(STATUSES.NotFound);
   });
 
   test('timeout result', () => {
@@ -21,7 +22,7 @@ describe('Status helper', () => {
     res.setValue = 'timeout';
     res = checkOutputStatus(res);
     expect(res.getValue).toEqual('N/A');
-    expect(res.getStatus).toEqual(408);
+    expect(res.getStatus).toEqual(STATUSES.RequestTimeout);
   });
 
   test('error result', () => {
@@ -29,7 +30,7 @@ describe('Status helper', () => {
     res.setValue = 'error';
     res = checkOutputStatus(res);
     expect(res.getValue).toEqual('N/A');
-    expect(res.getStatus).toEqual(500);
+    expect(res.getStatus).toEqual(STATUSES.ServerError);
   });
 
   test('not available result', () => {
@@ -37,7 +38,7 @@ describe('Status helper', () => {
     res.setValue = 'not available';
     res = checkOutputStatus(res);
     expect(res.getValue).toEqual('N/A');
-    expect(res.getStatus).toEqual(503);
+    expect(res.getStatus).toEqual(STATUSES.Unavailable);
   });
 
   test('pushed result', () => {
@@ -45,7 +46,7 @@ describe('Status helper', () => {
     res.setValue = 'pushed';
     res = checkOutputStatus(res);
     expect(res.getValue).toEqual('Added');
-    expect(res.getStatus).toEqual(201);
+    expect(res.getStatus).toEqual(STATUSES.Created);
   });
 
   test('OK result', () => {
@@ -53,6 +54,6 @@ describe('Status helper', () => {
     res.setValue = 'OK';
     res = checkOutputStatus(res);
     expect(res.getValue).toEqual('OK');
-    expect(res.getStatus).toEqual(200);
+    expect(res.getStatus).toEqual(STATUSES.OK);
   });
 });

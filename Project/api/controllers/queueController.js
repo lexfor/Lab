@@ -1,6 +1,6 @@
 import RequestResult from '../RequestResult.js';
 import { checkOutputStatus } from '../helpers/StatusHelper.js';
-import { STATUSES } from '../constants.js';
+import { STATUSES, NOT_AVAILABLE } from '../../constants.js';
 
 export default class QueueController {
   constructor(queue, patients) {
@@ -11,7 +11,7 @@ export default class QueueController {
   async checkLength() {
     const res = new RequestResult();
     if (await this.queueService.isEmpty()) {
-      res.setValue = 'N/A';
+      res.setValue = NOT_AVAILABLE;
       res.setStatus = STATUSES.Unavailable;
     }
     return res;
@@ -20,7 +20,7 @@ export default class QueueController {
   async checkIsExistValue(body) {
     const res = new RequestResult();
     if (await this.queueService.isExist(body)) {
-      res.setValue = 'N/A';
+      res.setValue = NOT_AVAILABLE;
       res.setStatus = STATUSES.BadRequest;
     }
     return res;

@@ -1,10 +1,10 @@
 async function getCurrent() {
-  const response = await fetch('/current');
+  const response = await fetch('/doctor/patient/current');
   document.getElementById('currentNumber').innerHTML = await response.json();
 }
 
 async function next() {
-  await fetch('/doctor/next');
+  await fetch('/doctor/patient/next');
   await getCurrent();
 }
 
@@ -12,7 +12,7 @@ async function setCurrentResolution() {
   const resolution = document.getElementById('resolutionText');
   const body = {};
   body.value = resolution.value;
-  const response = await fetch('/doctor/set-resolution', {
+  const response = await fetch('/doctor/patient/current/resolution', {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -24,7 +24,7 @@ async function setCurrentResolution() {
 
 async function findResolution() {
   const input = document.getElementById('valueInput');
-  const response = await fetch(`/resolution/${input.value}`);
+  const response = await fetch(`/doctor/patient/${input.value}/resolution`);
   const resolution = await response.json();
   const output = document.getElementById('resolutionOutput');
   output.value = resolution;
@@ -32,7 +32,7 @@ async function findResolution() {
 
 async function deleteResolution() {
   const input = document.getElementById('valueInput');
-  await fetch(`/doctor/resolution/${input.value}`, {
+  await fetch(`/doctor/patient/${input.value}/resolution`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

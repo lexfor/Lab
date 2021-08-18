@@ -3,7 +3,7 @@ import Ajv from 'ajv';
 import { injector } from '../Injector.js';
 import { AddPatientSchema } from '../api/schems/AddPatientSchema.js';
 import { GetPatientSchema } from '../api/schems/GetPatientSchema.js';
-import { STATUSES } from '../api/constants.js';
+import { STATUSES, NOT_AVAILABLE } from '../constants.js';
 
 const router = express();
 const ajv = new Ajv();
@@ -19,7 +19,7 @@ router.post('/patient', async (req, res, next) => {
   if (validationResult) {
     await next();
   } else {
-    res.status(STATUSES.BadRequest).send(JSON.stringify('N/A'));
+    res.status(STATUSES.BadRequest).send(JSON.stringify(NOT_AVAILABLE));
   }
 },
 
@@ -28,22 +28,22 @@ async (req, res) => {
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 
-router.get('/current', async (req, res) => {
+router.get('/patient/current', async (req, res) => {
   const result = await queueController.getCurrentInQueue();
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 
-router.get('/all-value', async (req, res) => {
+router.get('/patient/all', async (req, res) => {
   const result = await resolutionController.getAllProcessedPatientsValue();
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 
-router.get('/resolution/:value', async (req, res, next) => {
+router.get('/patient/:value/resolution', async (req, res, next) => {
   const validationResult = ajv.validate(GetPatientSchema, req.params);
   if (validationResult) {
     await next();
   } else {
-    res.status(STATUSES.BadRequest).send(JSON.stringify('N/A'));
+    res.status(STATUSES.BadRequest).send(JSON.stringify(NOT_AVAILABLE));
   }
 },
 

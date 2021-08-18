@@ -1,22 +1,22 @@
-import { STATUSES } from '../constants.js';
+import { STATUSES, NOT_AVAILABLE } from '../../constants.js';
 
 export function checkOutputStatus(res) {
   switch (res.getValue) {
     case 'not found':
       res.setStatus = STATUSES.NotFound;
-      res.setValue = 'N/A';
+      res.setValue = NOT_AVAILABLE;
       break;
     case 'timeout':
       res.setStatus = STATUSES.RequestTimeout;
-      res.setValue = 'N/A';
+      res.setValue = NOT_AVAILABLE;
       break;
     case 'error':
       res.setStatus = STATUSES.ServerError;
-      res.setValue = 'N/A';
+      res.setValue = NOT_AVAILABLE;
       break;
     case 'not available':
       res.setStatus = STATUSES.Unavailable;
-      res.setValue = 'N/A';
+      res.setValue = NOT_AVAILABLE;
       break;
     case 'pushed':
       res.setStatus = STATUSES.Created;

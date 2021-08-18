@@ -13,42 +13,33 @@ client.select(0);
 client.flushdb();
 
 class RedisQueue {
-  constructor() {
-    this.count = 0;
-    this.current = 0;
-  }
-
   async push(value) {
-    const setAsync = promisify(client.set).bind(client);
-    await setAsync(this.count, value);
-    this.count += 1;
+    const rpushAsync = promisify(client.rpush).bind(client);
+    await rpushAsync('queue', value);
   }
 
   async shift() {
-    if (this.current === this.count) {
-      return;
-    }
-    await client.del(this.current);
-    this.current += 1;
+    const lpopAsync = promisify(client.lpop).bind(client);
+    await lpopAsync('queue');
   }
 
   async getFirst() {
-    const getAsync = promisify(client.get).bind(client);
-    const result = await getAsync(this.current);
+    const lindexAsync = promisify(client.lindex).bind(client);
+    const result = await lindexAsync('queue', 0);
     return result;
   }
 
   async getAll() {
-    const keysAsync = promisify(client.keys).bind(client);
-    const mgetAsync = promisify(client.mget).bind(client);
-    const result = await keysAsync('*');
+    const llenAsync = promisify(client.llen).bind(client);
+    const lrangeAsync = promisify(client.lrange).bind(client);
+
+    const queueLength = await llenAsync('queue');
+    const result = await lrangeAsync('queue', 0, queueLength);
 
     if (result.length === 0) {
       return [];
     }
-
-    const values = await mgetAsync(result);
-    return values;
+    return result;
   }
 }
 

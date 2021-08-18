@@ -12,3 +12,10 @@ export const STATUSES = {
   ServerError: 500,
   Unavailable: 503,
 };
+
+export const STORAGE_NAME = {
+  REDIS: 'redis',
+  MEMORY: 'memory',
+}
+
+export const NOT_AVAILABLE = 'N/A';

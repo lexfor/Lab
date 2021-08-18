@@ -1,5 +1,5 @@
 async function getAllValue() {
-  let response = await fetch('/all-value');
+  let response = await fetch('/patient/all');
   response = await response.json();
 
   const select = document.getElementById('valueSelect');
@@ -21,20 +21,22 @@ async function Add() {
     body: JSON.stringify(inputValue.value),
   });
   await getAllValue();
+  await getCurrent();
 }
 
 async function getCurrent() {
-  const response = await fetch('/current');
+  const response = await fetch('/patient/current');
   document.getElementById('currentNumber').innerHTML = await response.json();
 }
 
 async function getSelectedResolution() {
   const select = document.getElementById('valueSelect');
-  const response = await fetch(`/resolution/${select.value}`);
+  const response = await fetch(`/patient/${select.value}/resolution`);
   const json = await response.json();
   const textarea = document.getElementById('resolution');
   textarea.value = json;
 }
 
+getCurrent();
 getAllValue();
-setInterval(getCurrent, 3000);
+setInterval(getCurrent, 3000)

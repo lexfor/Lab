@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { STORAGE_NAME } from './constants.js'
 
 dotenv.config();
 
@@ -9,7 +10,7 @@ const memory = {
     port: parseInt(process.env.DEV_APP_PORT, 10) || 3000,
   },
   storage: {
-    name: 'memory',
+    name: STORAGE_NAME.MEMORY,
     port: 6379,
   },
 };
@@ -19,7 +20,7 @@ const redis = {
     port: parseInt(process.env.DEV_APP_PORT, 10) || 3000,
   },
   storage: {
-    name: 'redis',
+    name: STORAGE_NAME.REDIS,
     port: 6379,
   },
 };

@@ -1,6 +1,6 @@
 import RequestResult from '../RequestResult.js';
 import { checkOutputStatus } from '../helpers/StatusHelper.js';
-import { STATUSES } from '../constants.js';
+import { STATUSES, NOT_AVAILABLE } from '../../constants.js';
 
 export default class ResolutionController {
   constructor(queue, patients) {
@@ -11,7 +11,7 @@ export default class ResolutionController {
   async checkLength() {
     const res = new RequestResult();
     if (await this.patientsService.isEmpty()) {
-      res.setValue = 'N/A';
+      res.setValue = NOT_AVAILABLE;
       res.setStatus = STATUSES.Unavailable;
     }
     return res;
@@ -20,7 +20,7 @@ export default class ResolutionController {
   async checkIsExistResolution(body) {
     const res = new RequestResult();
     if (!await this.patientsService.isExist(body)) {
-      res.setValue = 'N/A';
+      res.setValue = NOT_AVAILABLE;
       res.setStatus = STATUSES.NotFound;
     }
     return res;
@@ -29,7 +29,7 @@ export default class ResolutionController {
   async checkCurrentPatient() {
     const res = new RequestResult();
     if (await this.queueService.isEmpty()) {
-      res.setValue = 'N/A';
+      res.setValue = NOT_AVAILABLE;
       res.setStatus = STATUSES.Unavailable;
     }
     return res;
