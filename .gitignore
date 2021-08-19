@@ -1,5 +1,7 @@
-*.idea
+.idea
+.idea/workspace.xml
 /node_modules
 .eslintrc.*
-package.*
 package-lock.*
+webpack.config.js
+dump.rdb

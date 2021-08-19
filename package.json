@@ -1,0 +1,51 @@
+{
+  "name": "lab",
+  "version": "1.0.0",
+  "description": "ITRex lab",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "webpack",
+    "start": "node Project/index.js",
+    "lint": "eslint ./Project/api/**/*.js ./Project/routes/*.js --fix",
+    "test": "jest --runInBand"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lexfor/Lab.git"
+  },
+  "author": "Timofey Kinevich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lexfor/Lab/issues"
+  },
+  "homepage": "https://github.com/lexfor/Lab#readme",
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "babel-jest": "^27.0.6",
+    "eslint": "^7.31.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.4",
+    "jest": "^27.0.6",
+    "webpack-cli": "^4.7.2"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.15.3",
+    "ajv": "^6.12.6",
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "node-fetch": "^2.6.1",
+    "path": "^0.12.7",
+    "redis": "^3.1.2",
+    "require": "^2.4.20",
+    "webpack": "^5.47.1"
+  }
+}
