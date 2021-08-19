@@ -30,11 +30,8 @@ class RedisQueue {
   }
 
   async getAll() {
-    const llenAsync = promisify(client.llen).bind(client);
     const lrangeAsync = promisify(client.lrange).bind(client);
-
-    const queueLength = await llenAsync('queue');
-    const result = await lrangeAsync('queue', 0, queueLength);
+    const result = await lrangeAsync('queue', 0, -1);
 
     if (result.length === 0) {
       return [];
