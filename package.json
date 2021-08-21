@@ -7,7 +7,7 @@
   "scripts": {
     "build": "webpack",
     "start": "node Project/index.js",
-    "lint": "eslint ./Project/api/**/*.js ./Project/routes/*.js --fix",
+    "lint": "eslint ./Project/api/**/*.js ./Project/routes/*.js ./Project/*.js --fix",
     "test": "jest --runInBand"
   },
   "jest": {
@@ -42,10 +42,13 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
+    "mysql2": "^2.3.0",
     "node-fetch": "^2.6.1",
     "path": "^0.12.7",
     "redis": "^3.1.2",
     "require": "^2.4.20",
+    "sequelize": "^6.6.5",
+    "uuid": "^8.3.2",
     "webpack": "^5.47.1"
   }
 }

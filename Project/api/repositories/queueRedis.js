@@ -3,24 +3,29 @@ import { promisify } from 'util';
 
 import { envConfig } from '../../config.js';
 
-const client = redis.createClient(envConfig.storage.port);
+let client;
+if (envConfig.storage === 'redis' || process.env.TEST_STORAGE === 'redis') {
+  client = redis.createClient(envConfig.storage.port);
 
-client.on('error', (error) => {
-  console.error(error);
-});
+  client.on('error', (error) => {
+    console.error(error);
+  });
 
-client.select(0);
-client.flushdb();
+  client.select(0);
+  client.flushdb();
+}
 
 class RedisQueue {
-  async push(value) {
+  async push(id) {
     const rpushAsync = promisify(client.rpush).bind(client);
-    await rpushAsync('queue', value);
+    await rpushAsync('queue', id);
+    return 'pushed';
   }
 
   async shift() {
     const lpopAsync = promisify(client.lpop).bind(client);
     await lpopAsync('queue');
+    return 'shifted';
   }
 
   async getFirst() {

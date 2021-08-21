@@ -1,54 +1,63 @@
+import { v4 as uuidv4 } from 'uuid';
+import { NOT_AVAILABLE } from '../../constants.js';
+
 class ResolutionStorage {
   constructor() {
-    this.resolution = new Map();
-    this.TTL = [];
+    this.resolutions = [];
   }
 
-  async set(value, resolution, time) {
-    this.resolution.set(value, resolution);
-    let itemIndex = -1;
-    this.TTL.forEach((item, index) => {
-      if (item.key === value) {
-        itemIndex = index;
+  async create(resolutionValue, time) {
+    const uuid = uuidv4();
+    this.resolutions.push({
+      id: uuid,
+      value: resolutionValue,
+      delay: time,
+      createdTime: new Date().getTime(),
+    });
+    return uuid;
+  }
+
+  async update(resolutionID, resolutionValue, time) {
+    this.resolutions.forEach((item, index) => {
+      if (item.id === resolutionID) {
+        this.resolutions[index].value = resolutionValue;
+        this.resolutions[index].delay = time;
+        this.resolutions[index].createdTime = new Date().getTime();
       }
     });
-
-    if (itemIndex === -1) {
-      this.TTL.push({ key: value, timeDelay: time, timeNow: new Date().getTime() });
-    } else {
-      this.TTL[itemIndex].timeDelay = time;
-      this.TTL[itemIndex].timeNow = new Date().getTime();
-    }
   }
 
-  async get(value) {
-    let itemIndex = -1;
-    this.TTL.forEach((item, index) => {
-      if (item.key === value) {
-        itemIndex = index;
+  async get(resolutionID) {
+    let result = '';
+    this.checkTime(resolutionID);
+    this.resolutions.forEach((item) => {
+      if (item.id === resolutionID) {
+        result = item.value;
       }
     });
-
-    if (itemIndex === -1) {
-      return '';
-    }
-
-    if (!this.TTL[itemIndex].timeDelay) {
-      return this.resolution.get(value);
-    }
-
-    if ((new Date().getTime() - this.TTL[itemIndex].timeNow) <= this.TTL[itemIndex].timeDelay) {
-      return this.resolution.get(value);
-    }
-    return '';
+    return result;
   }
 
-  async has(value) {
-    return this.resolution.has(value);
+  async delete(resolutionID) {
+    this.resolutions.forEach((item, index) => {
+      if (item.id === resolutionID) {
+        this.resolutions[index].value = NOT_AVAILABLE;
+      }
+    });
   }
 
   async getAll() {
-    return Array.from(this.resolution.keys());
+    return this.resolutions.map((item) => item.id);
+  }
+
+  checkTime(resolutionID) {
+    this.resolutions.forEach((item, index) => {
+      if (item.id === resolutionID) {
+        if (new Date().getTime() - item.createdTime > item.delay) {
+          this.resolutions[index].value = NOT_AVAILABLE;
+        }
+      }
+    });
   }
 }
 

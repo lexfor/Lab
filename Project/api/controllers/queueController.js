@@ -3,9 +3,8 @@ import { checkOutputStatus } from '../helpers/StatusHelper.js';
 import { STATUSES, NOT_AVAILABLE } from '../../constants.js';
 
 export default class QueueController {
-  constructor(queue, patients) {
+  constructor(queue) {
     this.queueService = queue;
-    this.patientsService = patients;
   }
 
   async checkLength() {
@@ -31,7 +30,6 @@ export default class QueueController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    await this.patientsService.createResolution(body);
     res.setValue = await this.queueService.push(body);
     return checkOutputStatus(res);
   }

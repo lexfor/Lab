@@ -31,7 +31,11 @@ async function getCurrent() {
 
 async function getSelectedResolution() {
   const select = document.getElementById('valueSelect');
-  const response = await fetch(`/patient/${select.value}/resolution`);
+  const url = new URL('/patient/resolution', document.location.origin);
+  const params = new URLSearchParams();
+  params.append('value', select.value);
+  url.search = params.toString();
+  const response = await fetch(url.href);
   const json = await response.json();
   const textarea = document.getElementById('resolution');
   textarea.value = json;

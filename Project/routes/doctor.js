@@ -26,8 +26,8 @@ router.get('/patient/next', async (req, res) => {
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 
-router.get('/patient/:value/resolution', async (req, res, next) => {
-  const validationResult = ajv.validate(GetPatientSchema, req.params);
+router.get('/patient/resolution', async (req, res, next) => {
+  const validationResult = ajv.validate(GetPatientSchema, req.query);
   if (validationResult) {
     await next();
   } else {
@@ -36,7 +36,7 @@ router.get('/patient/:value/resolution', async (req, res, next) => {
 },
 
 async (req, res) => {
-  const result = await resolutionController.findResolution(req.params.value);
+  const result = await resolutionController.findResolution(req.query.value);
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 
@@ -54,8 +54,8 @@ async (req, res) => {
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 
-router.delete('/patient/:value/resolution', async (req, res, next) => {
-  const validationResult = ajv.validate(DeleteResolutionSchema, req.params);
+router.delete('/patient/resolution', async (req, res, next) => {
+  const validationResult = ajv.validate(DeleteResolutionSchema, req.query);
   if (validationResult) {
     await next();
   } else {
@@ -64,7 +64,7 @@ router.delete('/patient/:value/resolution', async (req, res, next) => {
 },
 
 async (req, res) => {
-  const result = await resolutionController.deleteResolution(req.params.value);
+  const result = await resolutionController.deleteResolution(req.query.value);
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 

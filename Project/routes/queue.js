@@ -38,8 +38,8 @@ router.get('/patient/all', async (req, res) => {
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 
-router.get('/patient/:value/resolution', async (req, res, next) => {
-  const validationResult = ajv.validate(GetPatientSchema, req.params);
+router.get('/patient/resolution', async (req, res, next) => {
+  const validationResult = ajv.validate(GetPatientSchema, req.query);
   if (validationResult) {
     await next();
   } else {
@@ -48,7 +48,7 @@ router.get('/patient/:value/resolution', async (req, res, next) => {
 },
 
 async (req, res) => {
-  const result = await resolutionController.findResolution(req.params.value);
+  const result = await resolutionController.findResolution(req.query.value);
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 

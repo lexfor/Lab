@@ -24,7 +24,11 @@ async function setCurrentResolution() {
 
 async function findResolution() {
   const input = document.getElementById('valueInput');
-  const response = await fetch(`/doctor/patient/${input.value}/resolution`);
+  const url = new URL('/doctor/patient/resolution', document.location.origin);
+  const params = new URLSearchParams();
+  params.append('value', input.value);
+  url.search = params.toString();
+  const response = await fetch(url.href);
   const resolution = await response.json();
   const output = document.getElementById('resolutionOutput');
   output.value = resolution;
@@ -32,7 +36,11 @@ async function findResolution() {
 
 async function deleteResolution() {
   const input = document.getElementById('valueInput');
-  await fetch(`/doctor/patient/${input.value}/resolution`, {
+  const url = new URL('/doctor/patient/resolution', document.location.origin);
+  const params = new URLSearchParams();
+  params.append('value', input.value);
+  url.search = params.toString();
+  await fetch(url.href, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

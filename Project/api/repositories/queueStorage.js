@@ -3,12 +3,14 @@ class QueueStorage {
     this.fifo = [];
   }
 
-  push(value) {
-    this.fifo.push(value);
+  push(id) {
+    this.fifo.push(id);
+    return 'pushed';
   }
 
   shift() {
     this.fifo.shift();
+    return 'shifted';
   }
 
   getFirst() {
