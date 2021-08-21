@@ -53,3 +53,6 @@ jobs:
 
       - name: Linting the code with ESLint
         run: npm run lint
+
+      - name: testing with unit tests
+        run: npm run test
