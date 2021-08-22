@@ -1,4 +1,4 @@
-import PatientsResolutionsService from '../api/service/PatientService.js';
+import PatientService from '../api/service/PatientService.js';
 import { patientInMemoryStorage } from '../api/repositories/patientStorage.js';
 import { resolutionInMemoryStorage } from '../api/repositories/resolutionStorage.js';
 
@@ -6,7 +6,7 @@ jest.mock('../api/repositories/patientStorage.js');
 jest.mock('../api/repositories/resolutionStorage.js');
 
 describe('patient service unit tests', () => {
-  const patients = new PatientsResolutionsService(
+  const patients = new PatientService(
     patientInMemoryStorage,
     resolutionInMemoryStorage,
   );

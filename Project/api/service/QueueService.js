@@ -33,7 +33,6 @@ export default class QueueService {
 
   async isEmpty() {
     const fifo = await this.queueStorage.getAll();
-    console.log(fifo);
     return fifo.length === 0;
   }
 }

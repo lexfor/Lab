@@ -1,5 +1,5 @@
 import QueueController from './api/controllers/queueController.js';
-import ResolutionController from './api/controllers/resolutionController.js';
+import PatientController from './api/controllers/patientController.js';
 import PatientService from './api/service/PatientService.js';
 import QueueService from './api/service/QueueService.js';
 
@@ -39,7 +39,7 @@ class Injector {
     this.patientService = new PatientService(this.patientStorage, this.resolutionStorage);
     this.queueService = new QueueService(this.queueStorage, this.patientService);
     this.queueController = new QueueController(this.queueService);
-    this.resolutionController = new ResolutionController(this.queueService, this.patientService);
+    this.resolutionController = new PatientController(this.queueService, this.patientService);
   }
 
   get getQueueController() {

@@ -2,7 +2,7 @@ import RequestResult from '../RequestResult.js';
 import { checkOutputStatus } from '../helpers/StatusHelper.js';
 import { STATUSES, NOT_AVAILABLE } from '../../constants.js';
 
-export default class ResolutionController {
+export default class PatientController {
   constructor(queue, patients) {
     this.queueService = queue;
     this.patientsService = patients;
@@ -17,7 +17,7 @@ export default class ResolutionController {
     return res;
   }
 
-  async checkIsExistResolution(body) {
+  async checkIsExistPatient(body) {
     const res = new RequestResult();
     if (!await this.patientsService.isExist(body)) {
       res.setValue = NOT_AVAILABLE;
@@ -40,10 +40,16 @@ export default class ResolutionController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
+    let delay;
+    if (body.delay) {
+      delay = body.delay;
+    } else {
+      delay = process.env.TTL_DELAY;
+    }
     res.setValue = await this.patientsService.updateResolution(
       await this.queueService.getCurrent(),
       body.value,
-      process.env.TTL_DELAY,
+      delay,
     );
     return checkOutputStatus(res);
   }
@@ -58,7 +64,7 @@ export default class ResolutionController {
   }
 
   async findResolution(body) {
-    const res = await this.checkIsExistResolution(body);
+    const res = await this.checkIsExistPatient(body);
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
@@ -67,7 +73,7 @@ export default class ResolutionController {
   }
 
   async deleteResolution(body) {
-    const res = await this.checkIsExistResolution(body);
+    const res = await this.checkIsExistPatient(body);
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }

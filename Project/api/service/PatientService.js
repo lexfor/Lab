@@ -40,6 +40,7 @@ export default class PatientService {
   async deleteResolution(value) {
     const resolutionID = await this.findResolutionID(value);
     await this.resolutionStorage.delete(resolutionID);
+    return 'deleted';
   }
 
   async getAllValue() {
