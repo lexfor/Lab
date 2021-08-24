@@ -1,5 +1,5 @@
 async function getAllValue() {
-  let response = await fetch('/patient/all');
+  let response = await fetch('/queue/patient/all');
   response = await response.json();
 
   const select = document.getElementById('valueSelect');
@@ -13,7 +13,7 @@ async function getAllValue() {
 
 async function Add() {
   const inputValue = document.getElementById('inputValue');
-  await fetch('/patient', {
+  await fetch('/queue/patient', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -25,13 +25,13 @@ async function Add() {
 }
 
 async function getCurrent() {
-  const response = await fetch('/patient/current');
+  const response = await fetch('/queue/patient/current');
   document.getElementById('currentNumber').innerHTML = await response.json();
 }
 
 async function getSelectedResolution() {
   const select = document.getElementById('valueSelect');
-  const url = new URL('/patient/resolution', document.location.origin);
+  const url = new URL('/queue/patient/resolution', document.location.origin);
   const params = new URLSearchParams();
   params.append('value', select.value);
   url.search = params.toString();
