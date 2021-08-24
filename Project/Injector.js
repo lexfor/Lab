@@ -9,7 +9,6 @@ import { resolutionInMemoryStorage } from './api/repositories/resolutionStorage.
 import { queueInRedisStorage } from './api/repositories/queueRedis.js';
 import { patientInRedisStorage } from './api/repositories/patientRedis.js';
 import { resolutionInRedisStorage } from './api/repositories/resolutionRedis.js';
-import { queueInSQL } from './api/repositories/queueSQL.js';
 import { patientInSQL } from './api/repositories/patientSQL.js';
 import { resolutionInSQL } from './api/repositories/resolutionSQL.js';
 
@@ -20,21 +19,28 @@ class Injector {
     switch (envConfig.storage.name) {
       case 'redis':
         console.log('using redis');
-        this.queueStorage = queueInRedisStorage;
         this.patientStorage = patientInRedisStorage;
         this.resolutionStorage = resolutionInRedisStorage;
         break;
       case 'sql':
         console.log('using SQL');
-        this.queueStorage = queueInSQL;
         this.patientStorage = patientInSQL;
         this.resolutionStorage = resolutionInSQL;
         break;
       default:
         console.log('using memory');
-        this.queueStorage = queueInMemoryStorage;
         this.patientStorage = patientInMemoryStorage;
         this.resolutionStorage = resolutionInMemoryStorage;
+    }
+    switch (envConfig.queueStorage.name) {
+      case 'redis':
+        console.log('using redis for queue');
+        this.queueStorage = queueInRedisStorage;
+        break;
+      default:
+        console.log('using memory for queue');
+        this.queueStorage = queueInMemoryStorage;
+        break;
     }
     this.patientService = new PatientService(this.patientStorage, this.resolutionStorage);
     this.queueService = new QueueService(this.queueStorage, this.patientService);

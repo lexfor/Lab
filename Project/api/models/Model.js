@@ -60,24 +60,3 @@ sequelize.sync({ force: true })
   .catch((error) => console.log('This error occurred', error));
 
 export { patient };
-
-const queue = sequelize.define('queue', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-});
-
-queue.belongsTo(patient, {
-  foreignKey: {
-    name: 'patient_id',
-    type: DataTypes.UUID,
-  },
-});
-
-sequelize.sync({ force: true })
-  .then(() => console.log('queue table has been successfully created, if one doesn\'t exist'))
-  .catch((error) => console.log('This error occurred', error));
-
-export { queue };

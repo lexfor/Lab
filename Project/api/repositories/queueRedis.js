@@ -4,7 +4,7 @@ import { promisify } from 'util';
 import { envConfig } from '../../config.js';
 
 let client;
-if (envConfig.storage === 'redis' || process.env.TEST_STORAGE === 'redis') {
+if (envConfig.storage.name === 'redis' || envConfig.queueStorage.name === 'redis') {
   client = redis.createClient(envConfig.storage.port);
 
   client.on('error', (error) => {
