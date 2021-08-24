@@ -81,7 +81,7 @@ describe('patient service unit tests', () => {
 
   test('get all patients names', async () => {
     patientInMemoryStorage.getAllNames.mockImplementation(() => ['Tim', 'Dima', 'Andrei']);
-    const result = await patients.getAllValue('Tim');
+    const result = await patients.getAllPatientNames('Tim');
     expect(result).toEqual(['Tim', 'Dima', 'Andrei']);
   });
 

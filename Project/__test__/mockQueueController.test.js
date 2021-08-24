@@ -91,7 +91,7 @@ describe('queue controller unit tests', () => {
 
   test('take next value from queue', async () => {
     queueService.isEmpty.mockResolvedValue(false);
-    queueService.pop.mockResolvedValue('shifted');
+    queueService.shift.mockResolvedValue('shifted');
     const res = await queueController.takeNextValueInQueue();
     expect(res.getValue).toEqual('shifted');
     expect(res.getStatus).toEqual(STATUSES.OK);

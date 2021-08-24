@@ -102,15 +102,15 @@ describe('queue controller unit tests', () => {
 
   test('get all patients names', async () => {
     patientsService.isEmpty.mockResolvedValue(false);
-    patientsService.getAllValue.mockResolvedValue(['Tim', 'Dima']);
-    const res = await patientController.getAllProcessedPatientsValue();
+    patientsService.getAllPatientNames.mockResolvedValue(['Tim', 'Dima']);
+    const res = await patientController.getAllProcessedPatientsNames();
     expect(res.getValue).toEqual(['Tim', 'Dima']);
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
 
   test('get all patients names without any patient', async () => {
     patientsService.isEmpty.mockResolvedValue(true);
-    const res = await patientController.getAllProcessedPatientsValue();
+    const res = await patientController.getAllProcessedPatientsNames();
     expect(res.getValue).toEqual(NOT_AVAILABLE);
     expect(res.getStatus).toEqual(STATUSES.Unavailable);
   });
@@ -124,7 +124,7 @@ describe('queue controller unit tests', () => {
       expect(name).toEqual('Andrei');
       return 'All fine';
     });
-    const res = await patientController.findResolution('Andrei');
+    const res = await patientController.findResolutionByPatientName('Andrei');
     expect(res.getValue).toEqual('All fine');
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
@@ -134,7 +134,7 @@ describe('queue controller unit tests', () => {
       expect(name).toEqual('Andrei');
       return false;
     });
-    const res = await patientController.findResolution('Andrei');
+    const res = await patientController.findResolutionByPatientName('Andrei');
     expect(res.getValue).toEqual(NOT_AVAILABLE);
     expect(res.getStatus).toEqual(STATUSES.NotFound);
   });
@@ -148,7 +148,7 @@ describe('queue controller unit tests', () => {
       expect(name).toEqual('Andrei');
       return 'deleted';
     });
-    const res = await patientController.deleteResolution('Andrei');
+    const res = await patientController.deletePatientResolution('Andrei');
     expect(res.getValue).toEqual('deleted');
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
@@ -158,7 +158,7 @@ describe('queue controller unit tests', () => {
       expect(name).toEqual('Andrei');
       return false;
     });
-    const res = await patientController.deleteResolution('Andrei');
+    const res = await patientController.deletePatientResolution('Andrei');
     expect(res.getValue).toEqual(NOT_AVAILABLE);
     expect(res.getStatus).toEqual(STATUSES.NotFound);
   });

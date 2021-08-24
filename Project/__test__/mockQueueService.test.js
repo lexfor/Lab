@@ -26,7 +26,7 @@ describe('queue service unit tests', () => {
 
   test('pop patient from queue', async () => {
     queueInMemoryStorage.shift.mockImplementation(() => 'shifted');
-    const result = await queue.pop();
+    const result = await queue.shift();
     expect(result).toEqual('shifted');
   });
 

@@ -63,6 +63,10 @@ In UI we not have input for time, I decided, that it's not necessary, but add fu
 
 **Get project from Docker:**
 
-    docker pull lexforor/lab:latest
-    docker run  -p 3000:3000 -d lexforor/lab
+    cd Docker
+    docker-compose up -d
+
+Then open 
+
+    http://localhost:3000/
 
