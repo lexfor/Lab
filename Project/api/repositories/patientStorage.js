@@ -11,11 +11,10 @@ class PatientStorage {
     return uuid;
   }
 
-  async update(patientID, value, resolutionID) {
+  async update(patientID, value) {
     this.patient.forEach((item, index) => {
       if (item.id === patientID) {
         this.patient[index].name = value;
-        this.patient[index].resolution_id = resolutionID;
       }
     });
     return 'updated';
@@ -36,16 +35,6 @@ class PatientStorage {
     this.patient.forEach((item) => {
       if (item.id === patientID) {
         result = item.name;
-      }
-    });
-    return result;
-  }
-
-  async getResolutionID(patientID) {
-    let result;
-    this.patient.forEach((item) => {
-      if (item.id === patientID) {
-        result = item.resolution_id;
       }
     });
     return result;

@@ -10,7 +10,7 @@ export default class QueueService {
     return 'pushed';
   }
 
-  async pop() {
+  async shift() {
     await this.queueStorage.shift();
     return 'shifted';
   }
@@ -22,8 +22,8 @@ export default class QueueService {
   }
 
   async isExist(value) {
-    const fifo = await this.queueStorage.getAll();
-    let names = fifo.map((item) => {
+    const allPatientInQueue = await this.queueStorage.getAll();
+    let names = allPatientInQueue.map((item) => {
       const res = this.patientService.getPatientName(item);
       return res;
     });
@@ -32,7 +32,7 @@ export default class QueueService {
   }
 
   async isEmpty() {
-    const fifo = await this.queueStorage.getAll();
-    return fifo.length === 0;
+    const allPatientInQueue = await this.queueStorage.getAll();
+    return allPatientInQueue.length === 0;
   }
 }

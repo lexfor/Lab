@@ -33,7 +33,7 @@ jobs:
           accessToken: ${{ secrets.GITHUB_TOKEN }} # optional, default is false
 
   install-n-lint:
-    name: check with eslint
+    name: check with eslint and tests
     runs-on: ubuntu-20.04
     strategy:
       matrix:

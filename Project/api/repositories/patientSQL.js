@@ -8,10 +8,9 @@ class PatientSQL {
     return result;
   }
 
-  async update(patientID, value, resolutionID) {
+  async update(patientID, value) {
     await patient.update({
       name: value,
-      resolution_id: resolutionID,
     }, {
       where: {
         id: patientID,
@@ -39,17 +38,6 @@ class PatientSQL {
     });
     console.log('return patient with name :', result.name);
     result = result.name;
-    return result;
-  }
-
-  async getResolutionID(patientID) {
-    let result = await patient.findOne({
-      where: {
-        id: patientID,
-      },
-    });
-    console.log('find resolution id for patient with name :', result.name);
-    result = result.resolution_id;
     return result;
   }
 

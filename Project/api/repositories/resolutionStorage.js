@@ -6,13 +6,14 @@ class ResolutionStorage {
     this.resolutions = [];
   }
 
-  async create(resolutionValue, time) {
+  async create(patientID, resolutionValue, time) {
     const uuid = uuidv4();
     this.resolutions.push({
       id: uuid,
       value: resolutionValue,
       delay: time,
       createdTime: new Date().getTime(),
+      patient_id: patientID,
     });
     return uuid;
   }
@@ -27,9 +28,21 @@ class ResolutionStorage {
     });
   }
 
+  async getResolutionID(patientID) {
+    let result;
+    this.resolutions.forEach((item) => {
+      if (item.patient_id === patientID) {
+        result = item.id;
+      }
+    });
+    return result;
+  }
+
   async get(resolutionID) {
     let result = '';
-    this.checkTime(resolutionID);
+    if (!this.checkTime(resolutionID)) {
+      return result;
+    }
     this.resolutions.forEach((item) => {
       if (item.id === resolutionID) {
         result = item.value;
@@ -51,13 +64,15 @@ class ResolutionStorage {
   }
 
   checkTime(resolutionID) {
-    this.resolutions.forEach((item, index) => {
+    let result = true;
+    this.resolutions.forEach((item) => {
       if (item.id === resolutionID) {
         if (new Date().getTime() - item.createdTime > item.delay) {
-          this.resolutions[index].value = NOT_AVAILABLE;
+          result = false;
         }
       }
     });
+    return result;
   }
 }
 

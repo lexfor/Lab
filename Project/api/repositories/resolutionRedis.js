@@ -6,7 +6,7 @@ import { envConfig } from '../../config.js';
 import { NOT_AVAILABLE } from '../../constants.js';
 
 let client;
-if (envConfig.storage === 'redis' || process.env.TEST_STORAGE === 'redis') {
+if (envConfig.storage.name === 'redis') {
   client = redis.createClient(envConfig.storage.port);
 
   client.on('error', (error) => {
@@ -18,10 +18,12 @@ if (envConfig.storage === 'redis' || process.env.TEST_STORAGE === 'redis') {
 }
 
 class ResolutionRedis {
-  async create(resolutionValue, time) {
+  async create(patientID, resolutionValue, time) {
     const key = uuidv4();
     const setAsync = promisify(client.set).bind(client);
     const expireAsync = promisify(client.expire).bind(client);
+    const hsetAsync = promisify(client.hset).bind(client);
+    await hsetAsync('patient', key, patientID);
     setAsync(key, resolutionValue);
     if (time) {
       expireAsync(key, time / 1000);
@@ -32,10 +34,30 @@ class ResolutionRedis {
   async update(resolutionID, resolutionValue, time) {
     const setAsync = promisify(client.set).bind(client);
     const expireAsync = promisify(client.expire).bind(client);
+    const hsetAsync = promisify(client.hset).bind(client);
+    const hdelAsync = promisify(client.hdel).bind(client);
+    await hdelAsync('patient', resolutionID);
+    await hsetAsync('patient', resolutionID, resolutionValue);
     setAsync(resolutionID, resolutionValue);
     if (time) {
       expireAsync(resolutionID, time / 1000);
     }
+  }
+
+  async getResolutionID(patientID) {
+    const hgetallAsync = promisify(client.hgetall).bind(client);
+    const keysAndValuesObject = await hgetallAsync('patient');
+    if (!keysAndValuesObject) {
+      return '';
+    }
+    const keysAndValuesArray = Object.entries(keysAndValuesObject);
+    let result;
+    keysAndValuesArray.forEach((item) => {
+      if (item[1] === patientID) {
+        [result] = item;
+      }
+    });
+    return result;
   }
 
   async get(resolutionID) {

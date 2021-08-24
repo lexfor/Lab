@@ -46,7 +46,7 @@ export default class PatientController {
     } else {
       delay = process.env.TTL_DELAY;
     }
-    res.setValue = await this.patientsService.updateResolution(
+    res.setValue = await this.patientsService.addResolution(
       await this.queueService.getCurrent(),
       body.value,
       delay,
@@ -54,16 +54,16 @@ export default class PatientController {
     return checkOutputStatus(res);
   }
 
-  async getAllProcessedPatientsValue() {
+  async getAllProcessedPatientsNames() {
     const res = await this.checkLength();
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.patientsService.getAllValue();
+    res.setValue = await this.patientsService.getAllPatientNames();
     return checkOutputStatus(res);
   }
 
-  async findResolution(body) {
+  async findResolutionByPatientName(body) {
     const res = await this.checkIsExistPatient(body);
     if (res.getStatus !== STATUSES.OK) {
       return res;
@@ -72,7 +72,7 @@ export default class PatientController {
     return checkOutputStatus(res);
   }
 
-  async deleteResolution(body) {
+  async deletePatientResolution(body) {
     const res = await this.checkIsExistPatient(body);
     if (res.getStatus !== STATUSES.OK) {
       return res;

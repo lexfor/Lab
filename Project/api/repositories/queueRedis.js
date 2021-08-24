@@ -4,8 +4,18 @@ import { promisify } from 'util';
 import { envConfig } from '../../config.js';
 
 let client;
-if (envConfig.storage.name === 'redis' || envConfig.queueStorage.name === 'redis') {
+if (envConfig.storage.name === 'redis') {
   client = redis.createClient(envConfig.storage.port);
+
+  client.on('error', (error) => {
+    console.error(error);
+  });
+
+  client.select(0);
+  client.flushdb();
+}
+if (envConfig.queueStorage.name === 'redis') {
+  client = redis.createClient(envConfig.queueStorage.port);
 
   client.on('error', (error) => {
     console.error(error);

@@ -6,14 +6,12 @@ export default class PatientService {
 
   async findResolutionID(value) {
     const patientID = await this.patientStorage.find(value);
-    const resolutionID = await this.patientStorage.getResolutionID(patientID);
+    const resolutionID = await this.resolutionStorage.getResolutionID(patientID);
     return resolutionID;
   }
 
   async createPatient(value) {
     const patientID = await this.patientStorage.create(value);
-    const resolutionID = await this.resolutionStorage.create('');
-    await this.patientStorage.update(patientID, value, resolutionID);
     return patientID;
   }
 
@@ -22,9 +20,9 @@ export default class PatientService {
     return result;
   }
 
-  async updateResolution(value, resolution, time) {
-    const resolutionID = await this.findResolutionID(value);
-    await this.resolutionStorage.update(resolutionID, resolution, time);
+  async addResolution(value, resolution, time) {
+    const patientID = await this.patientStorage.find(value);
+    await this.resolutionStorage.create(patientID, resolution, time);
     return 'updated';
   }
 
@@ -43,7 +41,7 @@ export default class PatientService {
     return 'deleted';
   }
 
-  async getAllValue() {
+  async getAllPatientNames() {
     const result = await this.patientStorage.getAllNames();
     return result;
   }

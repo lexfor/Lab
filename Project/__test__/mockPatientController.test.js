@@ -68,7 +68,7 @@ describe('queue controller unit tests', () => {
   test('set resolution for current patient', async () => {
     queueService.isEmpty.mockResolvedValue(false);
     queueService.getCurrent.mockResolvedValue('Labkov');
-    patientsService.updateResolution.mockImplementation((name, resolution, timeDelay) => {
+    patientsService.addResolution.mockImplementation((name, resolution, timeDelay) => {
       expect(name).toEqual('Labkov');
       expect(resolution).toEqual('good');
       expect(timeDelay).toEqual(process.env.TTL_DELAY);
@@ -89,7 +89,7 @@ describe('queue controller unit tests', () => {
   test('set resolution for current patient with ttl', async () => {
     queueService.isEmpty.mockResolvedValue(false);
     queueService.getCurrent.mockResolvedValue('Labkov');
-    patientsService.updateResolution.mockImplementation((name, resolution, timeDelay) => {
+    patientsService.addResolution.mockImplementation((name, resolution, timeDelay) => {
       expect(name).toEqual('Labkov');
       expect(resolution).toEqual('good');
       expect(timeDelay).toEqual(20000);

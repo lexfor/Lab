@@ -24,7 +24,7 @@ describe('patient service unit tests', () => {
 
   test('find patient resolution id', async () => {
     patientInMemoryStorage.find.mockResolvedValue('123');
-    patientInMemoryStorage.getResolutionID.mockImplementation((id) => {
+    resolutionInMemoryStorage.getResolutionID.mockImplementation((id) => {
       expect(id).toEqual('123');
       return '234';
     });
@@ -36,13 +36,13 @@ describe('patient service unit tests', () => {
     patientInMemoryStorage.find.mockImplementation((value) => {
       expect(value).toEqual('Tim');
     });
-    patientInMemoryStorage.getResolutionID.mockResolvedValue('abc');
+    resolutionInMemoryStorage.getResolutionID.mockResolvedValue('abc');
     resolutionInMemoryStorage.update.mockImplementation((resolutionID, resolution, time) => {
       expect(resolutionID).toEqual('abc');
       expect(resolution).toEqual('aaaaaa');
       expect(time).toEqual(process.env.TTL_DELAY);
     });
-    const result = await patients.updateResolution('Tim', 'aaaaaa', process.env.TTL_DELAY);
+    const result = await patients.addResolution('Tim', 'aaaaaa', process.env.TTL_DELAY);
     expect(result).toEqual('updated');
   });
 
@@ -59,7 +59,7 @@ describe('patient service unit tests', () => {
     patientInMemoryStorage.find.mockImplementation((value) => {
       expect(value).toEqual('Tim');
     });
-    patientInMemoryStorage.getResolutionID.mockResolvedValue('abc');
+    resolutionInMemoryStorage.getResolutionID.mockResolvedValue('abc');
     resolutionInMemoryStorage.get.mockImplementation((resolutionID) => {
       expect(resolutionID).toEqual('abc');
       return 'aaaaaa';
@@ -72,7 +72,7 @@ describe('patient service unit tests', () => {
     patientInMemoryStorage.find.mockImplementation((value) => {
       expect(value).toEqual('Tim');
     });
-    patientInMemoryStorage.getResolutionID.mockResolvedValue('abc');
+    resolutionInMemoryStorage.getResolutionID.mockResolvedValue('abc');
     resolutionInMemoryStorage.delete.mockImplementation((resolutionID) => {
       expect(resolutionID).toEqual('abc');
     });

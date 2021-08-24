@@ -2,11 +2,12 @@ import { resolution } from '../models/Model.js';
 import { NOT_AVAILABLE } from '../../constants.js';
 
 class ResolutionSQL {
-  async create(resolutionValue, time) {
+  async create(patientID, resolutionValue, time) {
     let result = await resolution.create({
       value: resolutionValue,
       delay: time,
       createdTime: new Date().getTime(),
+      patient_id: patientID,
     });
     console.log('create resolution with value :', result.value);
     result = result.id;
@@ -25,12 +26,26 @@ class ResolutionSQL {
     });
   }
 
+  async getResolutionID(patientID) {
+    let result = await resolution.findOne({
+      where: {
+        patient_id: patientID,
+      },
+    });
+    console.log('find resolution with name :', result.name);
+    result = result.id;
+    return result;
+  }
+
   async get(resolutionID) {
     let result = await resolution.findOne({
       where: {
         id: resolutionID,
       },
     });
+    if (new Date().getTime() - result.createdTime >= result.delay) {
+      return NOT_AVAILABLE;
+    }
     console.log('find resolution :', result.value);
     result = result.value;
     return result;

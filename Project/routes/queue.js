@@ -34,7 +34,7 @@ router.get('/patient/current', async (req, res) => {
 });
 
 router.get('/patient/all', async (req, res) => {
-  const result = await resolutionController.getAllProcessedPatientsValue();
+  const result = await resolutionController.getAllProcessedPatientsNames();
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 
@@ -48,7 +48,7 @@ router.get('/patient/resolution', async (req, res, next) => {
 },
 
 async (req, res) => {
-  const result = await resolutionController.findResolution(req.query.value);
+  const result = await resolutionController.findResolutionByPatientName(req.query.value);
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 

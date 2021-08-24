@@ -48,7 +48,7 @@ export default class QueueController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.queueService.pop();
+    res.setValue = await this.queueService.shift();
     return checkOutputStatus(res);
   }
 }

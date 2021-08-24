@@ -36,7 +36,7 @@ router.get('/patient/resolution', async (req, res, next) => {
 },
 
 async (req, res) => {
-  const result = await resolutionController.findResolution(req.query.value);
+  const result = await resolutionController.findResolutionByPatientName(req.query.value);
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 
@@ -64,7 +64,7 @@ router.delete('/patient/resolution', async (req, res, next) => {
 },
 
 async (req, res) => {
-  const result = await resolutionController.deleteResolution(req.query.value);
+  const result = await resolutionController.deletePatientResolution(req.query.value);
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 

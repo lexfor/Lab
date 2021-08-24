@@ -5,7 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { envConfig } from '../../config.js';
 
 let client;
-if (envConfig.storage === 'redis' || process.env.TEST_STORAGE === 'redis') {
+
+if (envConfig.storage.name === 'redis') {
   client = redis.createClient(envConfig.storage.port);
 
   client.on('error', (error) => {
@@ -21,17 +22,14 @@ class PatientRedis {
     const key = uuidv4();
     const hsetAsync = promisify(client.hset).bind(client);
     await hsetAsync('names', key, value);
-    await hsetAsync('resolutions', key, '');
     return key;
   }
 
-  async update(patientID, value, resolutionID) {
+  async update(patientID, value) {
     const hsetAsync = promisify(client.hset).bind(client);
     const hdelAsync = promisify(client.hdel).bind(client);
     await hdelAsync('names', patientID);
     await hsetAsync('names', patientID, value);
-    await hdelAsync('resolutions', patientID);
-    await hsetAsync('resolutions', patientID, resolutionID);
     return 'updated';
   }
 
@@ -74,7 +72,6 @@ class PatientRedis {
     try {
       const hdelAsync = promisify(client.hdel).bind(client);
       await hdelAsync('names', patientID);
-      await hdelAsync('resolutions', patientID);
     } catch (e) {
       console.log(e.message);
     }
