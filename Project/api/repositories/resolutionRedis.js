@@ -7,7 +7,7 @@ import { NOT_AVAILABLE } from '../../constants.js';
 
 let client;
 if (envConfig.storage.name === 'redis') {
-  client = redis.createClient(envConfig.storage.port);
+  client = redis.createClient({ host: envConfig.storage.host, port: envConfig.storage.port });
 
   client.on('error', (error) => {
     console.error(error);

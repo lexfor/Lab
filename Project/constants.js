@@ -19,4 +19,10 @@ export const STORAGE_NAME = {
   SQL: 'sql',
 };
 
+export const SERVER_PORT = {
+  REDIS_PORT: 6379,
+  SQL_PORT: 3306,
+  APP_PORT: 3000,
+};
+
 export const NOT_AVAILABLE = 'N/A';

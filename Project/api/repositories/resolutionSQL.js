@@ -32,6 +32,9 @@ class ResolutionSQL {
         patient_id: patientID,
       },
     });
+    if (!result) {
+      return '';
+    }
     console.log('find resolution with name :', result.name);
     result = result.id;
     return result;
@@ -43,6 +46,9 @@ class ResolutionSQL {
         id: resolutionID,
       },
     });
+    if (!result) {
+      return '';
+    }
     if (new Date().getTime() - result.createdTime >= result.delay) {
       return NOT_AVAILABLE;
     }

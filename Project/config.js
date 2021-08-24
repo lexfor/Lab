@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { STORAGE_NAME } from './constants.js';
+import { SERVER_PORT, STORAGE_NAME } from './constants.js';
 
 dotenv.config();
 
@@ -7,59 +7,65 @@ const env = process.env.NODE_ENV;
 
 const memory = {
   app: {
-    port: parseInt(process.env.DEV_APP_PORT, 10) || 3000,
+    port: parseInt(process.env.DEV_APP_PORT, 10) || SERVER_PORT.APP_PORT,
   },
 
   queueStorage: {
     name: process.env.QUEUE_STORAGE,
-    port: 6379,
+    host: process.env.QUEUE_HOST,
+    port: SERVER_PORT.REDIS_PORT,
   },
 
   storage: {
     name: STORAGE_NAME.MEMORY,
-    port: 6379,
+    host: process.env.STORAGE_HOST,
+    port: SERVER_PORT.REDIS_PORT,
   },
 };
 
 const redis = {
   app: {
-    port: parseInt(process.env.DEV_APP_PORT, 10) || 3000,
+    port: parseInt(process.env.DEV_APP_PORT, 10) || SERVER_PORT.APP_PORT,
   },
 
   queueStorage: {
     name: process.env.QUEUE_STORAGE,
-    port: 6379,
+    host: process.env.QUEUE_HOST,
+    port: SERVER_PORT.REDIS_PORT,
   },
 
   storage: {
     name: STORAGE_NAME.REDIS,
-    port: 6379,
+    host: process.env.STORAGE_HOST,
+    port: SERVER_PORT.REDIS_PORT,
   },
 };
 
 const sql = {
   app: {
-    port: parseInt(process.env.DEV_APP_PORT, 10) || 3000,
+    port: parseInt(process.env.DEV_APP_PORT, 10) || SERVER_PORT.APP_PORT,
   },
 
   queueStorage: {
     name: process.env.QUEUE_STORAGE,
-    port: 6379,
+    host: process.env.QUEUE_HOST,
+    port: SERVER_PORT.REDIS_PORT,
   },
 
   storage: {
     name: STORAGE_NAME.SQL,
-    port: 3306,
+    host: process.env.STORAGE_HOST,
+    port: SERVER_PORT.SQL_PORT,
   },
 };
 
 const test = {
   app: {
-    port: parseInt(process.env.DEV_APP_PORT, 10) || 3000,
+    port: parseInt(process.env.DEV_APP_PORT, 10) || SERVER_PORT.APP_PORT,
   },
   storage: {
     name: process.env.TEST_STORAGE,
-    port: 6379,
+    port: SERVER_PORT.REDIS_PORT,
   },
 };
 
@@ -74,10 +80,10 @@ const envConfig = config[env];
 export { envConfig };
 
 const DB_ACCESS = {
-  host: 'localhost',
+  host: process.env.STORAGE_HOST,
   user: 'root',
   password: 'Timafifa14',
-  port: 3306,
+  port: SERVER_PORT.SQL_PORT,
   database: 'lab',
   dialect: 'mysql',
 };
