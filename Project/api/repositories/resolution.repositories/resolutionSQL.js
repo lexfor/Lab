@@ -5,32 +5,32 @@ export default class ResolutionSQL {
     this.resolutionModel = resolution;
   }
 
-  async create(patientObject, resolutionValue, time) {
+  async create(patient, resolutionValue, time) {
     const result = await this.resolutionModel.create({
       value: resolutionValue,
       delay: time,
-      patient_id: patientObject.id,
+      patient_id: patient.id,
     });
     console.log('create resolution with value :', result.value);
     return result;
   }
 
-  async update(resolutionObject, resolutionValue, time) {
+  async update(resolution, resolutionValue, time) {
     await this.resolutionModel.update({
       value: resolutionValue,
       delay: time,
       createdTime: new Date().getTime(),
     }, {
       where: {
-        id: resolutionObject.id,
+        id: resolution.id,
       },
     });
   }
 
-  async getResolution(patientObject) {
+  async get(patient) {
     const result = await this.resolutionModel.findOne({
       where: {
-        patient_id: patientObject.id,
+        patient_id: patient.id,
       },
     });
     if (!result) {
@@ -43,26 +43,13 @@ export default class ResolutionSQL {
     return result;
   }
 
-  async get(resolutionObject) {
-    const result = await this.resolutionModel.findOne({
-      where: {
-        id: resolutionObject.id,
-      },
-    });
-    if (!result) {
-      return '';
-    }
-    console.log('find resolution :', result.value);
-    return result;
-  }
-
-  async delete(resolutionObject) {
+  async delete(resolution) {
     await this.resolutionModel.update({
       value: NOT_AVAILABLE,
       delay: null,
     }, {
       where: {
-        id: resolutionObject.id,
+        id: resolution.id,
       },
     });
   }

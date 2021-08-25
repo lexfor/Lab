@@ -2,28 +2,28 @@ import { v4 as uuidv4 } from 'uuid';
 
 class PatientMemory {
   constructor() {
-    this.patient = [];
+    this.patients = [];
   }
 
-  async create(value) {
+  async create(patientName) {
     const uuid = uuidv4();
-    const patientObject = { id: uuid, name: value };
-    this.patient.push(patientObject);
+    const patientObject = { id: uuid, name: patientName };
+    this.patients.push(patientObject);
     return patientObject;
   }
 
-  async update(patientObject, value) {
-    this.patient.forEach((item, index) => {
-      if (item.id === patientObject.id) {
-        this.patient[index].name = value;
+  async update(patient, patientName) {
+    this.patients.forEach((item, index) => {
+      if (item.id === patient.id) {
+        this.patients[index].name = patientName;
       }
     });
-    return { id: patientObject.id, name: value };
+    return { id: patient.id, name: patientName };
   }
 
-  async find(patientName) {
+  async getByName(patientName) {
     let result = {};
-    this.patient.forEach((item) => {
+    this.patients.forEach((item) => {
       if (item.name === patientName) {
         result = item;
       }
@@ -31,9 +31,9 @@ class PatientMemory {
     return result;
   }
 
-  async get(patientID) {
+  async getByID(patientID) {
     let result = {};
-    this.patient.forEach((item) => {
+    this.patients.forEach((item) => {
       if (item.id === patientID) {
         result = item;
       }
@@ -41,19 +41,19 @@ class PatientMemory {
     return result;
   }
 
-  async delete(patientObject) {
+  async delete(patient) {
     let result;
-    this.patient.forEach((item, index) => {
-      if (item.id === patientObject.id) {
+    this.patients.forEach((item, index) => {
+      if (item.id === patient.id) {
         result = index;
       }
     });
-    this.patient.splice(result, 1);
+    this.patients.splice(result, 1);
     return result;
   }
 
   async getAllNames() {
-    return this.patient.map((item) => item.name);
+    return this.patients.map((item) => item.name);
   }
 }
 

@@ -6,12 +6,12 @@ export default class PatientRedis {
     this.client = client;
   }
 
-  async create(value) {
-    const key = uuidv4();
+  async create(patientName) {
+    const uuid = uuidv4();
     const hsetAsync = promisify(this.client.hset).bind(this.client);
-    await hsetAsync('names', key, value);
-    const patient = { id: key, name: value };
-    return patient;
+    await hsetAsync('names', uuid, patientName);
+    const result = { id: uuid, name: patientName };
+    return result;
   }
 
   async update(patient, value) {
@@ -19,11 +19,11 @@ export default class PatientRedis {
     const hdelAsync = promisify(this.client.hdel).bind(this.client);
     await hdelAsync('names', patient.id);
     await hsetAsync('names', patient.id, value);
-    const patientObject = { id: patient.id, name: value };
-    return patientObject;
+    const result = { id: patient.id, name: value };
+    return result;
   }
 
-  async find(patientName) {
+  async getByName(patientName) {
     const hgetallAsync = promisify(this.client.hgetall).bind(this.client);
     const keysAndValuesObject = await hgetallAsync('names');
     const keysAndValuesArray = Object.entries(keysAndValuesObject);
@@ -36,7 +36,7 @@ export default class PatientRedis {
     return result;
   }
 
-  async get(patientID) {
+  async getByID(patientID) {
     try {
       const hgetAsync = promisify(this.client.hget).bind(this.client);
       const result = {};

@@ -1,16 +1,17 @@
 import PatientService from '../api/service/PatientService.js';
-import ResolutionService from '../api/service/ResolutionService.js';
 import { patientMemoryRepository } from '../api/repositories/patient.repositories/patientMemory.js';
 import { resolutionMemoryRepository } from '../api/repositories/resolution.repositories/resolutionMemory.js';
+import { queueMemoryRepository } from '../api/repositories/queue.repositories/queueMemory.js';
 
 jest.mock('../api/repositories/patient.repositories/patientMemory.js');
-jest.mock('../api/service/ResolutionService.js');
+jest.mock('../api/repositories/resolution.repositories/resolutionMemory.js');
+jest.mock('../api/repositories/queue.repositories/queueMemory.js');
 
 describe('patient service unit tests', () => {
-  const resolutions = new ResolutionService(resolutionMemoryRepository);
   const patients = new PatientService(
     patientMemoryRepository,
-    resolutions,
+    resolutionMemoryRepository,
+    queueMemoryRepository,
   );
 
   test('create patient', async () => {
@@ -23,63 +24,44 @@ describe('patient service unit tests', () => {
     expect(result.name).toEqual('Tim');
   });
 
-  test('find patient resolution id', async () => {
-    patientMemoryRepository.find.mockImplementation((value) => ({ id: '123', name: value }));
-    resolutions.findResolution.mockImplementation((patient) => {
+  test('find patient resolution', async () => {
+    patientMemoryRepository.getByName.mockImplementation((value) => ({ id: '123', name: value }));
+    resolutionMemoryRepository.get.mockImplementation((patient) => {
       expect(patient.id).toEqual('123');
       expect(patient.name).toEqual('Tim');
       return { id: '234', value: 'Good' };
     });
-    const result = await patients.findResolution('Tim');
-    expect(result.id).toEqual('234');
-    expect(result.value).toEqual('Good');
+    const result = await patients.findPatientResolution('Tim');
+    expect(result).toEqual('Good');
   });
 
   test('add patient resolution', async () => {
-    patientMemoryRepository.find.mockImplementation((value) => ({ id: '123', name: value }));
-    resolutions.addResolution.mockImplementation((patient, resolution, time) => {
+    queueMemoryRepository.getFirst.mockResolvedValue('123');
+    patientMemoryRepository.getByID.mockImplementation((value) => ({ id: value, name: 'Tim' }));
+    resolutionMemoryRepository.create.mockImplementation((patient, resolution, time) => {
       expect(patient.id).toEqual('123');
       expect(patient.name).toEqual('Tim');
       expect(resolution).toEqual('aaaaaa');
       expect(time).toEqual(process.env.TTL_DELAY);
       return { id: '234', value: 'Good' };
     });
-    const result = await patients.addResolution('Tim', 'aaaaaa', process.env.TTL_DELAY);
-    expect(result.id).toEqual('234');
-    expect(result.value).toEqual('Good');
-  });
-
-  test('get patient name', async () => {
-    patientMemoryRepository.get.mockImplementation((patientID) => {
-      expect(patientID).toEqual('123');
-      return { name: 'Tim', id: patientID };
-    });
-    const result = await patients.getPatient('123');
-    expect(result.name).toEqual('Tim');
-    expect(result.id).toEqual('123');
-  });
-
-  test('get patient resolution', async () => {
-    patientMemoryRepository.find.mockImplementation((value) => ({ id: '123', name: value }));
-    resolutions.findResolution.mockImplementation((patient) => {
-      expect(patient.id).toEqual('123');
-      expect(patient.name).toEqual('Tim');
-      return { id: '234', value: 'Good' };
-    });
-    const result = await patients.getResolutionValue('Tim');
+    const result = await patients.addPatientResolution('aaaaaa', process.env.TTL_DELAY);
     expect(result).toEqual('Good');
   });
 
   test('delete patient', async () => {
-    patientMemoryRepository.find.mockImplementation((value) => ({ id: '123', name: value }));
-    resolutions.deleteResolution.mockImplementation((patient) => {
+    patientMemoryRepository.getByName.mockImplementation((value) => ({ id: '123', name: value }));
+    resolutionMemoryRepository.get.mockImplementation((patient) => {
       expect(patient.id).toEqual('123');
       expect(patient.name).toEqual('Tim');
       return { id: '234', value: 'bad' };
     });
-    const result = await patients.deleteResolution('Tim');
-    expect(result.id).toEqual('123');
-    expect(result.name).toEqual('Tim');
+    resolutionMemoryRepository.delete.mockImplementation((resolution) => {
+      expect(resolution.id).toEqual('234');
+      expect(resolution.value).toEqual('bad');
+    });
+    const result = await patients.deletePatientResolution('Tim');
+    expect(result).toEqual('bad');
   });
 
   test('get all patients names', async () => {

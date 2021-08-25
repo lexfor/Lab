@@ -3,13 +3,12 @@ import QueueController from './api/controllers/queueController.js';
 import PatientController from './api/controllers/patientController.js';
 import PatientService from './api/service/PatientService.js';
 import QueueService from './api/service/QueueService.js';
-import ResolutionService from './api/service/ResolutionService.js';
 import QueueRedis from './api/repositories/queue.repositories/queueRedis.js';
 import PatientRedis from './api/repositories/patient.repositories/patientRedis.js';
 import ResolutionRedis from './api/repositories/resolution.repositories/resolutionRedis.js';
 import PatientSQL from './api/repositories/patient.repositories/patientSQL.js';
 import ResolutionSQL from './api/repositories/resolution.repositories/resolutionSQL.js';
-import { sequelize } from './modelInitializator.js';
+import { sequelize } from './DBInitializator.js';
 
 import { queueMemoryRepository } from './api/repositories/queue.repositories/queueMemory.js';
 import { patientMemoryRepository } from './api/repositories/patient.repositories/patientMemory.js';
@@ -29,18 +28,18 @@ class Injector {
           port: envConfig.storage.port,
         });
         client.flushdb();
-        this.patientStorage = new PatientRedis(client);
-        this.resolutionStorage = new ResolutionRedis(client);
+        this.patientRepository = new PatientRedis(client);
+        this.resolutionRepository = new ResolutionRedis(client);
         break;
       case 'sql':
         console.log('using SQL');
-        this.patientStorage = new PatientSQL(sequelize.models.patient);
-        this.resolutionStorage = new ResolutionSQL(sequelize.models.resolution);
+        this.patientRepository = new PatientSQL(sequelize.models.patient);
+        this.resolutionRepository = new ResolutionSQL(sequelize.models.resolution);
         break;
       default:
         console.log('using memory');
-        this.patientStorage = patientMemoryRepository;
-        this.resolutionStorage = resolutionMemoryRepository;
+        this.patientRepository = patientMemoryRepository;
+        this.resolutionRepository = resolutionMemoryRepository;
     }
     switch (envConfig.queueStorage.name) {
       case 'redis':
@@ -50,16 +49,19 @@ class Injector {
           port: envConfig.queueStorage.port,
         });
         client.flushdb();
-        this.queueStorage = new QueueRedis(client);
+        this.queueRepository = new QueueRedis(client);
         break;
       default:
         console.log('using memory for queue');
-        this.queueStorage = queueMemoryRepository;
+        this.queueRepository = queueMemoryRepository;
         break;
     }
-    this.resolutionService = new ResolutionService(this.resolutionStorage);
-    this.patientService = new PatientService(this.patientStorage, this.resolutionService);
-    this.queueService = new QueueService(this.queueStorage, this.patientService);
+    this.patientService = new PatientService(
+      this.patientRepository,
+      this.resolutionRepository,
+      this.queueRepository,
+    );
+    this.queueService = new QueueService(this.queueRepository, this.patientRepository);
     this.queueController = new QueueController(this.queueService);
     this.resolutionController = new PatientController(this.queueService, this.patientService);
   }

@@ -1,11 +1,11 @@
 export default class QueueService {
-  constructor(queueRepository, patientService) {
+  constructor(queueRepository, patientRepository) {
     this.queueRepository = queueRepository;
-    this.patientService = patientService;
+    this.patientRepository = patientRepository;
   }
 
   async push(value) {
-    const patient = await this.patientService.createPatient(value);
+    const patient = await this.patientRepository.create(value);
     await this.queueRepository.push(patient);
     return 'pushed';
   }
@@ -17,14 +17,14 @@ export default class QueueService {
 
   async getCurrent() {
     const patientID = await this.queueRepository.getFirst();
-    const patient = await this.patientService.getPatient(patientID);
+    const patient = await this.patientRepository.getByID(patientID);
     return patient.name;
   }
 
   async isExist(value) {
-    const allPatientInQueue = await this.queueRepository.getAll();
-    let names = allPatientInQueue.map((item) => {
-      const res = this.patientService.getPatient(item);
+    const allPatientIDInQueue = await this.queueRepository.getAll();
+    let names = allPatientIDInQueue.map((patientID) => {
+      const res = this.patientRepository.getByID(patientID);
       return res.name;
     });
     names = await Promise.all(names);

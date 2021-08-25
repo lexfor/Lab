@@ -1,16 +1,10 @@
-export default class PatientService {
-  constructor(patientRepository, resolutionService) {
-    this.patientRepository = patientRepository;
-    this.resolutionService = resolutionService;
-  }
+import { NOT_AVAILABLE } from '../../constants.js';
 
-  async findResolution(value) {
-    const patient = await this.patientRepository.find(value);
-    const resolution = await this.resolutionService.findResolution(patient);
-    if (!resolution.value) {
-      return 'not found';
-    }
-    return resolution;
+export default class PatientService {
+  constructor(patientRepository, resolutionRepository, queueRepository) {
+    this.patientRepository = patientRepository;
+    this.resolutionRepository = resolutionRepository;
+    this.queueRepository = queueRepository;
   }
 
   async createPatient(value) {
@@ -18,29 +12,27 @@ export default class PatientService {
     return patient;
   }
 
-  async getPatient(patientID) {
-    const result = await this.patientRepository.get(patientID);
-    return result;
+  async addPatientResolution(value, time) {
+    const patientID = await this.queueRepository.getFirst();
+    const patient = await this.patientRepository.getByID(patientID);
+    const resolution = await this.resolutionRepository.create(patient, value, time);
+    return resolution.value;
   }
 
-  async addResolution(value, resolution, time) {
-    const patient = await this.patientRepository.find(value);
-    const resolutionResult = await this.resolutionService.addResolution(patient, resolution, time);
-    return resolutionResult;
-  }
-
-  async getResolutionValue(value) {
-    const result = await this.findResolution(value);
-    if (!result.value) {
-      return 'not found';
+  async findPatientResolution(patientName) {
+    const patient = await this.patientRepository.getByName(patientName);
+    const resolution = await this.resolutionRepository.get(patient);
+    if (!resolution.value) {
+      return NOT_AVAILABLE;
     }
-    return result.value;
+    return resolution.value;
   }
 
-  async deleteResolution(value) {
-    const patient = await this.patientRepository.find(value);
-    await this.resolutionService.deleteResolution(patient);
-    return patient;
+  async deletePatientResolution(patientName) {
+    const patient = await this.patientRepository.getByName(patientName);
+    const resolution = await this.resolutionRepository.get(patient);
+    await this.resolutionRepository.delete(resolution);
+    return resolution.value;
   }
 
   async getAllPatientNames() {

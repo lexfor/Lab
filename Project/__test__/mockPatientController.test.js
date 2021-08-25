@@ -1,5 +1,4 @@
 import PatientService from '../api/service/PatientService.js';
-import ResolutionService from '../api/service/ResolutionService.js';
 import QueueService from '../api/service/QueueService.js';
 import PatientController from '../api/controllers/patientController.js';
 import { patientMemoryRepository } from '../api/repositories/patient.repositories/patientMemory.js';
@@ -11,12 +10,12 @@ jest.mock('../api/service/PatientService.js');
 jest.mock('../api/service/QueueService.js');
 
 describe('queue controller unit tests', () => {
-  const resolutionService = new ResolutionService(resolutionMemoryRepository);
   const patientsService = new PatientService(
     patientMemoryRepository,
-    resolutionService,
+    resolutionMemoryRepository,
+    queueMemoryRepository,
   );
-  const queueService = new QueueService(queueMemoryRepository, patientsService);
+  const queueService = new QueueService(queueMemoryRepository, patientMemoryRepository);
   const patientController = new PatientController(queueService, patientsService);
 
   test('check length', async () => {
@@ -69,9 +68,7 @@ describe('queue controller unit tests', () => {
 
   test('set resolution for current patient', async () => {
     queueService.isEmpty.mockResolvedValue(false);
-    queueService.getCurrent.mockResolvedValue('Labkov');
-    patientsService.addResolution.mockImplementation((name, resolution, timeDelay) => {
-      expect(name).toEqual('Labkov');
+    patientsService.addPatientResolution.mockImplementation((resolution, timeDelay) => {
       expect(resolution).toEqual('good');
       expect(timeDelay).toEqual(process.env.TTL_DELAY);
       return 'updated';
@@ -90,9 +87,7 @@ describe('queue controller unit tests', () => {
 
   test('set resolution for current patient with ttl', async () => {
     queueService.isEmpty.mockResolvedValue(false);
-    queueService.getCurrent.mockResolvedValue('Labkov');
-    patientsService.addResolution.mockImplementation((name, resolution, timeDelay) => {
-      expect(name).toEqual('Labkov');
+    patientsService.addPatientResolution.mockImplementation((resolution, timeDelay) => {
       expect(resolution).toEqual('good');
       expect(timeDelay).toEqual(20000);
       return 'updated';
@@ -122,7 +117,7 @@ describe('queue controller unit tests', () => {
       expect(name).toEqual('Andrei');
       return true;
     });
-    patientsService.getResolutionValue.mockImplementation((name) => {
+    patientsService.findPatientResolution.mockImplementation((name) => {
       expect(name).toEqual('Andrei');
       return 'All fine';
     });
@@ -146,7 +141,7 @@ describe('queue controller unit tests', () => {
       expect(name).toEqual('Andrei');
       return true;
     });
-    patientsService.deleteResolution.mockImplementation((name) => {
+    patientsService.deletePatientResolution.mockImplementation((name) => {
       expect(name).toEqual('Andrei');
       return 'deleted';
     });

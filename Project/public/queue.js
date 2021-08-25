@@ -5,10 +5,12 @@ async function getAllValue() {
   const select = document.getElementById('valueSelect');
   select.options.length = 0;
   select.append(new Option('Выберите', 'Выберите'));
-  response.forEach((item) => {
-    const option = new Option(item, item);
-    select.append(option);
-  });
+  if (Array.isArray(response)) {
+    response.forEach((item) => {
+      const option = new Option(item, item);
+      select.append(option);
+    });
+  }
 }
 
 async function Add() {

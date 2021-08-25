@@ -32,7 +32,7 @@ class ResolutionMemory {
     });
   }
 
-  async getResolution(patient) {
+  async get(patient) {
     let result;
     this.resolutions.forEach((item) => {
       if (item.patient_id === patient.id) {

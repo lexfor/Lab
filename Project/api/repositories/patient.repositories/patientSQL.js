@@ -3,24 +3,24 @@ export default class PatientSQL {
     this.patientModel = patient;
   }
 
-  async create(value) {
-    const result = await this.patientModel.create({ name: value });
+  async create(patientName) {
+    const result = await this.patientModel.create({ name: patientName });
     console.log('create patient with name :', result.name);
     return result;
   }
 
-  async update(patientObject, value) {
+  async update(patient, value) {
     const result = await this.patientModel.update({
       name: value,
     }, {
       where: {
-        id: patientObject.id,
+        id: patient.id,
       },
     });
     return result;
   }
 
-  async find(patientName) {
+  async getByName(patientName) {
     const result = await this.patientModel.findOne({
       where: {
         name: patientName,
@@ -30,7 +30,7 @@ export default class PatientSQL {
     return result;
   }
 
-  async get(patientID) {
+  async getByID(patientID) {
     const result = await this.patientModel.findOne({
       where: {
         id: patientID,
@@ -40,10 +40,10 @@ export default class PatientSQL {
     return result;
   }
 
-  async delete(patientObject) {
+  async delete(patient) {
     await this.patientModel.destroy({
       where: {
-        id: patientObject.id,
+        id: patient.id,
       },
     });
   }

@@ -46,11 +46,7 @@ export default class PatientController {
     } else {
       delay = process.env.TTL_DELAY;
     }
-    res.setValue = await this.patientsService.addResolution(
-      await this.queueService.getCurrent(),
-      body.value,
-      delay,
-    );
+    res.setValue = await this.patientsService.addPatientResolution(body.value, delay);
     return checkOutputStatus(res);
   }
 
@@ -68,7 +64,7 @@ export default class PatientController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.patientsService.getResolutionValue(body);
+    res.setValue = await this.patientsService.findPatientResolution(body);
     return checkOutputStatus(res);
   }
 
@@ -77,7 +73,7 @@ export default class PatientController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.patientsService.deleteResolution(body);
+    res.setValue = await this.patientsService.deletePatientResolution(body);
     return checkOutputStatus(res);
   }
 }

@@ -1,19 +1,18 @@
 import QueueService from '../api/service/QueueService.js';
 import { queueMemoryRepository } from '../api/repositories/queue.repositories/queueMemory';
-import PatientService from '../api/service/PatientService.js';
+import { patientMemoryRepository } from '../api/repositories/patient.repositories/patientMemory.js';
 
 jest.mock('../api/repositories/queue.repositories/queueMemory');
-jest.mock('../api/service/PatientService.js');
+jest.mock('../api/repositories/patient.repositories/patientMemory.js');
 
 describe('queue service unit tests', () => {
-  const patients = new PatientService();
   const queue = new QueueService(
     queueMemoryRepository,
-    patients,
+    patientMemoryRepository,
   );
 
   test('push patient in queue', async () => {
-    patients.createPatient.mockImplementation((name) => {
+    patientMemoryRepository.create.mockImplementation((name) => {
       expect(name).toEqual('Tim');
       return '123';
     });
@@ -32,7 +31,7 @@ describe('queue service unit tests', () => {
 
   test('get current patient from queue', async () => {
     queueMemoryRepository.getFirst.mockResolvedValue('123');
-    patients.getPatient.mockImplementation((id) => {
+    patientMemoryRepository.getByID.mockImplementation((id) => {
       expect(id).toEqual('123');
       return { name: 'Tim', id: '123' };
     });
@@ -42,7 +41,7 @@ describe('queue service unit tests', () => {
 
   test('check is exist patient', async () => {
     queueMemoryRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
-    patients.getPatient.mockImplementation((item) => {
+    patientMemoryRepository.getByID.mockImplementation((item) => {
       switch (item) {
         case 'aaa':
           return { name: 'Tim', id: 'aaa' };
@@ -60,7 +59,7 @@ describe('queue service unit tests', () => {
 
   test('check is exist patient', async () => {
     queueMemoryRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
-    patients.getPatient.mockImplementation((item) => {
+    patientMemoryRepository.getByID.mockImplementation((item) => {
       switch (item) {
         case 'aaa':
           return { name: 'Tim', id: 'aaa' };
