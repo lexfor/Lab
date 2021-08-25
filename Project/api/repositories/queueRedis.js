@@ -48,5 +48,5 @@ class RedisQueue {
   }
 }
 
-const queueInRedisStorage = new RedisQueue();
-export { queueInRedisStorage };
+const queueRedisRepository = new RedisQueue();
+export { queueRedisRepository };

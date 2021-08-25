@@ -1,19 +1,19 @@
 import PatientService from '../api/service/PatientService.js';
 import QueueService from '../api/service/QueueService.js';
 import QueueController from '../api/controllers/queueController.js';
-import { patientInMemoryStorage } from '../api/repositories/patientStorage.js';
-import { resolutionInMemoryStorage } from '../api/repositories/resolutionStorage.js';
-import { queueInMemoryStorage } from '../api/repositories/queueStorage.js';
+import { patientMemoryRepository } from '../api/repositories/patientMemory.js';
+import { resolutionMemoryRepository } from '../api/repositories/resolutionMemory.js';
+import { queueMemoryRepository } from '../api/repositories/queueMemory.js';
 import { NOT_AVAILABLE, STATUSES } from '../constants';
 
 jest.mock('../api/service/QueueService.js');
 
 describe('queue controller unit tests', () => {
   const patientsService = new PatientService(
-    patientInMemoryStorage,
-    resolutionInMemoryStorage,
+    patientMemoryRepository,
+    resolutionMemoryRepository,
   );
-  const queueService = new QueueService(queueInMemoryStorage, patientsService);
+  const queueService = new QueueService(queueMemoryRepository, patientsService);
   const queueController = new QueueController(queueService);
 
   test('check length', async () => {

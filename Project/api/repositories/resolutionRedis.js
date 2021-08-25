@@ -78,5 +78,5 @@ class ResolutionRedis {
   }
 }
 
-const resolutionInRedisStorage = new ResolutionRedis();
-export { resolutionInRedisStorage };
+const resolutionRedisRepository = new ResolutionRedis();
+export { resolutionRedisRepository };

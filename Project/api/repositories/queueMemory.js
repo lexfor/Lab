@@ -1,4 +1,4 @@
-class QueueStorage {
+class QueueMemory {
   constructor() {
     this.fifo = [];
   }
@@ -25,5 +25,5 @@ class QueueStorage {
   }
 }
 
-const queueInMemoryStorage = new QueueStorage();
-export { queueInMemoryStorage };
+const queueMemoryRepository = new QueueMemory();
+export { queueMemoryRepository };

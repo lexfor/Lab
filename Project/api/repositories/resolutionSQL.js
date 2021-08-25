@@ -78,5 +78,5 @@ class ResolutionSQL {
   }
 }
 
-const resolutionInSQL = new ResolutionSQL();
-export { resolutionInSQL };
+const resolutionSQLRepository = new ResolutionSQL();
+export { resolutionSQLRepository };

@@ -84,5 +84,5 @@ class PatientRedis {
   }
 }
 
-const patientInRedisStorage = new PatientRedis();
-export { patientInRedisStorage };
+const patientRedisRepository = new PatientRedis();
+export { patientRedisRepository };

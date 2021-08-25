@@ -3,14 +3,14 @@ import PatientController from './api/controllers/patientController.js';
 import PatientService from './api/service/PatientService.js';
 import QueueService from './api/service/QueueService.js';
 
-import { queueInMemoryStorage } from './api/repositories/queueStorage.js';
-import { patientInMemoryStorage } from './api/repositories/patientStorage.js';
-import { resolutionInMemoryStorage } from './api/repositories/resolutionStorage.js';
-import { queueInRedisStorage } from './api/repositories/queueRedis.js';
-import { patientInRedisStorage } from './api/repositories/patientRedis.js';
-import { resolutionInRedisStorage } from './api/repositories/resolutionRedis.js';
-import { patientInSQL } from './api/repositories/patientSQL.js';
-import { resolutionInSQL } from './api/repositories/resolutionSQL.js';
+import { queueMemoryRepository } from './api/repositories/queueMemory.js';
+import { patientMemoryRepository } from './api/repositories/patientMemory.js';
+import { resolutionMemoryRepository } from './api/repositories/resolutionMemory.js';
+import { queueRedisRepository } from './api/repositories/queueRedis.js';
+import { patientRedisRepository } from './api/repositories/patientRedis.js';
+import { resolutionRedisRepository } from './api/repositories/resolutionRedis.js';
+import { patientSQLRepository } from './api/repositories/patientSQL.js';
+import { resolutionSQLRepository } from './api/repositories/resolutionSQL.js';
 
 import { envConfig } from './config.js';
 
@@ -19,27 +19,27 @@ class Injector {
     switch (envConfig.storage.name) {
       case 'redis':
         console.log('using redis');
-        this.patientStorage = patientInRedisStorage;
-        this.resolutionStorage = resolutionInRedisStorage;
+        this.patientStorage = patientRedisRepository;
+        this.resolutionStorage = resolutionRedisRepository;
         break;
       case 'sql':
         console.log('using SQL');
-        this.patientStorage = patientInSQL;
-        this.resolutionStorage = resolutionInSQL;
+        this.patientStorage = patientSQLRepository;
+        this.resolutionStorage = resolutionSQLRepository;
         break;
       default:
         console.log('using memory');
-        this.patientStorage = patientInMemoryStorage;
-        this.resolutionStorage = resolutionInMemoryStorage;
+        this.patientStorage = patientMemoryRepository;
+        this.resolutionStorage = resolutionMemoryRepository;
     }
     switch (envConfig.queueStorage.name) {
       case 'redis':
         console.log('using redis for queue');
-        this.queueStorage = queueInRedisStorage;
+        this.queueStorage = queueRedisRepository;
         break;
       default:
         console.log('using memory for queue');
-        this.queueStorage = queueInMemoryStorage;
+        this.queueStorage = queueMemoryRepository;
         break;
     }
     this.patientService = new PatientService(this.patientStorage, this.resolutionStorage);

@@ -59,5 +59,5 @@ class PatientSQL {
   }
 }
 
-const patientInSQL = new PatientSQL();
-export { patientInSQL };
+const patientSQLRepository = new PatientSQL();
+export { patientSQLRepository };

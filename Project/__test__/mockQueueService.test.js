@@ -1,14 +1,14 @@
 import QueueService from '../api/service/QueueService.js';
-import { queueInMemoryStorage } from '../api/repositories/queueStorage';
+import { queueMemoryRepository } from '../api/repositories/queueMemory';
 import PatientService from '../api/service/PatientService.js';
 
-jest.mock('../api/repositories/queueStorage');
+jest.mock('../api/repositories/queueMemory');
 jest.mock('../api/service/PatientService.js');
 
 describe('queue service unit tests', () => {
   const patients = new PatientService();
   const queue = new QueueService(
-    queueInMemoryStorage,
+    queueMemoryRepository,
     patients,
   );
 
@@ -17,7 +17,7 @@ describe('queue service unit tests', () => {
       expect(name).toEqual('Tim');
       return '123';
     });
-    queueInMemoryStorage.push.mockImplementation((id) => {
+    queueMemoryRepository.push.mockImplementation((id) => {
       expect(id).toEqual('123');
     });
     const result = await queue.push('Tim');
@@ -25,13 +25,13 @@ describe('queue service unit tests', () => {
   });
 
   test('pop patient from queue', async () => {
-    queueInMemoryStorage.shift.mockImplementation(() => 'shifted');
+    queueMemoryRepository.shift.mockImplementation(() => 'shifted');
     const result = await queue.shift();
     expect(result).toEqual('shifted');
   });
 
   test('get current patient from queue', async () => {
-    queueInMemoryStorage.getFirst.mockResolvedValue('123');
+    queueMemoryRepository.getFirst.mockResolvedValue('123');
     patients.getPatientName.mockImplementation((id) => {
       expect(id).toEqual('123');
       return 'Tim';
@@ -41,7 +41,7 @@ describe('queue service unit tests', () => {
   });
 
   test('check is exist patient', async () => {
-    queueInMemoryStorage.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
+    queueMemoryRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
     patients.getPatientName.mockImplementation((item) => {
       switch (item) {
         case 'aaa':
@@ -59,7 +59,7 @@ describe('queue service unit tests', () => {
   });
 
   test('check is exist patient', async () => {
-    queueInMemoryStorage.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
+    queueMemoryRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
     patients.getPatientName.mockImplementation((item) => {
       switch (item) {
         case 'aaa':
@@ -77,13 +77,13 @@ describe('queue service unit tests', () => {
   });
 
   test('check is patient storage empty', async () => {
-    queueInMemoryStorage.getAll.mockImplementation(() => ['Tim', 'Dima', 'Andrei']);
+    queueMemoryRepository.getAll.mockImplementation(() => ['Tim', 'Dima', 'Andrei']);
     const result = await queue.isEmpty();
     expect(result).toEqual(false);
   });
 
   test('check is patient storage empty', async () => {
-    queueInMemoryStorage.getAll.mockImplementation(() => []);
+    queueMemoryRepository.getAll.mockImplementation(() => []);
     const result = await queue.isEmpty();
     expect(result).toEqual(true);
   });

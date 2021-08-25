@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { NOT_AVAILABLE } from '../../constants.js';
 
-class ResolutionStorage {
+class ResolutionMemory {
   constructor() {
     this.resolutions = [];
   }
@@ -76,5 +76,5 @@ class ResolutionStorage {
   }
 }
 
-const resolutionInMemoryStorage = new ResolutionStorage();
-export { resolutionInMemoryStorage };
+const resolutionMemoryRepository = new ResolutionMemory();
+export { resolutionMemoryRepository };

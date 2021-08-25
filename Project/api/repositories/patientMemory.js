@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-class PatientStorage {
+class PatientMemory {
   constructor() {
     this.patient = [];
   }
@@ -56,5 +56,5 @@ class PatientStorage {
   }
 }
 
-const patientInMemoryStorage = new PatientStorage();
-export { patientInMemoryStorage };
+const patientMemoryRepository = new PatientMemory();
+export { patientMemoryRepository };
