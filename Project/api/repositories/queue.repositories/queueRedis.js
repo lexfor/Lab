@@ -5,9 +5,9 @@ export default class QueueRedis {
     this.client = redisClient;
   }
 
-  async push(id) {
+  async push(patient) {
     const rpushAsync = promisify(this.client.rpush).bind(this.client);
-    await rpushAsync('queue', id);
+    await rpushAsync('queue', patient.id);
     return 'pushed';
   }
 

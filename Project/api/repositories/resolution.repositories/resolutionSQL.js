@@ -1,75 +1,74 @@
-import { resolution } from '../../models/Model.js';
 import { NOT_AVAILABLE } from '../../../constants.js';
 
-class ResolutionSQL {
-  async create(patientID, resolutionValue, time) {
-    let result = await resolution.create({
+export default class ResolutionSQL {
+  constructor(resolution) {
+    this.resolutionModel = resolution;
+  }
+
+  async create(patientObject, resolutionValue, time) {
+    const result = await this.resolutionModel.create({
       value: resolutionValue,
       delay: time,
-      createdTime: new Date().getTime(),
-      patient_id: patientID,
+      patient_id: patientObject.id,
     });
     console.log('create resolution with value :', result.value);
-    result = result.id;
     return result;
   }
 
-  async update(resolutionID, resolutionValue, time) {
-    await resolution.update({
+  async update(resolutionObject, resolutionValue, time) {
+    await this.resolutionModel.update({
       value: resolutionValue,
       delay: time,
       createdTime: new Date().getTime(),
     }, {
       where: {
-        id: resolutionID,
+        id: resolutionObject.id,
       },
     });
   }
 
-  async getResolutionID(patientID) {
-    let result = await resolution.findOne({
+  async getResolution(patientObject) {
+    const result = await this.resolutionModel.findOne({
       where: {
-        patient_id: patientID,
+        patient_id: patientObject.id,
       },
     });
     if (!result) {
       return '';
     }
-    console.log('find resolution with name :', result.name);
-    result = result.id;
+    if (new Date().getTime() - new Date(result.updatedAt).getTime() > result.delay) {
+      result.value = NOT_AVAILABLE;
+    }
+    console.log('find resolution with name :', result.value);
     return result;
   }
 
-  async get(resolutionID) {
-    let result = await resolution.findOne({
+  async get(resolutionObject) {
+    const result = await this.resolutionModel.findOne({
       where: {
-        id: resolutionID,
+        id: resolutionObject.id,
       },
     });
     if (!result) {
       return '';
-    }
-    if (new Date().getTime() - result.createdTime >= result.delay) {
-      return NOT_AVAILABLE;
     }
     console.log('find resolution :', result.value);
-    result = result.value;
     return result;
   }
 
-  async delete(resolutionID) {
-    await resolution.update({
+  async delete(resolutionObject) {
+    await this.resolutionModel.update({
       value: NOT_AVAILABLE,
       delay: null,
     }, {
       where: {
-        id: resolutionID,
+        id: resolutionObject.id,
       },
     });
   }
 
   async getAll() {
-    const rows = await resolution.findAll({
+    const rows = await this.resolutionModel.findAll({
       attributes: ['id'],
     });
     const result = rows.map((r) => r.dataValues.id);
@@ -77,6 +76,3 @@ class ResolutionSQL {
     return result;
   }
 }
-
-const resolutionSQLRepository = new ResolutionSQL();
-export { resolutionSQLRepository };

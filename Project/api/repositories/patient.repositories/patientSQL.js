@@ -1,56 +1,55 @@
-import { patient } from '../../models/Model.js';
+export default class PatientSQL {
+  constructor(patient) {
+    this.patientModel = patient;
+  }
 
-class PatientSQL {
   async create(value) {
-    let result = await patient.create({ name: value });
+    const result = await this.patientModel.create({ name: value });
     console.log('create patient with name :', result.name);
-    result = result.id;
     return result;
   }
 
-  async update(patientID, value) {
-    await patient.update({
+  async update(patientObject, value) {
+    const result = await this.patientModel.update({
       name: value,
     }, {
       where: {
-        id: patientID,
+        id: patientObject.id,
       },
     });
-    return 'updated';
+    return result;
   }
 
   async find(patientName) {
-    let result = await patient.findOne({
+    const result = await this.patientModel.findOne({
       where: {
         name: patientName,
       },
     });
     console.log('find patient with name :', result.name);
-    result = result.id;
     return result;
   }
 
   async get(patientID) {
-    let result = await patient.findOne({
+    const result = await this.patientModel.findOne({
       where: {
         id: patientID,
       },
     });
     console.log('return patient with name :', result.name);
-    result = result.name;
     return result;
   }
 
-  async delete(patientID) {
-    await patient.destroy({
+  async delete(patientObject) {
+    await this.patientModel.destroy({
       where: {
-        id: patientID,
+        id: patientObject.id,
       },
     });
   }
 
   async getAllNames() {
-    const rows = await patient.findAll({
+    const rows = await this.patientModel.findAll({
       attributes: ['name'],
     });
     const result = rows.map((r) => r.dataValues.name);
@@ -58,6 +57,3 @@ class PatientSQL {
     return result;
   }
 }
-
-const patientSQLRepository = new PatientSQL();
-export { patientSQLRepository };

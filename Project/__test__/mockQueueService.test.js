@@ -32,9 +32,9 @@ describe('queue service unit tests', () => {
 
   test('get current patient from queue', async () => {
     queueMemoryRepository.getFirst.mockResolvedValue('123');
-    patients.getPatientName.mockImplementation((id) => {
+    patients.getPatient.mockImplementation((id) => {
       expect(id).toEqual('123');
-      return 'Tim';
+      return { name: 'Tim', id: '123' };
     });
     const result = await queue.getCurrent();
     expect(result).toEqual('Tim');
@@ -42,14 +42,14 @@ describe('queue service unit tests', () => {
 
   test('check is exist patient', async () => {
     queueMemoryRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
-    patients.getPatientName.mockImplementation((item) => {
+    patients.getPatient.mockImplementation((item) => {
       switch (item) {
         case 'aaa':
-          return 'Tim';
+          return { name: 'Tim', id: 'aaa' };
         case 'bbb':
-          return 'Dima';
+          return { name: 'Dima', id: 'bbb' };
         case 'ccc':
-          return 'Andrei';
+          return { name: 'Andrei', id: 'ccc' };
         default:
           return 'N/A';
       }
@@ -60,14 +60,14 @@ describe('queue service unit tests', () => {
 
   test('check is exist patient', async () => {
     queueMemoryRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
-    patients.getPatientName.mockImplementation((item) => {
+    patients.getPatient.mockImplementation((item) => {
       switch (item) {
         case 'aaa':
-          return 'Tim';
+          return { name: 'Tim', id: 'aaa' };
         case 'bbb':
-          return 'Dima';
+          return { name: 'Dima', id: 'bbb' };
         case 'ccc':
-          return 'Andrei';
+          return { name: 'Andrei', id: 'ccc' };
         default:
           return 'N/A';
       }

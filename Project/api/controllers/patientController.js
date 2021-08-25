@@ -68,7 +68,7 @@ export default class PatientController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.patientsService.getResolution(body);
+    res.setValue = await this.patientsService.getResolutionValue(body);
     return checkOutputStatus(res);
   }
 

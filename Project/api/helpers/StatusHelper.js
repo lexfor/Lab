@@ -26,6 +26,10 @@ export function checkOutputStatus(res) {
       res.setStatus = STATUSES.ACCEPTED;
       res.setValue = 'Accepted';
       break;
+    case {}:
+      res.setStatus = STATUSES.NOT_FOUND;
+      res.setValue = NOT_AVAILABLE;
+      break;
     default:
       res.setStatus = STATUSES.OK;
       break;

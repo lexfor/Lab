@@ -1,4 +1,5 @@
 import PatientService from '../api/service/PatientService.js';
+import ResolutionService from '../api/service/ResolutionService.js';
 import QueueService from '../api/service/QueueService.js';
 import PatientController from '../api/controllers/patientController.js';
 import { patientMemoryRepository } from '../api/repositories/patient.repositories/patientMemory.js';
@@ -10,9 +11,10 @@ jest.mock('../api/service/PatientService.js');
 jest.mock('../api/service/QueueService.js');
 
 describe('queue controller unit tests', () => {
+  const resolutionService = new ResolutionService(resolutionMemoryRepository);
   const patientsService = new PatientService(
     patientMemoryRepository,
-    resolutionMemoryRepository,
+    resolutionService,
   );
   const queueService = new QueueService(queueMemoryRepository, patientsService);
   const patientController = new PatientController(queueService, patientsService);
@@ -120,7 +122,7 @@ describe('queue controller unit tests', () => {
       expect(name).toEqual('Andrei');
       return true;
     });
-    patientsService.getResolution.mockImplementation((name) => {
+    patientsService.getResolutionValue.mockImplementation((name) => {
       expect(name).toEqual('Andrei');
       return 'All fine';
     });

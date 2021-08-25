@@ -7,43 +7,44 @@ class PatientMemory {
 
   async create(value) {
     const uuid = uuidv4();
-    this.patient.push({ id: uuid, name: value });
-    return uuid;
+    const patientObject = { id: uuid, name: value };
+    this.patient.push(patientObject);
+    return patientObject;
   }
 
-  async update(patientID, value) {
+  async update(patientObject, value) {
     this.patient.forEach((item, index) => {
-      if (item.id === patientID) {
+      if (item.id === patientObject.id) {
         this.patient[index].name = value;
       }
     });
-    return 'updated';
+    return { id: patientObject.id, name: value };
   }
 
   async find(patientName) {
-    let result;
+    let result = {};
     this.patient.forEach((item) => {
       if (item.name === patientName) {
-        result = item.id;
+        result = item;
       }
     });
     return result;
   }
 
   async get(patientID) {
-    let result = '';
+    let result = {};
     this.patient.forEach((item) => {
       if (item.id === patientID) {
-        result = item.name;
+        result = item;
       }
     });
     return result;
   }
 
-  async delete(patientID) {
+  async delete(patientObject) {
     let result;
     this.patient.forEach((item, index) => {
-      if (item.id === patientID) {
+      if (item.id === patientObject.id) {
         result = index;
       }
     });

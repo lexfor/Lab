@@ -5,8 +5,8 @@ export default class QueueService {
   }
 
   async push(value) {
-    const patientID = await this.patientService.createPatient(value);
-    await this.queueRepository.push(patientID);
+    const patient = await this.patientService.createPatient(value);
+    await this.queueRepository.push(patient);
     return 'pushed';
   }
 
@@ -17,15 +17,15 @@ export default class QueueService {
 
   async getCurrent() {
     const patientID = await this.queueRepository.getFirst();
-    const name = await this.patientService.getPatientName(patientID);
-    return name;
+    const patient = await this.patientService.getPatient(patientID);
+    return patient.name;
   }
 
   async isExist(value) {
     const allPatientInQueue = await this.queueRepository.getAll();
     let names = allPatientInQueue.map((item) => {
-      const res = this.patientService.getPatientName(item);
-      return res;
+      const res = this.patientService.getPatient(item);
+      return res.name;
     });
     names = await Promise.all(names);
     return names.indexOf(value) !== -1;

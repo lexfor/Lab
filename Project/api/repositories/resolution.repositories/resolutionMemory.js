@@ -6,21 +6,25 @@ class ResolutionMemory {
     this.resolutions = [];
   }
 
-  async create(patientID, resolutionValue, time) {
+  async create(patient, resolutionValue, time) {
     const uuid = uuidv4();
     this.resolutions.push({
       id: uuid,
       value: resolutionValue,
       delay: time,
       createdTime: new Date().getTime(),
-      patient_id: patientID,
+      patient_id: patient.id,
     });
-    return uuid;
+    return {
+      id: uuid,
+      value: resolutionValue,
+      patient_id: patient.id,
+    };
   }
 
-  async update(resolutionID, resolutionValue, time) {
+  async update(resolution, resolutionValue, time) {
     this.resolutions.forEach((item, index) => {
-      if (item.id === resolutionID) {
+      if (item.id === resolution.id) {
         this.resolutions[index].value = resolutionValue;
         this.resolutions[index].delay = time;
         this.resolutions[index].createdTime = new Date().getTime();
@@ -28,32 +32,25 @@ class ResolutionMemory {
     });
   }
 
-  async getResolutionID(patientID) {
+  async getResolution(patient) {
     let result;
     this.resolutions.forEach((item) => {
-      if (item.patient_id === patientID) {
-        result = item.id;
+      if (item.patient_id === patient.id) {
+        result = item;
       }
     });
-    return result;
-  }
-
-  async get(resolutionID) {
-    let result = '';
-    if (!this.checkTime(resolutionID)) {
+    if (!result) {
+      return {};
+    }
+    if (this.checkTime(result)) {
       return result;
     }
-    this.resolutions.forEach((item) => {
-      if (item.id === resolutionID) {
-        result = item.value;
-      }
-    });
-    return result;
+    return {};
   }
 
-  async delete(resolutionID) {
+  async delete(resolution) {
     this.resolutions.forEach((item, index) => {
-      if (item.id === resolutionID) {
+      if (item.id === resolution.id) {
         this.resolutions[index].value = NOT_AVAILABLE;
       }
     });
@@ -63,15 +60,11 @@ class ResolutionMemory {
     return this.resolutions.map((item) => item.id);
   }
 
-  checkTime(resolutionID) {
+  checkTime(resolution) {
     let result = true;
-    this.resolutions.forEach((item) => {
-      if (item.id === resolutionID) {
-        if (new Date().getTime() - item.createdTime > item.delay) {
-          result = false;
-        }
-      }
-    });
+    if (new Date().getTime() - resolution.createdTime > resolution.delay) {
+      result = false;
+    }
     return result;
   }
 }

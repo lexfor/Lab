@@ -3,8 +3,8 @@ class QueueMemory {
     this.fifo = [];
   }
 
-  push(id) {
-    this.fifo.push(id);
+  push(patient) {
+    this.fifo.push(patient.id);
     return 'pushed';
   }
 

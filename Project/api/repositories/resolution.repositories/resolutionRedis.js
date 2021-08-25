@@ -7,57 +7,63 @@ export default class ResolutionRedis {
     this.client = client;
   }
 
-  async create(patientID, resolutionValue, time) {
+  async create(patient, resolutionValue, time) {
     const key = uuidv4();
     const setAsync = promisify(this.client.set).bind(this.client);
     const expireAsync = promisify(this.client.expire).bind(this.client);
     const hsetAsync = promisify(this.client.hset).bind(this.client);
-    await hsetAsync('patient', key, patientID);
+    await hsetAsync('patient', key, patient.id);
     setAsync(key, resolutionValue);
     if (time) {
       expireAsync(key, time / 1000);
     }
-    return key;
+    const resolution = { id: key, name: resolutionValue, patient_id: patient.id };
+    return resolution;
   }
 
-  async update(resolutionID, resolutionValue, time) {
+  async update(resolution, resolutionValue, time) {
     const setAsync = promisify(this.client.set).bind(this.client);
     const expireAsync = promisify(this.client.expire).bind(this.client);
     const hsetAsync = promisify(this.client.hset).bind(this.client);
     const hdelAsync = promisify(this.client.hdel).bind(this.client);
-    await hdelAsync('patient', resolutionID);
-    await hsetAsync('patient', resolutionID, resolutionValue);
-    setAsync(resolutionID, resolutionValue);
+    await hdelAsync('patient', resolution.id);
+    await hsetAsync('patient', resolution.id, resolutionValue);
+    setAsync(resolution.id, resolutionValue);
     if (time) {
-      expireAsync(resolutionID, time / 1000);
+      expireAsync(resolution.id, time / 1000);
     }
   }
 
-  async getResolutionID(patientID) {
+  async getResolution(patient) {
     const hgetallAsync = promisify(this.client.hgetall).bind(this.client);
+    const getAsync = promisify(this.client.get).bind(this.client);
     const keysAndValuesObject = await hgetallAsync('patient');
+
     if (!keysAndValuesObject) {
       return '';
     }
     const keysAndValuesArray = Object.entries(keysAndValuesObject);
-    let result;
+    const result = {};
+
     keysAndValuesArray.forEach((item) => {
-      if (item[1] === patientID) {
-        [result] = item;
+      if (item[1] === patient.id) {
+        [result.id, result.patient_id] = item;
       }
     });
+
+    result.value = await getAsync(result.id);
     return result;
   }
 
-  async get(resolutionID) {
+  async get(resolution) {
     const getAsync = promisify(this.client.get).bind(this.client);
-    const result = await getAsync(resolutionID);
+    const result = await getAsync(resolution.id);
     return result;
   }
 
-  async delete(resolutionID) {
+  async delete(resolution) {
     const setAsync = promisify(this.client.set).bind(this.client);
-    setAsync(resolutionID, NOT_AVAILABLE);
+    setAsync(resolution.id, NOT_AVAILABLE);
   }
 
   async getAll() {

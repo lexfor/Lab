@@ -10,25 +10,27 @@ export default class PatientRedis {
     const key = uuidv4();
     const hsetAsync = promisify(this.client.hset).bind(this.client);
     await hsetAsync('names', key, value);
-    return key;
+    const patient = { id: key, name: value };
+    return patient;
   }
 
-  async update(patientID, value) {
+  async update(patient, value) {
     const hsetAsync = promisify(this.client.hset).bind(this.client);
     const hdelAsync = promisify(this.client.hdel).bind(this.client);
-    await hdelAsync('names', patientID);
-    await hsetAsync('names', patientID, value);
-    return 'updated';
+    await hdelAsync('names', patient.id);
+    await hsetAsync('names', patient.id, value);
+    const patientObject = { id: patient.id, name: value };
+    return patientObject;
   }
 
   async find(patientName) {
     const hgetallAsync = promisify(this.client.hgetall).bind(this.client);
     const keysAndValuesObject = await hgetallAsync('names');
     const keysAndValuesArray = Object.entries(keysAndValuesObject);
-    let result;
+    const result = {};
     keysAndValuesArray.forEach((item) => {
       if (item[1] === patientName) {
-        [result] = item;
+        [result.id, result.name] = item;
       }
     });
     return result;
@@ -37,7 +39,9 @@ export default class PatientRedis {
   async get(patientID) {
     try {
       const hgetAsync = promisify(this.client.hget).bind(this.client);
-      const result = await hgetAsync('names', patientID);
+      const result = {};
+      result.name = await hgetAsync('names', patientID);
+      result.id = patientID;
       return result;
     } catch (e) {
       console.log(e.message);
@@ -45,23 +49,14 @@ export default class PatientRedis {
     }
   }
 
-  async getResolutionID(patientID) {
-    try {
-      const hgetAsync = promisify(this.client.hget).bind(this.client);
-      const result = await hgetAsync('resolutions', patientID);
-      return result;
-    } catch (e) {
-      console.log(e.message);
-      return '';
-    }
-  }
-
-  async delete(patientID) {
+  async delete(patient) {
     try {
       const hdelAsync = promisify(this.client.hdel).bind(this.client);
-      await hdelAsync('names', patientID);
+      await hdelAsync('names', patient.id);
+      return patient;
     } catch (e) {
       console.log(e.message);
+      return '';
     }
   }
 

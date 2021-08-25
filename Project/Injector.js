@@ -3,15 +3,17 @@ import QueueController from './api/controllers/queueController.js';
 import PatientController from './api/controllers/patientController.js';
 import PatientService from './api/service/PatientService.js';
 import QueueService from './api/service/QueueService.js';
+import ResolutionService from './api/service/ResolutionService.js';
 import QueueRedis from './api/repositories/queue.repositories/queueRedis.js';
 import PatientRedis from './api/repositories/patient.repositories/patientRedis.js';
 import ResolutionRedis from './api/repositories/resolution.repositories/resolutionRedis.js';
+import PatientSQL from './api/repositories/patient.repositories/patientSQL.js';
+import ResolutionSQL from './api/repositories/resolution.repositories/resolutionSQL.js';
+import { sequelize } from './modelInitializator.js';
 
 import { queueMemoryRepository } from './api/repositories/queue.repositories/queueMemory.js';
 import { patientMemoryRepository } from './api/repositories/patient.repositories/patientMemory.js';
 import { resolutionMemoryRepository } from './api/repositories/resolution.repositories/resolutionMemory.js';
-import { patientSQLRepository } from './api/repositories/patient.repositories/patientSQL.js';
-import { resolutionSQLRepository } from './api/repositories/resolution.repositories/resolutionSQL.js';
 
 import { envConfig } from './config.js';
 
@@ -32,8 +34,8 @@ class Injector {
         break;
       case 'sql':
         console.log('using SQL');
-        this.patientStorage = patientSQLRepository;
-        this.resolutionStorage = resolutionSQLRepository;
+        this.patientStorage = new PatientSQL(sequelize.models.patient);
+        this.resolutionStorage = new ResolutionSQL(sequelize.models.resolution);
         break;
       default:
         console.log('using memory');
@@ -55,7 +57,8 @@ class Injector {
         this.queueStorage = queueMemoryRepository;
         break;
     }
-    this.patientService = new PatientService(this.patientStorage, this.resolutionStorage);
+    this.resolutionService = new ResolutionService(this.resolutionStorage);
+    this.patientService = new PatientService(this.patientStorage, this.resolutionService);
     this.queueService = new QueueService(this.queueStorage, this.patientService);
     this.queueController = new QueueController(this.queueService);
     this.resolutionController = new PatientController(this.queueService, this.patientService);
