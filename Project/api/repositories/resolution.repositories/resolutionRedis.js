@@ -1,28 +1,17 @@
-import redis from 'redis';
 import { promisify } from 'util';
 import { v4 as uuidv4 } from 'uuid';
-
-import { envConfig } from '../../../config.js';
 import { NOT_AVAILABLE } from '../../../constants.js';
 
-let client;
-if (envConfig.storage.name === 'redis') {
-  client = redis.createClient({ host: envConfig.storage.host, port: envConfig.storage.port });
+export default class ResolutionRedis {
+  constructor(client) {
+    this.client = client;
+  }
 
-  client.on('error', (error) => {
-    console.error(error);
-  });
-
-  client.select(2);
-  client.flushdb();
-}
-
-class ResolutionRedis {
   async create(patientID, resolutionValue, time) {
     const key = uuidv4();
-    const setAsync = promisify(client.set).bind(client);
-    const expireAsync = promisify(client.expire).bind(client);
-    const hsetAsync = promisify(client.hset).bind(client);
+    const setAsync = promisify(this.client.set).bind(this.client);
+    const expireAsync = promisify(this.client.expire).bind(this.client);
+    const hsetAsync = promisify(this.client.hset).bind(this.client);
     await hsetAsync('patient', key, patientID);
     setAsync(key, resolutionValue);
     if (time) {
@@ -32,10 +21,10 @@ class ResolutionRedis {
   }
 
   async update(resolutionID, resolutionValue, time) {
-    const setAsync = promisify(client.set).bind(client);
-    const expireAsync = promisify(client.expire).bind(client);
-    const hsetAsync = promisify(client.hset).bind(client);
-    const hdelAsync = promisify(client.hdel).bind(client);
+    const setAsync = promisify(this.client.set).bind(this.client);
+    const expireAsync = promisify(this.client.expire).bind(this.client);
+    const hsetAsync = promisify(this.client.hset).bind(this.client);
+    const hdelAsync = promisify(this.client.hdel).bind(this.client);
     await hdelAsync('patient', resolutionID);
     await hsetAsync('patient', resolutionID, resolutionValue);
     setAsync(resolutionID, resolutionValue);
@@ -45,7 +34,7 @@ class ResolutionRedis {
   }
 
   async getResolutionID(patientID) {
-    const hgetallAsync = promisify(client.hgetall).bind(client);
+    const hgetallAsync = promisify(this.client.hgetall).bind(this.client);
     const keysAndValuesObject = await hgetallAsync('patient');
     if (!keysAndValuesObject) {
       return '';
@@ -61,22 +50,19 @@ class ResolutionRedis {
   }
 
   async get(resolutionID) {
-    const getAsync = promisify(client.get).bind(client);
+    const getAsync = promisify(this.client.get).bind(this.client);
     const result = await getAsync(resolutionID);
     return result;
   }
 
   async delete(resolutionID) {
-    const setAsync = promisify(client.set).bind(client);
+    const setAsync = promisify(this.client.set).bind(this.client);
     setAsync(resolutionID, NOT_AVAILABLE);
   }
 
   async getAll() {
-    const keysAsync = promisify(client.keys).bind(client);
+    const keysAsync = promisify(this.client.keys).bind(this.client);
     const result = await keysAsync('*');
     return result;
   }
 }
-
-const resolutionRedisRepository = new ResolutionRedis();
-export { resolutionRedisRepository };

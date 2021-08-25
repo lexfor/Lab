@@ -1,26 +1,34 @@
+import redis from 'redis';
 import QueueController from './api/controllers/queueController.js';
 import PatientController from './api/controllers/patientController.js';
 import PatientService from './api/service/PatientService.js';
 import QueueService from './api/service/QueueService.js';
+import QueueRedis from './api/repositories/queue.repositories/queueRedis.js';
+import PatientRedis from './api/repositories/patient.repositories/patientRedis.js';
+import ResolutionRedis from './api/repositories/resolution.repositories/resolutionRedis.js';
 
 import { queueMemoryRepository } from './api/repositories/queue.repositories/queueMemory.js';
 import { patientMemoryRepository } from './api/repositories/patient.repositories/patientMemory.js';
 import { resolutionMemoryRepository } from './api/repositories/resolution.repositories/resolutionMemory.js';
-import { queueRedisRepository } from './api/repositories/queue.repositories/queueRedis.js';
-import { patientRedisRepository } from './api/repositories/patient.repositories/patientRedis.js';
-import { resolutionRedisRepository } from './api/repositories/resolution.repositories/resolutionRedis.js';
 import { patientSQLRepository } from './api/repositories/patient.repositories/patientSQL.js';
 import { resolutionSQLRepository } from './api/repositories/resolution.repositories/resolutionSQL.js';
 
 import { envConfig } from './config.js';
+
+let client;
 
 class Injector {
   constructor() {
     switch (envConfig.storage.name) {
       case 'redis':
         console.log('using redis');
-        this.patientStorage = patientRedisRepository;
-        this.resolutionStorage = resolutionRedisRepository;
+        client = redis.createClient({
+          host: envConfig.storage.host,
+          port: envConfig.storage.port,
+        });
+        client.flushdb();
+        this.patientStorage = new PatientRedis(client);
+        this.resolutionStorage = new ResolutionRedis(client);
         break;
       case 'sql':
         console.log('using SQL');
@@ -35,7 +43,12 @@ class Injector {
     switch (envConfig.queueStorage.name) {
       case 'redis':
         console.log('using redis for queue');
-        this.queueStorage = queueRedisRepository;
+        client = redis.createClient({
+          host: envConfig.queueStorage.host,
+          port: envConfig.queueStorage.port,
+        });
+        client.flushdb();
+        this.queueStorage = new QueueRedis(client);
         break;
       default:
         console.log('using memory for queue');
