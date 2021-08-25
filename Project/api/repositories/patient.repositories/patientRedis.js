@@ -2,7 +2,7 @@ import redis from 'redis';
 import { promisify } from 'util';
 import { v4 as uuidv4 } from 'uuid';
 
-import { envConfig } from '../../config.js';
+import { envConfig } from '../../../config.js';
 
 let client;
 

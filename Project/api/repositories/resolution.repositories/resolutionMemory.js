@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { NOT_AVAILABLE } from '../../constants.js';
+import { NOT_AVAILABLE } from '../../../constants.js';
 
 class ResolutionMemory {
   constructor() {

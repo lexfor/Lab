@@ -3,14 +3,14 @@ import PatientController from './api/controllers/patientController.js';
 import PatientService from './api/service/PatientService.js';
 import QueueService from './api/service/QueueService.js';
 
-import { queueMemoryRepository } from './api/repositories/queueMemory.js';
-import { patientMemoryRepository } from './api/repositories/patientMemory.js';
-import { resolutionMemoryRepository } from './api/repositories/resolutionMemory.js';
-import { queueRedisRepository } from './api/repositories/queueRedis.js';
-import { patientRedisRepository } from './api/repositories/patientRedis.js';
-import { resolutionRedisRepository } from './api/repositories/resolutionRedis.js';
-import { patientSQLRepository } from './api/repositories/patientSQL.js';
-import { resolutionSQLRepository } from './api/repositories/resolutionSQL.js';
+import { queueMemoryRepository } from './api/repositories/queue.repositories/queueMemory.js';
+import { patientMemoryRepository } from './api/repositories/patient.repositories/patientMemory.js';
+import { resolutionMemoryRepository } from './api/repositories/resolution.repositories/resolutionMemory.js';
+import { queueRedisRepository } from './api/repositories/queue.repositories/queueRedis.js';
+import { patientRedisRepository } from './api/repositories/patient.repositories/patientRedis.js';
+import { resolutionRedisRepository } from './api/repositories/resolution.repositories/resolutionRedis.js';
+import { patientSQLRepository } from './api/repositories/patient.repositories/patientSQL.js';
+import { resolutionSQLRepository } from './api/repositories/resolution.repositories/resolutionSQL.js';
 
 import { envConfig } from './config.js';
 

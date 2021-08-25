@@ -1,9 +1,9 @@
 import PatientService from '../api/service/PatientService.js';
 import QueueService from '../api/service/QueueService.js';
 import PatientController from '../api/controllers/patientController.js';
-import { patientMemoryRepository } from '../api/repositories/patientMemory.js';
-import { resolutionMemoryRepository } from '../api/repositories/resolutionMemory.js';
-import { queueMemoryRepository } from '../api/repositories/queueMemory.js';
+import { patientMemoryRepository } from '../api/repositories/patient.repositories/patientMemory.js';
+import { resolutionMemoryRepository } from '../api/repositories/resolution.repositories/resolutionMemory.js';
+import { queueMemoryRepository } from '../api/repositories/queue.repositories/queueMemory.js';
 import { NOT_AVAILABLE, STATUSES } from '../constants';
 
 jest.mock('../api/service/PatientService.js');

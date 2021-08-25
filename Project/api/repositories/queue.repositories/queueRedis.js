@@ -1,7 +1,7 @@
 import redis from 'redis';
 import { promisify } from 'util';
 
-import { envConfig } from '../../config.js';
+import { envConfig } from '../../../config.js';
 
 let client;
 if (envConfig.queueStorage.name === 'redis') {

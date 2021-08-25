@@ -1,4 +1,4 @@
-import { patient } from '../models/Model.js';
+import { patient } from '../../models/Model.js';
 
 class PatientSQL {
   async create(value) {

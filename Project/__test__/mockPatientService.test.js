@@ -1,9 +1,9 @@
 import PatientService from '../api/service/PatientService.js';
-import { patientMemoryRepository } from '../api/repositories/patientMemory.js';
-import { resolutionMemoryRepository } from '../api/repositories/resolutionMemory.js';
+import { patientMemoryRepository } from '../api/repositories/patient.repositories/patientMemory.js';
+import { resolutionMemoryRepository } from '../api/repositories/resolution.repositories/resolutionMemory.js';
 
-jest.mock('../api/repositories/patientMemory.js');
-jest.mock('../api/repositories/resolutionMemory.js');
+jest.mock('../api/repositories/patient.repositories/patientMemory.js');
+jest.mock('../api/repositories/resolution.repositories/resolutionMemory.js');
 
 describe('patient service unit tests', () => {
   const patients = new PatientService(

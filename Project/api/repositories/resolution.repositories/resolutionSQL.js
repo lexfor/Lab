@@ -1,5 +1,5 @@
-import { resolution } from '../models/Model.js';
-import { NOT_AVAILABLE } from '../../constants.js';
+import { resolution } from '../../models/Model.js';
+import { NOT_AVAILABLE } from '../../../constants.js';
 
 class ResolutionSQL {
   async create(patientID, resolutionValue, time) {

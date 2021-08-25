@@ -2,8 +2,8 @@ import redis from 'redis';
 import { promisify } from 'util';
 import { v4 as uuidv4 } from 'uuid';
 
-import { envConfig } from '../../config.js';
-import { NOT_AVAILABLE } from '../../constants.js';
+import { envConfig } from '../../../config.js';
+import { NOT_AVAILABLE } from '../../../constants.js';
 
 let client;
 if (envConfig.storage.name === 'redis') {

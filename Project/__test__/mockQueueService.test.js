@@ -1,8 +1,8 @@
 import QueueService from '../api/service/QueueService.js';
-import { queueMemoryRepository } from '../api/repositories/queueMemory';
+import { queueMemoryRepository } from '../api/repositories/queue.repositories/queueMemory';
 import PatientService from '../api/service/PatientService.js';
 
-jest.mock('../api/repositories/queueMemory');
+jest.mock('../api/repositories/queue.repositories/queueMemory');
 jest.mock('../api/service/PatientService.js');
 
 describe('queue service unit tests', () => {
