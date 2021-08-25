@@ -81,10 +81,10 @@ export { envConfig };
 
 const DB_ACCESS = {
   host: process.env.STORAGE_HOST,
-  user: 'root',
-  password: 'Timafifa14',
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   port: SERVER_PORT.SQL_PORT,
-  database: 'lab',
+  database: process.env.DB_DATABASE,
   dialect: 'mysql',
 };
 

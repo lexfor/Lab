@@ -14,7 +14,7 @@ describe('Status helper', () => {
     res.setValue = 'not found';
     res = checkOutputStatus(res);
     expect(res.getValue).toEqual('N/A');
-    expect(res.getStatus).toEqual(STATUSES.NotFound);
+    expect(res.getStatus).toEqual(STATUSES.NOT_FOUND);
   });
 
   test('timeout result', () => {
@@ -22,7 +22,7 @@ describe('Status helper', () => {
     res.setValue = 'timeout';
     res = checkOutputStatus(res);
     expect(res.getValue).toEqual('N/A');
-    expect(res.getStatus).toEqual(STATUSES.RequestTimeout);
+    expect(res.getStatus).toEqual(STATUSES.REQUEST_TIMEOUT);
   });
 
   test('error result', () => {
@@ -30,7 +30,7 @@ describe('Status helper', () => {
     res.setValue = 'error';
     res = checkOutputStatus(res);
     expect(res.getValue).toEqual('N/A');
-    expect(res.getStatus).toEqual(STATUSES.ServerError);
+    expect(res.getStatus).toEqual(STATUSES.SERVER_ERROR);
   });
 
   test('not available result', () => {
@@ -38,7 +38,7 @@ describe('Status helper', () => {
     res.setValue = 'not available';
     res = checkOutputStatus(res);
     expect(res.getValue).toEqual('N/A');
-    expect(res.getStatus).toEqual(STATUSES.Unavailable);
+    expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
   });
 
   test('pushed result', () => {
@@ -46,7 +46,7 @@ describe('Status helper', () => {
     res.setValue = 'pushed';
     res = checkOutputStatus(res);
     expect(res.getValue).toEqual('Added');
-    expect(res.getStatus).toEqual(STATUSES.Created);
+    expect(res.getStatus).toEqual(STATUSES.CREATED);
   });
 
   test('OK result', () => {

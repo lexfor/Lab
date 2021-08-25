@@ -20,7 +20,7 @@ describe('queue controller unit tests', () => {
     queueService.isEmpty.mockResolvedValue(true);
     const res = await queueController.checkLength();
     expect(res.getValue).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.Unavailable);
+    expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
   });
 
   test('check length', async () => {
@@ -37,7 +37,7 @@ describe('queue controller unit tests', () => {
     });
     const res = await queueController.checkIsExistValue('Tim');
     expect(res.getValue).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.BadRequest);
+    expect(res.getStatus).toEqual(STATUSES.BAD_REQUEST);
   });
 
   test('check is value exist', async () => {
@@ -61,7 +61,7 @@ describe('queue controller unit tests', () => {
     });
     const res = await queueController.addValueInQueue('Andrei');
     expect(res.getValue).toEqual('Added');
-    expect(res.getStatus).toEqual(STATUSES.Created);
+    expect(res.getStatus).toEqual(STATUSES.CREATED);
   });
 
   test('add existed value in queue', async () => {
@@ -71,7 +71,7 @@ describe('queue controller unit tests', () => {
     });
     const res = await queueController.addValueInQueue('Andrei');
     expect(res.getValue).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.BadRequest);
+    expect(res.getStatus).toEqual(STATUSES.BAD_REQUEST);
   });
 
   test('get current value from queue', async () => {
@@ -86,7 +86,7 @@ describe('queue controller unit tests', () => {
     queueService.isEmpty.mockResolvedValue(true);
     const res = await queueController.getCurrentInQueue('Andrei');
     expect(res.getValue).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.Unavailable);
+    expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
   });
 
   test('take next value from queue', async () => {
@@ -101,6 +101,6 @@ describe('queue controller unit tests', () => {
     queueService.isEmpty.mockResolvedValue(true);
     const res = await queueController.takeNextValueInQueue();
     expect(res.getValue).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.Unavailable);
+    expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
   });
 });

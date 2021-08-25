@@ -12,7 +12,7 @@ export default class PatientController {
     const res = new RequestResult();
     if (await this.patientsService.isEmpty()) {
       res.setValue = NOT_AVAILABLE;
-      res.setStatus = STATUSES.Unavailable;
+      res.setStatus = STATUSES.UNAVAILABLE;
     }
     return res;
   }
@@ -21,7 +21,7 @@ export default class PatientController {
     const res = new RequestResult();
     if (!await this.patientsService.isExist(body)) {
       res.setValue = NOT_AVAILABLE;
-      res.setStatus = STATUSES.NotFound;
+      res.setStatus = STATUSES.NOT_FOUND;
     }
     return res;
   }
@@ -30,7 +30,7 @@ export default class PatientController {
     const res = new RequestResult();
     if (await this.queueService.isEmpty()) {
       res.setValue = NOT_AVAILABLE;
-      res.setStatus = STATUSES.Unavailable;
+      res.setStatus = STATUSES.UNAVAILABLE;
     }
     return res;
   }

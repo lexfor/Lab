@@ -21,7 +21,7 @@ describe('queue controller unit tests', () => {
     patientsService.isEmpty.mockResolvedValue(true);
     const res = await patientController.checkLength();
     expect(res.getValue).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.Unavailable);
+    expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
   });
 
   test('check length', async () => {
@@ -48,7 +48,7 @@ describe('queue controller unit tests', () => {
     });
     const res = await patientController.checkIsExistPatient('Gleb');
     expect(res.getValue).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.NotFound);
+    expect(res.getStatus).toEqual(STATUSES.NOT_FOUND);
   });
 
   test('check current patient', async () => {
@@ -62,7 +62,7 @@ describe('queue controller unit tests', () => {
     queueService.isEmpty.mockResolvedValue(true);
     const res = await patientController.checkCurrentPatient();
     expect(res.getValue).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.Unavailable);
+    expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
   });
 
   test('set resolution for current patient', async () => {
@@ -76,14 +76,14 @@ describe('queue controller unit tests', () => {
     });
     const res = await patientController.setResolutionForCurrentPatient({ value: 'good' });
     expect(res.getValue).toEqual('Accepted');
-    expect(res.getStatus).toEqual(STATUSES.Accepted);
+    expect(res.getStatus).toEqual(STATUSES.ACCEPTED);
   });
 
   test('set resolution for current patient with empty queue', async () => {
     queueService.isEmpty.mockResolvedValue(true);
     const res = await patientController.setResolutionForCurrentPatient({ value: 'good' });
     expect(res.getValue).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.Unavailable);
+    expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
   });
 
   test('set resolution for current patient with ttl', async () => {
@@ -97,7 +97,7 @@ describe('queue controller unit tests', () => {
     });
     const res = await patientController.setResolutionForCurrentPatient({ value: 'good', delay: 20000 });
     expect(res.getValue).toEqual('Accepted');
-    expect(res.getStatus).toEqual(STATUSES.Accepted);
+    expect(res.getStatus).toEqual(STATUSES.ACCEPTED);
   });
 
   test('get all patients names', async () => {
@@ -112,7 +112,7 @@ describe('queue controller unit tests', () => {
     patientsService.isEmpty.mockResolvedValue(true);
     const res = await patientController.getAllProcessedPatientsNames();
     expect(res.getValue).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.Unavailable);
+    expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
   });
 
   test('find patient resolution', async () => {
@@ -136,7 +136,7 @@ describe('queue controller unit tests', () => {
     });
     const res = await patientController.findResolutionByPatientName('Andrei');
     expect(res.getValue).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.NotFound);
+    expect(res.getStatus).toEqual(STATUSES.NOT_FOUND);
   });
 
   test('delete patient resolution', async () => {
@@ -160,6 +160,6 @@ describe('queue controller unit tests', () => {
     });
     const res = await patientController.deletePatientResolution('Andrei');
     expect(res.getValue).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.NotFound);
+    expect(res.getStatus).toEqual(STATUSES.NOT_FOUND);
   });
 });

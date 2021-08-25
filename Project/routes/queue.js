@@ -1,8 +1,8 @@
 import express from 'express';
 import Ajv from 'ajv';
 import { injector } from '../Injector.js';
-import { AddPatientSchema } from '../api/schems/AddPatientSchema.js';
-import { GetPatientSchema } from '../api/schems/GetPatientSchema.js';
+import { AddPatientSchema } from '../api/schemas/AddPatientSchema.js';
+import { GetPatientSchema } from '../api/schemas/GetPatientSchema.js';
 import { STATUSES, NOT_AVAILABLE } from '../constants.js';
 
 const router = express();
@@ -23,7 +23,7 @@ router.post('/queue/patient', async (req, res, next) => {
   if (validationResult) {
     await next();
   } else {
-    res.status(STATUSES.BadRequest).send(JSON.stringify(NOT_AVAILABLE));
+    res.status(STATUSES.BAD_REQUEST).send(JSON.stringify(NOT_AVAILABLE));
   }
 },
 
@@ -47,7 +47,7 @@ router.get('/queue/patient/resolution', async (req, res, next) => {
   if (validationResult) {
     await next();
   } else {
-    res.status(STATUSES.BadRequest).send(JSON.stringify(NOT_AVAILABLE));
+    res.status(STATUSES.BAD_REQUEST).send(JSON.stringify(NOT_AVAILABLE));
   }
 },
 

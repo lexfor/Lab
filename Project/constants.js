@@ -4,13 +4,13 @@ export const MIN_LENGTH = 2;
 
 export const STATUSES = {
   OK: 200,
-  Created: 201,
-  Accepted: 202,
-  BadRequest: 400,
-  NotFound: 404,
-  RequestTimeout: 408,
-  ServerError: 500,
-  Unavailable: 503,
+  CREATED: 201,
+  ACCEPTED: 202,
+  BAD_REQUEST: 400,
+  NOT_FOUND: 404,
+  REQUEST_TIMEOUT: 408,
+  SERVER_ERROR: 500,
+  UNAVAILABLE: 503,
 };
 
 export const STORAGE_NAME = {

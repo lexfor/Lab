@@ -11,7 +11,7 @@ export default class QueueController {
     const res = new RequestResult();
     if (await this.queueService.isEmpty()) {
       res.setValue = NOT_AVAILABLE;
-      res.setStatus = STATUSES.Unavailable;
+      res.setStatus = STATUSES.UNAVAILABLE;
     }
     return res;
   }
@@ -20,7 +20,7 @@ export default class QueueController {
     const res = new RequestResult();
     if (await this.queueService.isExist(body)) {
       res.setValue = NOT_AVAILABLE;
-      res.setStatus = STATUSES.BadRequest;
+      res.setStatus = STATUSES.BAD_REQUEST;
     }
     return res;
   }

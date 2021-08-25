@@ -2,9 +2,9 @@ import express from 'express';
 import Ajv from 'ajv';
 
 import { injector } from '../Injector.js';
-import { SetResolutionSchema } from '../api/schems/SetResolutionSchema.js';
-import { DeleteResolutionSchema } from '../api/schems/DeleteResolutionSchema.js';
-import { GetPatientSchema } from '../api/schems/GetPatientSchema.js';
+import { SetResolutionSchema } from '../api/schemas/SetResolutionSchema.js';
+import { DeleteResolutionSchema } from '../api/schemas/DeleteResolutionSchema.js';
+import { GetPatientSchema } from '../api/schemas/GetPatientSchema.js';
 import { STATUSES, NOT_AVAILABLE } from '../constants.js';
 
 const router = express();
@@ -31,7 +31,7 @@ router.get('/patient/resolution', async (req, res, next) => {
   if (validationResult) {
     await next();
   } else {
-    res.status(STATUSES.BadRequest).send(JSON.stringify(NOT_AVAILABLE));
+    res.status(STATUSES.BAD_REQUEST).send(JSON.stringify(NOT_AVAILABLE));
   }
 },
 
@@ -45,7 +45,7 @@ router.put('/patient/current/resolution', async (req, res, next) => {
   if (validationResult) {
     await next();
   } else {
-    res.status(STATUSES.BadRequest).send(JSON.stringify(NOT_AVAILABLE));
+    res.status(STATUSES.BAD_REQUEST).send(JSON.stringify(NOT_AVAILABLE));
   }
 },
 
@@ -59,7 +59,7 @@ router.delete('/patient/resolution', async (req, res, next) => {
   if (validationResult) {
     await next();
   } else {
-    res.status(STATUSES.BadRequest).send(JSON.stringify(NOT_AVAILABLE));
+    res.status(STATUSES.BAD_REQUEST).send(JSON.stringify(NOT_AVAILABLE));
   }
 },
 
