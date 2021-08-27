@@ -1,65 +1,71 @@
+import { v4 as uuidv4 } from 'uuid';
+import { promisify } from 'util';
 import { NOT_AVAILABLE } from '../../../constants.js';
+import { createConnection } from '../../../DBconnection.js';
 
 export default class ResolutionSQL {
-  constructor(resolution) {
-    this.resolutionModel = resolution;
-  }
-
   async create(patient, resolutionValue, time) {
-    const result = await this.resolutionModel.create({
-      value: resolutionValue,
-      delay: time,
-      patient_id: patient.id,
-    });
-    console.log('create resolution with value :', result.value);
-    return result;
+    const key = uuidv4();
+    const connection = createConnection();
+    const queryAsync = promisify(connection.query).bind(connection);
+    const sql = 'INSERT INTO resolutions (id, value, delay, createdTime, patient_id) VALUES ('
+      + `'${key}', `
+      + `'${resolutionValue}', `
+      + `${time}, `
+      + `'${new Date().getTime()}', `
+      + `'${patient.id}'
+      )`;
+    await queryAsync(sql);
+    connection.end();
+    return { id: key, value: resolutionValue, patient_id: patient.id };
   }
 
   async update(resolution, resolutionValue, time) {
-    await this.resolutionModel.update({
-      value: resolutionValue,
-      delay: time,
-      createdTime: new Date().getTime(),
-    }, {
-      where: {
-        id: resolution.id,
-      },
-    });
+    const connection = createConnection();
+    const queryAsync = promisify(connection.query).bind(connection);
+    const sql = 'UPDATE resolutions SET '
+      + `value = '${resolutionValue}', `
+      + `delay = ${time}, `
+      + `createdTime = ${new Date()} `
+      + 'WHERE '
+      + `id = '${resolution.id}'`;
+    await queryAsync(sql);
+    connection.end();
+    return { id: resolution.id, name: resolutionValue };
   }
 
   async get(patient) {
-    const result = await this.resolutionModel.findOne({
-      where: {
-        patient_id: patient.id,
-      },
-    });
-    if (!result) {
-      return '';
+    const connection = createConnection();
+    const queryAsync = promisify(connection.query).bind(connection);
+    const sql = 'SELECT * FROM resolutions '
+      + 'WHERE '
+      + `patient_id = '${patient.id}'`;
+    const result = await queryAsync(sql);
+    connection.end();
+    if (result[0]) {
+      return result[0];
     }
-    if (new Date().getTime() - new Date(result.updatedAt).getTime() > result.delay) {
-      result.value = NOT_AVAILABLE;
-    }
-    console.log('find resolution with name :', result.value);
-    return result;
+    return NOT_AVAILABLE;
   }
 
   async delete(resolution) {
-    await this.resolutionModel.update({
-      value: NOT_AVAILABLE,
-      delay: null,
-    }, {
-      where: {
-        id: resolution.id,
-      },
-    });
+    const connection = createConnection();
+    const queryAsync = promisify(connection.query).bind(connection);
+    const sql = 'UPDATE resolutions SET '
+      + `value = '${NOT_AVAILABLE}' `
+      + 'WHERE '
+      + `id = '${resolution.id}'`;
+    await queryAsync(sql);
+    connection.end();
+    return resolution;
   }
 
   async getAll() {
-    const rows = await this.resolutionModel.findAll({
-      attributes: ['id'],
-    });
-    const result = rows.map((r) => r.dataValues.id);
-    console.log('find all resolutions with ids :', result);
+    const connection = createConnection();
+    const queryAsync = promisify(connection.query).bind(connection);
+    const sql = 'SELECT * FROM resolutions';
+    const result = await queryAsync(sql);
+    connection.end();
     return result;
   }
 }

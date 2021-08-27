@@ -1,59 +1,71 @@
+import { promisify } from 'util';
+import { v4 as uuidv4 } from 'uuid';
+import { createConnection } from '../../../DBconnection.js';
+
 export default class PatientSQL {
-  constructor(patient) {
-    this.patientModel = patient;
-  }
-
   async create(patientName) {
-    const result = await this.patientModel.create({ name: patientName });
-    console.log('create patient with name :', result.name);
-    return result;
+    const key = uuidv4();
+    const connection = createConnection();
+    const queryAsync = promisify(connection.query).bind(connection);
+    const sql = 'INSERT INTO patients (id, name) VALUES ( '
+      + `'${key}', `
+      + `'${patientName}' )`;
+    await queryAsync(sql);
+    connection.end();
+    return { id: key, name: patientName };
   }
 
-  async update(patient, value) {
-    const result = await this.patientModel.update({
-      name: value,
-    }, {
-      where: {
-        id: patient.id,
-      },
-    });
-    return result;
+  async update(patient, patientName) {
+    const connection = createConnection();
+    const queryAsync = promisify(connection.query).bind(connection);
+    const sql = 'UPDATE patients SET '
+      + `name = '${patientName}' `
+      + 'WHERE '
+      + `id = '${patient.id}'`;
+    await queryAsync(sql);
+    connection.end();
+    return { id: patient.id, name: patientName };
   }
 
   async getByName(patientName) {
-    const result = await this.patientModel.findOne({
-      where: {
-        name: patientName,
-      },
-    });
-    console.log('find patient with name :', result.name);
-    return result;
+    const connection = createConnection();
+    const queryAsync = promisify(connection.query).bind(connection);
+    const sql = 'SELECT * FROM patients '
+      + 'WHERE '
+      + `name = '${patientName}'`;
+    const result = await queryAsync(sql);
+    connection.end();
+    return result[0];
   }
 
   async getByID(patientID) {
-    const result = await this.patientModel.findOne({
-      where: {
-        id: patientID,
-      },
-    });
-    console.log('return patient with name :', result.name);
-    return result;
+    const connection = createConnection();
+    const queryAsync = promisify(connection.query).bind(connection);
+    const sql = 'SELECT * FROM patients '
+      + 'WHERE '
+      + `id = '${patientID}'`;
+    const result = await queryAsync(sql);
+    connection.end();
+    return result[0];
   }
 
   async delete(patient) {
-    await this.patientModel.destroy({
-      where: {
-        id: patient.id,
-      },
-    });
+    const connection = createConnection();
+    const queryAsync = promisify(connection.query).bind(connection);
+    const sql = 'DELETE FROM patients '
+      + 'WHERE '
+      + `id = '${patient.id}'`;
+    await queryAsync(sql);
+    connection.end();
+    return patient;
   }
 
   async getAllNames() {
-    const rows = await this.patientModel.findAll({
-      attributes: ['name'],
-    });
-    const result = rows.map((r) => r.dataValues.name);
-    console.log('find all patient with names :', result);
-    return result;
+    const connection = createConnection();
+    const queryAsync = promisify(connection.query).bind(connection);
+    const sql = 'SELECT name FROM patients';
+    const result = await queryAsync(sql);
+    connection.end();
+    return result.map((item) => item.name);
   }
 }

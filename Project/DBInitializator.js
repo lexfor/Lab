@@ -1,25 +1,18 @@
-import pkg from 'sequelize';
-import { DB_ACCESS } from './config.js';
+import { promisify } from 'util';
+import { createConnection } from './DBconnection.js';
 import { patientDefine } from './api/models/patientModel.js';
 import { resolutionDefine } from './api/models/resolutionModel.js';
-import { patientResolutionRelation } from './api/models/modelsRelations.js';
 
-const { Sequelize } = pkg;
+export async function initializeDB() {
+  const connection = createConnection();
 
-const sequelize = new Sequelize(DB_ACCESS.database, DB_ACCESS.user, DB_ACCESS.password, {
-  dialect: DB_ACCESS.dialect,
-  host: DB_ACCESS.host,
-  port: DB_ACCESS.port,
-  logging: false,
-});
+  const queryAsync = promisify(connection.query).bind(connection);
+  await queryAsync('DROP TABLE IF EXISTS resolutions');
+  await queryAsync('DROP TABLE IF EXISTS patients');
+  connection.end();
 
-patientDefine(sequelize);
-resolutionDefine(sequelize);
+  await patientDefine(connection);
+  await resolutionDefine(connection);
 
-patientResolutionRelation(sequelize);
-
-sequelize.sync({ force: true })
-  .then(() => console.log('tables has been successfully created'))
-  .catch((error) => console.log('This error occurred', error));
-
-export { sequelize };
+  return connection;
+}

@@ -8,7 +8,7 @@ import PatientRedis from './api/repositories/patient.repositories/patientRedis.j
 import ResolutionRedis from './api/repositories/resolution.repositories/resolutionRedis.js';
 import PatientSQL from './api/repositories/patient.repositories/patientSQL.js';
 import ResolutionSQL from './api/repositories/resolution.repositories/resolutionSQL.js';
-import { sequelize } from './DBInitializator.js';
+import { initializeDB } from './DBInitializator.js';
 
 import { queueMemoryRepository } from './api/repositories/queue.repositories/queueMemory.js';
 import { patientMemoryRepository } from './api/repositories/patient.repositories/patientMemory.js';
@@ -33,8 +33,9 @@ class Injector {
         break;
       case 'sql':
         console.log('using SQL');
-        this.patientRepository = new PatientSQL(sequelize.models.patient);
-        this.resolutionRepository = new ResolutionSQL(sequelize.models.resolution);
+        initializeDB();
+        this.patientRepository = new PatientSQL();
+        this.resolutionRepository = new ResolutionSQL();
         break;
       default:
         console.log('using memory');
