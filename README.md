@@ -13,6 +13,31 @@ install all dependencies:
 
     npm install
 
+if you need change storage type - do it in .env file(NODE_ENV - patient and resolution storage type)
+
+    NODE_ENV=sql
+    QUEUE_STORAGE=redis
+
+if you want to use redis:
+
+    open console and start redis-server
+
+if you want to use MYSQL:
+
+Step 1:
+
+Create your SQL database
+
+    CREATE DATABASE <your database name>
+
+Step 2:
+
+Change .env file for you data
+
+    DB_USER=<your user name>
+    DB_PASSWORD=<your user password>
+    DB_DATABASE=<your database name>
+
 run project:
 
     npm start
@@ -23,7 +48,7 @@ Then open:
 
 *How to run tests?*
 
-    npm run test
+    npm test
 
 *How to use?*
 
