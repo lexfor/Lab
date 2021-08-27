@@ -8,11 +8,10 @@ export async function resolutionDefine() {
     + 'id VARCHAR(255),'
     + 'value VARCHAR(255),'
     + 'delay INT,'
-    + 'createdTime VARCHAR(255),'
+    + 'updatedTime VARCHAR(255),'
     + 'patient_id VARCHAR(255),'
     + 'PRIMARY KEY (id),'
     + 'FOREIGN KEY (patient_id) REFERENCES patients(id))';
-
   await queryAsync(sqlQuery);
   connection.end();
 }

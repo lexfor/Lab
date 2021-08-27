@@ -8,7 +8,7 @@ export default class ResolutionSQL {
     const key = uuidv4();
     const connection = createConnection();
     const queryAsync = promisify(connection.query).bind(connection);
-    const sql = 'INSERT INTO resolutions (id, value, delay, createdTime, patient_id) VALUES ('
+    const sql = 'INSERT INTO resolutions (id, value, delay, updatedTime, patient_id) VALUES ('
       + `'${key}', `
       + `'${resolutionValue}', `
       + `${time}, `
@@ -26,7 +26,7 @@ export default class ResolutionSQL {
     const sql = 'UPDATE resolutions SET '
       + `value = '${resolutionValue}', `
       + `delay = ${time}, `
-      + `createdTime = ${new Date()} `
+      + `updatedTime = ${new Date()} `
       + 'WHERE '
       + `id = '${resolution.id}'`;
     await queryAsync(sql);
@@ -42,10 +42,13 @@ export default class ResolutionSQL {
       + `patient_id = '${patient.id}'`;
     const result = await queryAsync(sql);
     connection.end();
-    if (result[0]) {
-      return result[0];
+    if (!result[0]) {
+      return NOT_AVAILABLE;
     }
-    return NOT_AVAILABLE;
+    if (new Date().getTime() - result[0].updatedTime > result[0].delay) {
+      return NOT_AVAILABLE;
+    }
+    return result[0];
   }
 
   async delete(resolution) {

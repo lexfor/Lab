@@ -33,7 +33,7 @@ class Injector {
         break;
       case 'sql':
         console.log('using SQL');
-        initializeDB();
+        initializeDB().then(console.log('Database initialized'));
         this.patientRepository = new PatientSQL();
         this.resolutionRepository = new ResolutionSQL();
         break;

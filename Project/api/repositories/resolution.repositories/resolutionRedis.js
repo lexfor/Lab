@@ -46,7 +46,7 @@ export default class ResolutionRedis {
     const keysAndValuesObject = await hgetallAsync('patient');
 
     if (!keysAndValuesObject) {
-      return '';
+      return NOT_AVAILABLE;
     }
     const keysAndValuesArray = Object.entries(keysAndValuesObject);
     const result = {};
