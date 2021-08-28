@@ -7,35 +7,47 @@ export default class PatientRedis {
   }
 
   async create(patientName) {
-    const uuid = uuidv4();
-    const hsetAsync = promisify(this.client.hset).bind(this.client);
-    await hsetAsync('names', uuid, patientName);
-    const result = { id: uuid, name: patientName };
-    return result;
+    try {
+      const uuid = uuidv4();
+      const hsetAsync = promisify(this.client.hset).bind(this.client);
+      await hsetAsync('names', uuid, patientName);
+      const result = { id: uuid, name: patientName };
+      return result;
+    } catch (e) {
+      return e.message;
+    }
   }
 
   async update(patient, value) {
-    const hsetAsync = promisify(this.client.hset).bind(this.client);
-    const hdelAsync = promisify(this.client.hdel).bind(this.client);
-    await hdelAsync('names', patient.id);
-    await hsetAsync('names', patient.id, value);
-    return {
-      id: patient.id,
-      name: value,
-    };
+    try {
+      const hsetAsync = promisify(this.client.hset).bind(this.client);
+      const hdelAsync = promisify(this.client.hdel).bind(this.client);
+      await hdelAsync('names', patient.id);
+      await hsetAsync('names', patient.id, value);
+      return {
+        id: patient.id,
+        name: value,
+      };
+    } catch (e) {
+      return e.message;
+    }
   }
 
   async getByName(patientName) {
-    const hgetallAsync = promisify(this.client.hgetall).bind(this.client);
-    const keysAndValuesObject = await hgetallAsync('names');
-    const keysAndValuesArray = Object.entries(keysAndValuesObject);
-    const result = {};
-    keysAndValuesArray.forEach((item) => {
-      if (item[1] === patientName) {
-        [result.id, result.name] = item;
-      }
-    });
-    return result;
+    try {
+      const hgetallAsync = promisify(this.client.hgetall).bind(this.client);
+      const keysAndValuesObject = await hgetallAsync('names');
+      const keysAndValuesArray = Object.entries(keysAndValuesObject);
+      const result = {};
+      keysAndValuesArray.forEach((item) => {
+        if (item[1] === patientName) {
+          [result.id, result.name] = item;
+        }
+      });
+      return result;
+    } catch (e) {
+      return e.message;
+    }
   }
 
   async getByID(patientID) {
@@ -46,8 +58,7 @@ export default class PatientRedis {
       result.id = patientID;
       return result;
     } catch (e) {
-      console.log(e.message);
-      return '';
+      return e.message;
     }
   }
 
@@ -57,14 +68,17 @@ export default class PatientRedis {
       await hdelAsync('names', patient.id);
       return patient;
     } catch (e) {
-      console.log(e.message);
-      return '';
+      return e.message;
     }
   }
 
   async getAllNames() {
-    const hvalsAsync = promisify(this.client.hvals).bind(this.client);
-    const result = await hvalsAsync('names');
-    return result;
+    try {
+      const hvalsAsync = promisify(this.client.hvals).bind(this.client);
+      const result = await hvalsAsync('names');
+      return result;
+    } catch (e) {
+      return e.message;
+    }
   }
 }

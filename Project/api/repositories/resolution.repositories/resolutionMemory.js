@@ -12,7 +12,7 @@ class ResolutionMemory {
       id: uuid,
       value: resolutionValue,
       delay: time,
-      createdTime: new Date().getTime(),
+      updatedAt: new Date().getTime(),
       patient_id: patient.id,
     });
     return {
@@ -27,7 +27,7 @@ class ResolutionMemory {
       if (item.id === resolution.id) {
         this.resolutions[index].value = resolutionValue;
         this.resolutions[index].delay = time;
-        this.resolutions[index].createdTime = new Date().getTime();
+        this.resolutions[index].updatedAt = new Date().getTime();
       }
     });
   }
@@ -62,7 +62,7 @@ class ResolutionMemory {
 
   checkTime(resolution) {
     let result = true;
-    if (new Date().getTime() - resolution.createdTime > resolution.delay) {
+    if (new Date().getTime() - resolution.updatedAt > resolution.delay) {
       result = false;
     }
     return result;
