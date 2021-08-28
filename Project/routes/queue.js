@@ -38,7 +38,7 @@ router.get('/queue/patient/current', async (req, res) => {
 });
 
 router.get('/queue/patient/all', async (req, res) => {
-  const result = await resolutionController.getAllProcessedPatientsNames();
+  const result = await resolutionController.getAllPatientsNames();
   res.status(result.getStatus).send(JSON.stringify(result.getValue));
 });
 

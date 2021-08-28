@@ -16,21 +16,21 @@ export default class QueueController {
     return res;
   }
 
-  async checkIsExistValue(body) {
+  async checkIsExistValue(patientName) {
     const res = new RequestResult();
-    if (await this.queueService.isExist(body)) {
+    if (await this.queueService.isExist(patientName)) {
       res.setValue = NOT_AVAILABLE;
       res.setStatus = STATUSES.BAD_REQUEST;
     }
     return res;
   }
 
-  async addValueInQueue(body) {
-    const res = await this.checkIsExistValue(body);
+  async addValueInQueue(patientName) {
+    const res = await this.checkIsExistValue(patientName);
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.queueService.push(body);
+    res.setValue = await this.queueService.push(patientName);
     return checkOutputStatus(res);
   }
 
