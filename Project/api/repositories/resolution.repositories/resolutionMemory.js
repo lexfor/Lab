@@ -40,12 +40,12 @@ class ResolutionMemory {
       }
     });
     if (!result) {
-      return NOT_AVAILABLE;
+      return { value: NOT_AVAILABLE };
     }
     if (this.checkTime(result)) {
       return result;
     }
-    return NOT_AVAILABLE;
+    return { value: NOT_AVAILABLE };
   }
 
   async delete(resolution) {

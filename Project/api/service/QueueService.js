@@ -6,19 +6,19 @@ export default class QueueService {
 
   async push(value) {
     const patient = await this.patientRepository.create(value);
-    await this.queueRepository.push(patient);
-    return 'pushed';
+    const result = await this.queueRepository.push(patient);
+    return result;
   }
 
   async shift() {
-    await this.queueRepository.shift();
-    return 'shifted';
+    const result = await this.queueRepository.shift();
+    return result;
   }
 
   async getCurrent() {
     const patientID = await this.queueRepository.getFirst();
     const patient = await this.patientRepository.getByID(patientID);
-    return patient.name;
+    return patient;
   }
 
   async isExist(value) {

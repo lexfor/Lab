@@ -46,7 +46,8 @@ export default class PatientController {
     } else {
       delay = process.env.TTL_DELAY;
     }
-    res.setValue = await this.patientsService.addPatientResolution(params.value, delay);
+    const result = await this.patientsService.addPatientResolution(params.value, delay);
+    res.setValue = result.value;
     return checkOutputStatus(res);
   }
 
@@ -59,21 +60,23 @@ export default class PatientController {
     return checkOutputStatus(res);
   }
 
-  async findResolutionByPatientName(body) {
-    const res = await this.checkIsExistPatient(body);
+  async findResolutionByPatientName(patientName) {
+    const res = await this.checkIsExistPatient(patientName);
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.patientsService.findPatientResolution(body);
+    const result = await this.patientsService.findPatientResolution(patientName);
+    res.setValue = result.value;
     return checkOutputStatus(res);
   }
 
-  async deletePatientResolution(body) {
-    const res = await this.checkIsExistPatient(body);
+  async deletePatientResolution(patientName) {
+    const res = await this.checkIsExistPatient(patientName);
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.patientsService.deletePatientResolution(body);
+    const result = await this.patientsService.deletePatientResolution(patientName);
+    res.setValue = result.value;
     return checkOutputStatus(res);
   }
 }

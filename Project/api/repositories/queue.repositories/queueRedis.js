@@ -8,13 +8,14 @@ export default class QueueRedis {
   async push(patient) {
     const rpushAsync = promisify(this.client.rpush).bind(this.client);
     await rpushAsync('queue', patient.id);
-    return 'pushed';
+    return patient;
   }
 
   async shift() {
+    const result = this.getFirst();
     const lpopAsync = promisify(this.client.lpop).bind(this.client);
     await lpopAsync('queue');
-    return 'shifted';
+    return result;
   }
 
   async getFirst() {

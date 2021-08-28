@@ -5,12 +5,13 @@ class QueueMemory {
 
   push(patient) {
     this.fifo.push(patient.id);
-    return 'pushed';
+    return patient;
   }
 
   shift() {
+    const resulut = this.fifo[0];
     this.fifo.shift();
-    return 'shifted';
+    return resulut;
   }
 
   getFirst() {

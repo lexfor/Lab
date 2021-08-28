@@ -19,8 +19,10 @@ export default class PatientRedis {
     const hdelAsync = promisify(this.client.hdel).bind(this.client);
     await hdelAsync('names', patient.id);
     await hsetAsync('names', patient.id, value);
-    const result = { id: patient.id, name: value };
-    return result;
+    return {
+      id: patient.id,
+      name: value,
+    };
   }
 
   async getByName(patientName) {

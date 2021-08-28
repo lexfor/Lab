@@ -43,10 +43,10 @@ export default class ResolutionSQL {
     const result = await queryAsync(sql);
     connection.end();
     if (!result[0]) {
-      return NOT_AVAILABLE;
+      return { value: NOT_AVAILABLE };
     }
     if (new Date().getTime() - result[0].updatedTime > result[0].delay) {
-      return NOT_AVAILABLE;
+      return { value: NOT_AVAILABLE };
     }
     return result[0];
   }

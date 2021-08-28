@@ -30,7 +30,8 @@ export default class QueueController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.queueService.push(patientName);
+    const result = await this.queueService.push(patientName);
+    res.setValue = result.name;
     return checkOutputStatus(res);
   }
 
@@ -39,7 +40,8 @@ export default class QueueController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.queueService.getCurrent();
+    const result = await this.queueService.getCurrent();
+    res.setValue = result.name;
     return checkOutputStatus(res);
   }
 
@@ -48,7 +50,8 @@ export default class QueueController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.queueService.shift();
+    const result = await this.queueService.shift();
+    res.setStatus = result.id;
     return checkOutputStatus(res);
   }
 }

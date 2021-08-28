@@ -16,7 +16,7 @@ export default class PatientService {
     const patientID = await this.queueRepository.getFirst();
     const patient = await this.patientRepository.getByID(patientID);
     const resolution = await this.resolutionRepository.create(patient, value, time);
-    return resolution.value;
+    return resolution;
   }
 
   async findPatientResolution(patientName) {
@@ -25,14 +25,14 @@ export default class PatientService {
     if (!resolution.value) {
       return NOT_AVAILABLE;
     }
-    return resolution.value;
+    return resolution;
   }
 
   async deletePatientResolution(patientName) {
     const patient = await this.patientRepository.getByName(patientName);
     const resolution = await this.resolutionRepository.get(patient);
     await this.resolutionRepository.delete(resolution);
-    return resolution.value;
+    return resolution;
   }
 
   async getAllPatientNames() {
