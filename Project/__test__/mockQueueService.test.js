@@ -18,9 +18,10 @@ describe('queue service unit tests', () => {
     });
     queueMemoryRepository.push.mockImplementation((id) => {
       expect(id).toEqual('123');
+      return { id: '123', value: 'good' };
     });
     const result = await queue.push('Tim');
-    expect(result).toEqual('pushed');
+    expect(result).toEqual({ id: '123', value: 'good' });
   });
 
   test('pop patient from queue', async () => {
@@ -36,7 +37,7 @@ describe('queue service unit tests', () => {
       return { name: 'Tim', id: '123' };
     });
     const result = await queue.getCurrent();
-    expect(result).toEqual('Tim');
+    expect(result).toEqual({ name: 'Tim', id: '123' });
   });
 
   test('check is exist patient', async () => {

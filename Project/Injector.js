@@ -63,7 +63,7 @@ class Injector {
       this.queueRepository,
     );
     this.queueService = new QueueService(this.queueRepository, this.patientRepository);
-    this.queueController = new QueueController(this.queueService);
+    this.queueController = new QueueController(this.queueService, this.patientService);
     this.resolutionController = new PatientController(this.queueService, this.patientService);
   }
 

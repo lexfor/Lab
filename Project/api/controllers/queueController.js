@@ -3,8 +3,9 @@ import { checkOutputStatus } from '../helpers/StatusHelper.js';
 import { STATUSES, NOT_AVAILABLE } from '../../constants.js';
 
 export default class QueueController {
-  constructor(queue) {
+  constructor(queue, patient) {
     this.queueService = queue;
+    this.patientService = patient;
   }
 
   async checkLength() {
@@ -16,9 +17,9 @@ export default class QueueController {
     return res;
   }
 
-  async checkIsExistValue(patientName) {
+  async checkIsExistPatient(patientName) {
     const res = new RequestResult();
-    if (await this.queueService.isExist(patientName)) {
+    if (await this.patientService.isExist(patientName)) {
       res.setValue = NOT_AVAILABLE;
       res.setStatus = STATUSES.BAD_REQUEST;
     }
@@ -26,7 +27,7 @@ export default class QueueController {
   }
 
   async addValueInQueue(patientName) {
-    const res = await this.checkIsExistValue(patientName);
+    const res = await this.checkIsExistPatient(patientName);
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
@@ -51,7 +52,7 @@ export default class QueueController {
       return res;
     }
     const result = await this.queueService.shift();
-    res.setStatus = result.id;
+    res.setValue = result.id;
     return checkOutputStatus(res);
   }
 }

@@ -46,6 +46,7 @@ export default class PatientController {
     } else {
       delay = process.env.TTL_DELAY;
     }
+    console.log(params);
     const result = await this.patientsService.addPatientResolution(params.value, delay);
     res.setValue = result.value;
     return checkOutputStatus(res);

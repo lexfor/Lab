@@ -32,7 +32,7 @@ describe('patient service unit tests', () => {
       return { id: '234', value: 'Good' };
     });
     const result = await patients.findPatientResolution('Tim');
-    expect(result).toEqual('Good');
+    expect(result).toEqual({ id: '234', value: 'Good' });
   });
 
   test('add patient resolution', async () => {
@@ -46,7 +46,7 @@ describe('patient service unit tests', () => {
       return { id: '234', value: 'Good' };
     });
     const result = await patients.addPatientResolution('aaaaaa', process.env.TTL_DELAY);
-    expect(result).toEqual('Good');
+    expect(result).toEqual({ id: '234', value: 'Good' });
   });
 
   test('delete patient', async () => {
@@ -61,7 +61,7 @@ describe('patient service unit tests', () => {
       expect(resolution.value).toEqual('bad');
     });
     const result = await patients.deletePatientResolution('Tim');
-    expect(result).toEqual('bad');
+    expect(result).toEqual({ id: '234', value: 'bad' });
   });
 
   test('get all patients names', async () => {
