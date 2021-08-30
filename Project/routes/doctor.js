@@ -2,9 +2,9 @@ import express from 'express';
 import Ajv from 'ajv';
 
 import { injector } from '../Injector.js';
-import { SetResolutionSchema } from '../api/schemas/SetResolutionSchema.js';
-import { DeleteResolutionSchema } from '../api/schemas/DeleteResolutionSchema.js';
-import { GetPatientSchema } from '../api/schemas/GetPatientSchema.js';
+import { SetResolutionSchema } from '../api/helpers/schemas/SetResolutionSchema.js';
+import { DeleteResolutionSchema } from '../api/helpers/schemas/DeleteResolutionSchema.js';
+import { GetPatientSchema } from '../api/helpers/schemas/GetPatientSchema.js';
 import { STATUSES, NOT_AVAILABLE } from '../constants.js';
 
 const router = express();
@@ -18,12 +18,12 @@ router.get('/', (req, res) => {
 
 router.get('/patient/current', async (req, res) => {
   const result = await queueController.getCurrentInQueue();
-  res.status(result.getStatus).send(JSON.stringify(result.getValue));
+  res.status(result.getStatus).json(result.getValue);
 });
 
 router.get('/patient/next', async (req, res) => {
   const result = await queueController.takeNextValueInQueue();
-  res.status(result.getStatus).send(JSON.stringify(result.getValue));
+  res.status(result.getStatus).json(result.getValue);
 });
 
 router.get('/patient/resolution', async (req, res, next) => {
@@ -31,13 +31,13 @@ router.get('/patient/resolution', async (req, res, next) => {
   if (validationResult) {
     await next();
   } else {
-    res.status(STATUSES.BAD_REQUEST).send(JSON.stringify(NOT_AVAILABLE));
+    res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
   }
 },
 
 async (req, res) => {
   const result = await resolutionController.findResolutionByPatientName(req.query.value);
-  res.status(result.getStatus).send(JSON.stringify(result.getValue));
+  res.status(result.getStatus).json(result.getValue);
 });
 
 router.put('/patient/current/resolution', async (req, res, next) => {
@@ -45,13 +45,13 @@ router.put('/patient/current/resolution', async (req, res, next) => {
   if (validationResult) {
     await next();
   } else {
-    res.status(STATUSES.BAD_REQUEST).send(JSON.stringify(NOT_AVAILABLE));
+    res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
   }
 },
 
 async (req, res) => {
   const result = await resolutionController.setResolutionForCurrentPatient(req.body);
-  res.status(result.getStatus).send(JSON.stringify(result.getValue));
+  res.status(result.getStatus).json(result.getValue);
 });
 
 router.delete('/patient/resolution', async (req, res, next) => {
@@ -59,13 +59,13 @@ router.delete('/patient/resolution', async (req, res, next) => {
   if (validationResult) {
     await next();
   } else {
-    res.status(STATUSES.BAD_REQUEST).send(JSON.stringify(NOT_AVAILABLE));
+    res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
   }
 },
 
 async (req, res) => {
   const result = await resolutionController.deletePatientResolution(req.query.value);
-  res.status(result.getStatus).send(JSON.stringify(result.getValue));
+  res.status(result.getStatus).json(result.getValue);
 });
 
 export default router;

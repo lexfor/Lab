@@ -1,6 +1,6 @@
 import { promisify } from 'util';
 import { v4 as uuidv4 } from 'uuid';
-import { createConnection } from '../../../DBconnection.js';
+import { createConnection } from '../../helpers/DBconnection.js';
 
 export default class PatientSQL {
   async create(patientName) {

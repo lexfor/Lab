@@ -1,5 +1,5 @@
 import { promisify } from 'util';
-import { createConnection } from '../../DBconnection.js';
+import { createConnection } from '../DBconnection.js';
 
 export async function resolutionDefine() {
   const connection = createConnection();

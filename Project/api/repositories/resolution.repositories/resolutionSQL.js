@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { promisify } from 'util';
 import { NOT_AVAILABLE } from '../../../constants.js';
-import { createConnection } from '../../../DBconnection.js';
+import { createConnection } from '../../helpers/DBconnection.js';
 
 export default class ResolutionSQL {
   async create(patient, resolutionValue, time) {

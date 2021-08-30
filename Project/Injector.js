@@ -8,7 +8,7 @@ import PatientRedis from './api/repositories/patient.repositories/patientRedis.j
 import ResolutionRedis from './api/repositories/resolution.repositories/resolutionRedis.js';
 import PatientSQL from './api/repositories/patient.repositories/patientSQL.js';
 import ResolutionSQL from './api/repositories/resolution.repositories/resolutionSQL.js';
-import { initializeDB } from './DBInitializator.js';
+import { initializeDB } from './api/helpers/DBInitializator.js';
 
 import { queueMemoryRepository } from './api/repositories/queue.repositories/queueMemory.js';
 import { patientMemoryRepository } from './api/repositories/patient.repositories/patientMemory.js';

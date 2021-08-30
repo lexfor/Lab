@@ -1,8 +1,8 @@
 import express from 'express';
 import Ajv from 'ajv';
 import { injector } from '../Injector.js';
-import { AddPatientSchema } from '../api/schemas/AddPatientSchema.js';
-import { GetPatientSchema } from '../api/schemas/GetPatientSchema.js';
+import { AddPatientSchema } from '../api/helpers/schemas/AddPatientSchema.js';
+import { GetPatientSchema } from '../api/helpers/schemas/GetPatientSchema.js';
 import { STATUSES, NOT_AVAILABLE } from '../constants.js';
 
 const router = express();
@@ -23,23 +23,23 @@ router.post('/queue/patient', async (req, res, next) => {
   if (validationResult) {
     await next();
   } else {
-    res.status(STATUSES.BAD_REQUEST).send(JSON.stringify(NOT_AVAILABLE));
+    res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
   }
 },
 
 async (req, res) => {
   const result = await queueController.addValueInQueue(req.body);
-  res.status(result.getStatus).send(JSON.stringify(result.getValue));
+  res.status(result.getStatus).json(result.getValue);
 });
 
 router.get('/queue/patient/current', async (req, res) => {
   const result = await queueController.getCurrentInQueue();
-  res.status(result.getStatus).send(JSON.stringify(result.getValue));
+  res.status(result.getStatus).json(result.getValue);
 });
 
 router.get('/queue/patient/all', async (req, res) => {
   const result = await resolutionController.getAllPatientsNames();
-  res.status(result.getStatus).send(JSON.stringify(result.getValue));
+  res.status(result.getStatus).json(result.getValue);
 });
 
 router.get('/queue/patient/resolution', async (req, res, next) => {
@@ -47,13 +47,13 @@ router.get('/queue/patient/resolution', async (req, res, next) => {
   if (validationResult) {
     await next();
   } else {
-    res.status(STATUSES.BAD_REQUEST).send(JSON.stringify(NOT_AVAILABLE));
+    res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
   }
 },
 
 async (req, res) => {
   const result = await resolutionController.findResolutionByPatientName(req.query.value);
-  res.status(result.getStatus).send(JSON.stringify(result.getValue));
+  res.status(result.getStatus).json(result.getValue);
 });
 
 export default router;
