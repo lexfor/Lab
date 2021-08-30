@@ -11,14 +11,10 @@ const queueController = injector.getQueueController;
 const resolutionController = injector.getResolutionController;
 
 router.get('/', (req, res) => {
-  res.redirect('/queue');
-});
-
-router.get('/queue', (req, res) => {
   res.sendFile('./public/queue.html', { root: './Project' });
 });
 
-router.post('/queue/patient', async (req, res, next) => {
+router.post('/patient', async (req, res, next) => {
   const validationResult = ajv.validate(AddPatientSchema, req.body);
   if (validationResult) {
     await next();
@@ -32,17 +28,17 @@ async (req, res) => {
   res.status(result.getStatus).json(result.getValue);
 });
 
-router.get('/queue/patient/current', async (req, res) => {
+router.get('/patient/current', async (req, res) => {
   const result = await queueController.getCurrentInQueue();
   res.status(result.getStatus).json(result.getValue);
 });
 
-router.get('/queue/patient/all', async (req, res) => {
+router.get('/patient/all', async (req, res) => {
   const result = await resolutionController.getAllPatientsNames();
   res.status(result.getStatus).json(result.getValue);
 });
 
-router.get('/queue/patient/resolution', async (req, res, next) => {
+router.get('/patient/resolution', async (req, res, next) => {
   const validationResult = ajv.validate(GetPatientSchema, req.query);
   if (validationResult) {
     await next();
