@@ -1,79 +1,28 @@
 import dotenv from 'dotenv';
-import { SERVER_PORT, STORAGE_NAME } from './constants.js';
+import { SERVER_PORT } from './constants.js';
 
 dotenv.config();
 
 const env = process.env.NODE_ENV;
 
-const memory = {
+const dev = {
   app: {
     port: parseInt(process.env.DEV_APP_PORT, 10) || SERVER_PORT.APP_PORT,
   },
 
   queueStorage: {
-    name: process.env.QUEUE_STORAGE,
     host: process.env.QUEUE_HOST,
     port: SERVER_PORT.REDIS_PORT,
   },
 
   storage: {
-    name: STORAGE_NAME.MEMORY,
-    host: process.env.STORAGE_HOST,
-    port: SERVER_PORT.REDIS_PORT,
-  },
-};
-
-const redis = {
-  app: {
-    port: parseInt(process.env.DEV_APP_PORT, 10) || SERVER_PORT.APP_PORT,
-  },
-
-  queueStorage: {
-    name: process.env.QUEUE_STORAGE,
-    host: process.env.QUEUE_HOST,
-    port: SERVER_PORT.REDIS_PORT,
-  },
-
-  storage: {
-    name: STORAGE_NAME.REDIS,
-    host: process.env.STORAGE_HOST,
-    port: SERVER_PORT.REDIS_PORT,
-  },
-};
-
-const sql = {
-  app: {
-    port: parseInt(process.env.DEV_APP_PORT, 10) || SERVER_PORT.APP_PORT,
-  },
-
-  queueStorage: {
-    name: process.env.QUEUE_STORAGE,
-    host: process.env.QUEUE_HOST,
-    port: SERVER_PORT.REDIS_PORT,
-  },
-
-  storage: {
-    name: STORAGE_NAME.SQL,
     host: process.env.STORAGE_HOST,
     port: SERVER_PORT.SQL_PORT,
   },
 };
 
-const test = {
-  app: {
-    port: parseInt(process.env.DEV_APP_PORT, 10) || SERVER_PORT.APP_PORT,
-  },
-  storage: {
-    name: process.env.TEST_STORAGE,
-    port: SERVER_PORT.REDIS_PORT,
-  },
-};
-
 const config = {
-  memory,
-  redis,
-  test,
-  sql,
+  dev,
 };
 
 const envConfig = config[env];

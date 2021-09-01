@@ -1,38 +1,37 @@
 import QueueService from '../api/service/QueueService.js';
-import { queueMemoryRepository } from '../api/repositories/queue.repositories/queueMemory';
-import { patientMemoryRepository } from '../api/repositories/patient.repositories/patientMemory.js';
+import QueueRedis from '../api/repositories/queue.repositories/queueRedis.js';
+import PatientSQL from '../api/repositories/patient.repositories/patientSQL.js';
 
-jest.mock('../api/repositories/queue.repositories/queueMemory');
-jest.mock('../api/repositories/patient.repositories/patientMemory.js');
+jest.mock('../api/repositories/queue.repositories/queueRedis.js');
+jest.mock('../api/repositories/patient.repositories/patientSQL.js');
 
 describe('queue service unit tests', () => {
+  const patientRepository = new PatientSQL();
+  const queueRepository = new QueueRedis();
   const queue = new QueueService(
-    queueMemoryRepository,
-    patientMemoryRepository,
+    queueRepository,
+    patientRepository,
   );
 
   test('push patient in queue', async () => {
-    patientMemoryRepository.create.mockImplementation((name) => {
-      expect(name).toEqual('Tim');
-      return '123';
-    });
-    queueMemoryRepository.push.mockImplementation((id) => {
-      expect(id).toEqual('123');
+    queueRepository.push.mockImplementation((user) => {
+      expect(user.id).toEqual('123');
+      expect(user.name).toEqual('Tim');
       return { id: '123', value: 'good' };
     });
-    const result = await queue.push('Tim');
+    const result = await queue.push({ name: 'Tim', id: '123' });
     expect(result).toEqual({ id: '123', value: 'good' });
   });
 
   test('pop patient from queue', async () => {
-    queueMemoryRepository.shift.mockImplementation(() => 'shifted');
+    queueRepository.shift.mockImplementation(() => 'shifted');
     const result = await queue.shift();
     expect(result).toEqual('shifted');
   });
 
   test('get current patient from queue', async () => {
-    queueMemoryRepository.getFirst.mockResolvedValue('123');
-    patientMemoryRepository.getByID.mockImplementation((id) => {
+    queueRepository.getFirst.mockResolvedValue('123');
+    patientRepository.getByID.mockImplementation((id) => {
       expect(id).toEqual('123');
       return { name: 'Tim', id: '123' };
     });
@@ -41,8 +40,8 @@ describe('queue service unit tests', () => {
   });
 
   test('check is exist patient', async () => {
-    queueMemoryRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
-    patientMemoryRepository.getByID.mockImplementation((item) => {
+    queueRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
+    patientRepository.getByID.mockImplementation((item) => {
       switch (item) {
         case 'aaa':
           return { name: 'Tim', id: 'aaa' };
@@ -59,8 +58,8 @@ describe('queue service unit tests', () => {
   });
 
   test('check is exist patient', async () => {
-    queueMemoryRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
-    patientMemoryRepository.getByID.mockImplementation((item) => {
+    queueRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
+    patientRepository.getByID.mockImplementation((item) => {
       switch (item) {
         case 'aaa':
           return { name: 'Tim', id: 'aaa' };
@@ -77,13 +76,13 @@ describe('queue service unit tests', () => {
   });
 
   test('check is patient storage empty', async () => {
-    queueMemoryRepository.getAll.mockImplementation(() => ['Tim', 'Dima', 'Andrei']);
+    queueRepository.getAll.mockImplementation(() => ['Tim', 'Dima', 'Andrei']);
     const result = await queue.isEmpty();
     expect(result).toEqual(false);
   });
 
   test('check is patient storage empty', async () => {
-    queueMemoryRepository.getAll.mockImplementation(() => []);
+    queueRepository.getAll.mockImplementation(() => []);
     const result = await queue.isEmpty();
     expect(result).toEqual(true);
   });

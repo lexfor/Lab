@@ -1,21 +1,29 @@
 import express from 'express';
 import Ajv from 'ajv';
+import jwt from 'jsonwebtoken';
 import { injector } from '../Injector.js';
-import { AddPatientSchema } from '../api/helpers/schemas/AddPatientSchema.js';
-import { GetPatientSchema } from '../api/helpers/schemas/GetPatientSchema.js';
+import { UserSchema } from '../api/helpers/schemas/UserSchema.js';
 import { STATUSES, NOT_AVAILABLE } from '../constants.js';
 
+const { verify } = jwt;
 const router = express();
 const ajv = new Ajv();
 const queueController = injector.getQueueController;
 const resolutionController = injector.getResolutionController;
 
 router.get('/', (req, res) => {
-  res.sendFile('./public/queue.html', { root: './Project' });
+  res.sendFile('./public/queue/queue.html', { root: './Project' });
 });
 
 router.post('/patient', async (req, res, next) => {
-  const validationResult = ajv.validate(AddPatientSchema, req.body);
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    res.status(STATUSES.UNAUTHORISED).json(NOT_AVAILABLE);
+  }
+  const auth = authHeader.split(' ')[1];
+  const user = verify(auth, process.env.TOKEN_KEY);
+  console.log(user);
+  const validationResult = ajv.validate(UserSchema, user);
   if (validationResult) {
     await next();
   } else {
@@ -24,22 +32,27 @@ router.post('/patient', async (req, res, next) => {
 },
 
 async (req, res) => {
-  const result = await queueController.addValueInQueue(req.body);
+  const authHeader = req.headers.authorization;
+  const auth = authHeader.split(' ')[1];
+  const user = verify(auth, process.env.TOKEN_KEY);
+  const result = await queueController.addValueInQueue(user);
   res.status(result.getStatus).json(result.getValue);
 });
 
 router.get('/patient/current', async (req, res) => {
   const result = await queueController.getCurrentInQueue();
-  res.status(result.getStatus).json(result.getValue);
-});
-
-router.get('/patient/all', async (req, res) => {
-  const result = await resolutionController.getAllPatientsNames();
+  console.log(result);
   res.status(result.getStatus).json(result.getValue);
 });
 
 router.get('/patient/resolution', async (req, res, next) => {
-  const validationResult = ajv.validate(GetPatientSchema, req.query);
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    res.status(STATUSES.UNAUTHORISED.json(NOT_AVAILABLE));
+  }
+  const auth = authHeader.split(' ')[1];
+  const user = verify(auth, process.env.TOKEN_KEY);
+  const validationResult = ajv.validate(UserSchema, user);
   if (validationResult) {
     await next();
   } else {
@@ -48,7 +61,10 @@ router.get('/patient/resolution', async (req, res, next) => {
 },
 
 async (req, res) => {
-  const result = await resolutionController.findResolutionByPatientName(req.query.value);
+  const authHeader = req.headers.authorization;
+  const auth = authHeader.split(' ')[1];
+  const user = verify(auth, process.env.TOKEN_KEY);
+  const result = await resolutionController.findResolutionByPatientName(user.name);
   res.status(result.getStatus).json(result.getValue);
 });
 

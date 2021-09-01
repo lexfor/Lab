@@ -13,7 +13,7 @@ const queueController = injector.getQueueController;
 const resolutionController = injector.getResolutionController;
 
 router.get('/', (req, res) => {
-  res.sendFile('./public/doctor.html', { root: './Project' });
+  res.sendFile('./public/doctor/doctor.html', { root: './Project' });
 });
 
 router.get('/patient/current', async (req, res) => {
@@ -50,7 +50,7 @@ router.put('/patient/current/resolution', async (req, res, next) => {
 },
 
 async (req, res) => {
-  const result = await resolutionController.setResolutionForCurrentPatient(req.body);
+  const result = await resolutionController.setResolutionForCurrentPatient(req.body.value);
   res.status(result.getStatus).json(result.getValue);
 });
 

@@ -1,6 +1,7 @@
 async function getCurrent() {
   const response = await fetch('/doctor/patient/current');
-  document.getElementById('currentNumber').innerHTML = await response.json();
+  const result = await response.json();
+  document.getElementById('currentNumber').innerHTML = result.name;
 }
 
 async function next() {
@@ -31,7 +32,7 @@ async function findResolution() {
   const response = await fetch(url.href);
   const resolution = await response.json();
   const output = document.getElementById('resolutionOutput');
-  output.value = resolution;
+  output.value = resolution.value;
 }
 
 async function deleteResolution() {

@@ -9,21 +9,15 @@
   <section class="section">
     <p class="name">The queue</p>
     <a href="/doctor" class="to-doctor">Doctor cabinet</a>
+    <button class="add-button" onclick="Add()"> Add me in queue</button>
     <section class="current">
       <p class="label">Current patient:</p>
       <p class="number" id="currentNumber">Stack item value</p>
     </section>
-    <section class="add">
-      <textarea class="value" id="inputValue"></textarea>
-      <button class="add-button" onclick="Add()">Add</button>
-    </section>
   </section>
   <section class="section">
-    <select class="search" id="valueSelect" onchange="getSelectedResolution()">
-      <option value="default" selected>Выберите</option>
-    </select>
     <textarea class="result" id="resolution"></textarea>
   </section>
 </body>
-  <script src="./queue.js"></script>
+  <script src="queue.js"></script>
 </html>

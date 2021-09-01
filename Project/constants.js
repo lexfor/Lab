@@ -11,12 +11,7 @@ export const STATUSES = {
   REQUEST_TIMEOUT: 408,
   SERVER_ERROR: 500,
   UNAVAILABLE: 503,
-};
-
-export const STORAGE_NAME = {
-  REDIS: 'redis',
-  MEMORY: 'memory',
-  SQL: 'sql',
+  UNAUTHORISED: 401,
 };
 
 export const SERVER_PORT = {

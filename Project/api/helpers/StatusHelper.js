@@ -6,6 +6,10 @@ export function checkOutputStatus(res) {
       res.setStatus = STATUSES.NOT_FOUND;
       res.setValue = NOT_AVAILABLE;
       break;
+    case 'no such user':
+      res.setStatus = STATUSES.NOT_FOUND;
+      res.setValue = NOT_AVAILABLE;
+      break;
     case 'timeout':
       res.setStatus = STATUSES.REQUEST_TIMEOUT;
       res.setValue = NOT_AVAILABLE;

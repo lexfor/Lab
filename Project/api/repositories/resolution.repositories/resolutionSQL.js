@@ -1,24 +1,26 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v1 as uuidv1 } from 'uuid';
 import { promisify } from 'util';
 import { NOT_AVAILABLE } from '../../../constants.js';
-import { createConnection } from '../../helpers/DBconnection.js';
 
 export default class ResolutionSQL {
+  constructor(connection) {
+    this.connection = connection;
+  }
+
   async create(patient, resolutionValue, time) {
     try {
-      const key = uuidv4();
-      const connection = createConnection();
-      const queryAsync = promisify(connection.query).bind(connection);
-      const sql = 'INSERT INTO resolutions (id, value, delay, updatedTime, patient_id) VALUES ('
-        + `'${key}', `
-        + `'${resolutionValue}', `
-        + `${time}, `
-        + `'${new Date().getTime()}', `
-        + `'${patient.id}'
-      )`;
-      await queryAsync(sql);
-      connection.end();
-      return { id: key, value: resolutionValue, patient_id: patient.id };
+      const uuid = uuidv1();
+      const data = {
+        id: uuid,
+        value: resolutionValue,
+        delay: time,
+        updatedTime: new Date().getTime(),
+        patient_id: patient.id,
+      };
+      const queryAsync = promisify(this.connection.query).bind(this.connection);
+      const sql = 'INSERT INTO resolutions SET ? ';
+      await queryAsync(sql, data);
+      return data;
     } catch (e) {
       return e.message;
     }
@@ -26,16 +28,14 @@ export default class ResolutionSQL {
 
   async update(resolution, resolutionValue, time) {
     try {
-      const connection = createConnection();
-      const queryAsync = promisify(connection.query).bind(connection);
-      const sql = 'UPDATE resolutions SET '
-        + `value = '${resolutionValue}', `
-        + `delay = ${time}, `
-        + `updatedTime = ${new Date()} `
-        + 'WHERE '
-        + `id = '${resolution.id}'`;
-      await queryAsync(sql);
-      connection.end();
+      const data = [{
+        value: resolutionValue,
+        delay: time,
+        updatedTime: new Date().getTime(),
+      }, resolution.id];
+      const queryAsync = promisify(this.connection.query).bind(this.connection);
+      const sql = 'UPDATE resolutions SET ? WHERE id = ?';
+      await queryAsync(sql, data);
       return { id: resolution.id, name: resolutionValue };
     } catch (e) {
       return e.message;
@@ -44,13 +44,9 @@ export default class ResolutionSQL {
 
   async get(patient) {
     try {
-      const connection = createConnection();
-      const queryAsync = promisify(connection.query).bind(connection);
-      const sql = 'SELECT * FROM resolutions '
-        + 'WHERE '
-        + `patient_id = '${patient.id}'`;
-      const result = await queryAsync(sql);
-      connection.end();
+      const queryAsync = promisify(this.connection.query).bind(this.connection);
+      const sql = 'SELECT * FROM resolutions WHERE patient_id = ?';
+      const result = await queryAsync(sql, patient.id);
       if (!result[0]) {
         return { value: NOT_AVAILABLE };
       }
@@ -65,14 +61,9 @@ export default class ResolutionSQL {
 
   async delete(resolution) {
     try {
-      const connection = createConnection();
-      const queryAsync = promisify(connection.query).bind(connection);
-      const sql = 'UPDATE resolutions SET '
-        + `value = '${NOT_AVAILABLE}' `
-        + 'WHERE '
-        + `id = '${resolution.id}'`;
-      await queryAsync(sql);
-      connection.end();
+      const queryAsync = promisify(this.connection.query).bind(this.connection);
+      const sql = 'DELETE FROM resolutions WHERE id = ?';
+      await queryAsync(sql, resolution.id);
       return resolution;
     } catch (e) {
       return e.message;
@@ -81,11 +72,9 @@ export default class ResolutionSQL {
 
   async getAll() {
     try {
-      const connection = createConnection();
-      const queryAsync = promisify(connection.query).bind(connection);
+      const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'SELECT * FROM resolutions';
       const result = await queryAsync(sql);
-      connection.end();
       return result;
     } catch (e) {
       return e.message;

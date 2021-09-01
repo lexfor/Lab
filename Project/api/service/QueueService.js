@@ -4,8 +4,7 @@ export default class QueueService {
     this.patientRepository = patientRepository;
   }
 
-  async push(value) {
-    const patient = await this.patientRepository.create(value);
+  async push(patient) {
     const result = await this.queueRepository.push(patient);
     return result;
   }

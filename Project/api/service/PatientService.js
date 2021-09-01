@@ -7,11 +7,6 @@ export default class PatientService {
     this.queueRepository = queueRepository;
   }
 
-  async createPatient(value) {
-    const patient = await this.patientRepository.create(value);
-    return patient;
-  }
-
   async addPatientResolution(value, time) {
     const patientID = await this.queueRepository.getFirst();
     const patient = await this.patientRepository.getByID(patientID);
@@ -33,11 +28,6 @@ export default class PatientService {
     const resolution = await this.resolutionRepository.get(patient);
     await this.resolutionRepository.delete(resolution);
     return resolution;
-  }
-
-  async getAllPatientNames() {
-    const result = await this.patientRepository.getAllNames();
-    return result;
   }
 
   async isExist(value) {
