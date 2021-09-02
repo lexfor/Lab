@@ -28,7 +28,7 @@ export default class AuthenticationService {
     return patient;
   }
 
-  async logIn(user) {
+  async logIn(user, secretToken = process.env.TOKEN_KEY) {
     const patient = await this.authenticationRepository.getPatientByLogin(user.login);
     if (!patient) {
       return 'no such user';
@@ -39,7 +39,7 @@ export default class AuthenticationService {
         name: patient.name,
         birthday: patient.birthday,
         gender: patient.gender,
-      }, process.env.TOKEN_KEY);
+      }, secretToken);
       return token;
     }
     return NOT_AVAILABLE;
@@ -47,6 +47,6 @@ export default class AuthenticationService {
 
   async isExist(user) {
     const values = await this.authenticationRepository.getAllLogins();
-    return values.indexOf(user.email) !== -1;
+    return values.indexOf(user.login) !== -1;
   }
 }

@@ -10,7 +10,6 @@ export default class AuthenticationController {
   async checkIsUserExist(user) {
     const res = new RequestResult();
     if (await this.authenticationService.isExist(user)) {
-      console.log(await this.authenticationService.isExist(user));
       res.setValue = { name: NOT_AVAILABLE };
       res.setStatus = STATUSES.UNAVAILABLE;
     }
