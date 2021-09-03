@@ -33,7 +33,7 @@ class Injector {
 
     this.authenticationController = new AuthenticationController(this.authenticationService);
     this.queueController = new QueueController(this.queueService);
-    this.resolutionController = new PatientController(this.queueService, this.patientService);
+    this.patientController = new PatientController(this.queueService, this.patientService);
   }
 
   get getQueueController() {
@@ -41,7 +41,7 @@ class Injector {
   }
 
   get getResolutionController() {
-    return this.resolutionController;
+    return this.patientController;
   }
 
   get getAuthenticationController() {
