@@ -1,11 +1,11 @@
-import PatientService from '../api/service/PatientService.js';
-import PatientSQL from '../api/repositories/patient.repositories/patientSQL.js';
-import ResolutionSQL from '../api/repositories/resolution.repositories/resolutionSQL.js';
-import QueueRedis from '../api/repositories/queue.repositories/queueRedis.js';
+import PatientService from '../api/patient/patient.service/patientService.js';
+import PatientSQL from '../api/patient/patient.repository/patientSQL.js';
+import ResolutionSQL from '../api/patient/patient.repository/resolutionSQL.js';
+import QueueRedis from '../api/queue/queue.repository/queueRedis.js';
 
-jest.mock('../api/repositories/patient.repositories/patientSQL.js');
-jest.mock('../api/repositories/resolution.repositories/resolutionSQL.js');
-jest.mock('../api/repositories/queue.repositories/queueRedis.js');
+jest.mock('../api/patient/patient.repository/patientSQL.js');
+jest.mock('../api/patient/patient.repository/resolutionSQL.js');
+jest.mock('../api/queue/queue.repository/queueRedis.js');
 
 describe('patient service unit tests', () => {
   const patientRepository = new PatientSQL();

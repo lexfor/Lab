@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
-import { NOT_AVAILABLE } from '../../constants.js';
+import { NOT_AVAILABLE } from '../../../constants.js';
 
 const { sign } = jwt;
 

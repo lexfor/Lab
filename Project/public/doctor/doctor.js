@@ -1,7 +1,10 @@
+const ws = new WebSocket('ws://localhost:8080');
+
 async function getCurrent() {
   const response = await fetch('/doctor/patient/current');
   const result = await response.json();
   document.getElementById('currentNumber').innerHTML = result.name;
+  ws.send(result.name);
 }
 
 async function next() {
@@ -21,6 +24,7 @@ async function setCurrentResolution() {
     body: JSON.stringify(body),
   });
   await response.json();
+  ws.send(resolution.value);
 }
 
 async function findResolution() {

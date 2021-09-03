@@ -1,3 +1,5 @@
+const socket = new WebSocket('ws://localhost:8080');
+
 async function getSelectedResolution() {
   const response = await fetch('/queue/patient/resolution', {
     method: 'GET',
@@ -37,4 +39,7 @@ window.onload = () => {
 };
 
 getCurrent();
-setInterval(getCurrent, 3000);
+
+socket.addEventListener('message', () => {
+  getCurrent();
+});

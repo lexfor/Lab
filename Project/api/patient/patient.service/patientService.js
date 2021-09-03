@@ -1,4 +1,4 @@
-import { NOT_AVAILABLE } from '../../constants.js';
+import { NOT_AVAILABLE } from '../../../constants.js';
 
 export default class PatientService {
   constructor(patientRepository, resolutionRepository, queueRepository) {

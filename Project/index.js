@@ -4,7 +4,7 @@ import queueRouter from './routes/queue.js';
 import mainRouter from './routes/main.js';
 import loginRouter from './routes/login.js';
 import registerRouter from './routes/registration.js';
-
+import { createServer } from './websocketServer.js';
 import { envConfig } from './config.js';
 
 const app = express();
@@ -21,5 +21,6 @@ app.use('/login', loginRouter);
 app.use('/registration', registerRouter);
 
 app.listen(envConfig.app.port, () => {
+  createServer();
   console.log(`Express web app available at localhost: ${envConfig.app.port}`);
 });

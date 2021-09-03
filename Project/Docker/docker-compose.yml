@@ -6,17 +6,17 @@ services:
     command: npm run start
     ports:
       - 3000:3000
+      - 8080:8080
     working_dir: /home/Lab
     volumes:
       - ./:/lab
     environment:
-      NODE_ENV: sql
-      QUEUE_STORAGE: redis
-      TEST_STORAGE: sql
+      NODE_ENV: dev
       DEV_APP_PORT: 3000
       TTL_DELAY: 30000
       QUEUE_HOST: redis
       STORAGE_HOST: db
+      TOKEN_KEY: EDABF42E713D54D6E24CECB25527F
     depends_on: [db,redis]
   db:
     image: mysql:8.0

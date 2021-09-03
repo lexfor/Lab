@@ -1,13 +1,13 @@
-import PatientService from '../api/service/PatientService.js';
-import QueueService from '../api/service/QueueService.js';
-import QueueController from '../api/controllers/queueController.js';
-import PatientSQL from '../api/repositories/patient.repositories/patientSQL.js';
-import ResolutionSQL from '../api/repositories/resolution.repositories/resolutionSQL.js';
-import QueueRedis from '../api/repositories/queue.repositories/queueRedis.js';
+import PatientService from '../api/patient/patient.service/patientService.js';
+import QueueService from '../api/queue/queue.service/queueService.js';
+import QueueController from '../api/queue/queue.controller/queueController.js';
+import PatientSQL from '../api/patient/patient.repository/patientSQL.js';
+import ResolutionSQL from '../api/patient/patient.repository/resolutionSQL.js';
+import QueueRedis from '../api/queue/queue.repository/queueRedis.js';
 import { NOT_AVAILABLE, STATUSES } from '../constants';
 
-jest.mock('../api/service/PatientService.js');
-jest.mock('../api/service/QueueService.js');
+jest.mock('../api/patient/patient.service/patientService.js');
+jest.mock('../api/queue/queue.service/queueService.js');
 
 describe('queue controller unit tests', () => {
   const patientRepository = new PatientSQL();

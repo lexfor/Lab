@@ -22,7 +22,6 @@ router.post('/patient', async (req, res, next) => {
   }
   const auth = authHeader.split(' ')[1];
   const user = verify(auth, process.env.TOKEN_KEY);
-  console.log(user);
   const validationResult = ajv.validate(UserSchema, user);
   if (validationResult) {
     await next();
@@ -41,7 +40,6 @@ async (req, res) => {
 
 router.get('/patient/current', async (req, res) => {
   const result = await queueController.getCurrentInQueue();
-  console.log(result);
   res.status(result.getStatus).json(result.getValue);
 });
 

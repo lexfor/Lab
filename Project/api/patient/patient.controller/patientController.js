@@ -1,6 +1,6 @@
-import RequestResult from '../RequestResult.js';
-import { checkOutputStatus } from '../helpers/StatusHelper.js';
-import { STATUSES, NOT_AVAILABLE } from '../../constants.js';
+import RequestResult from '../../RequestResult.js';
+import { checkOutputStatus } from '../../helpers/StatusHelper.js';
+import { STATUSES, NOT_AVAILABLE } from '../../../constants.js';
 
 export default class PatientController {
   constructor(queue, patients) {

@@ -1,8 +1,8 @@
-import AuthenticationService from '../api/service/authenticationService.js';
-import AuthenticationController from '../api/controllers/authenticationController.js';
+import AuthenticationService from '../api/authentication/authentication.service/authenticationService.js';
+import AuthenticationController from '../api/authentication/authentication.controller/authenticationController.js';
 import { NOT_AVAILABLE, STATUSES } from '../constants';
 
-jest.mock('../api/service/authenticationService.js');
+jest.mock('../api/authentication/authentication.service/authenticationService.js');
 
 describe('queue controller unit tests', () => {
   const authenticationService = new AuthenticationService();

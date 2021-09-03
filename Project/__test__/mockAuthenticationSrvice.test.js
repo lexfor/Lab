@@ -1,10 +1,10 @@
 import * as bcrypt from 'bcrypt';
-import AuthenticationService from '../api/service/authenticationService.js';
-import PatientSQL from '../api/repositories/patient.repositories/patientSQL.js';
-import AuthenticationSQL from '../api/repositories/authentication.repositories/authenticationSQL.js';
+import AuthenticationService from '../api/authentication/authentication.service/authenticationService.js';
+import PatientSQL from '../api/patient/patient.repository/patientSQL.js';
+import AuthenticationSQL from '../api/authentication/authentication.repository/authenticationSQL.js';
 
-jest.mock('../api/repositories/authentication.repositories/authenticationSQL.js');
-jest.mock('../api/repositories/patient.repositories/patientSQL.js');
+jest.mock('../api/authentication/authentication.repository/authenticationSQL.js');
+jest.mock('../api/patient/patient.repository/patientSQL.js');
 jest.mock('bcrypt');
 
 describe('queue controller unit tests', () => {
