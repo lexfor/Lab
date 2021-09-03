@@ -59,12 +59,12 @@ export default class PatientSQL {
     }
   }
 
-  async delete(patient) {
+  async delete(patientID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'DELETE FROM patients WHERE id = ?';
-      await queryAsync(sql, patient.id);
-      return patient;
+      await queryAsync(sql, patientID);
+      return patientID;
     } catch (e) {
       return e.message;
     }

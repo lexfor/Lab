@@ -7,7 +7,7 @@ export default class ResolutionSQL {
     this.connection = connection;
   }
 
-  async create(patient, resolutionValue, time) {
+  async create(patientID, resolutionValue, time) {
     try {
       const uuid = uuidv1();
       const data = {
@@ -15,7 +15,7 @@ export default class ResolutionSQL {
         value: resolutionValue,
         delay: time,
         updatedTime: new Date().getTime(),
-        patient_id: patient.id,
+        patient_id: patientID,
       };
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'INSERT INTO resolutions SET ? ';
@@ -42,11 +42,11 @@ export default class ResolutionSQL {
     }
   }
 
-  async get(patient) {
+  async get(patientID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'SELECT * FROM resolutions WHERE patient_id = ?';
-      const result = await queryAsync(sql, patient.id);
+      const result = await queryAsync(sql, patientID);
       if (!result[0]) {
         return { value: NOT_AVAILABLE };
       }
@@ -59,12 +59,12 @@ export default class ResolutionSQL {
     }
   }
 
-  async delete(resolution) {
+  async delete(patientID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
-      const sql = 'DELETE FROM resolutions WHERE id = ?';
-      await queryAsync(sql, resolution.id);
-      return resolution;
+      const sql = 'DELETE FROM resolutions WHERE patient_id = ?';
+      await queryAsync(sql, patientID);
+      return patientID;
     } catch (e) {
       return e.message;
     }

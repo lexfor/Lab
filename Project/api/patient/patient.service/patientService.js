@@ -6,8 +6,8 @@ export default class PatientService {
     this.resolutionRepository = resolutionRepository;
   }
 
-  async getResolution(patient) {
-    const resolution = await this.resolutionRepository.get(patient);
+  async getResolution(patientID) {
+    const resolution = await this.resolutionRepository.get(patientID);
     if (!resolution.value) {
       return NOT_AVAILABLE;
     }
@@ -15,26 +15,23 @@ export default class PatientService {
   }
 
   async addPatientResolution(value, patientID, time) {
-    const patient = await this.patientRepository.getByID(patientID);
-    const resolution = await this.resolutionRepository.create(patient, value, time);
+    const resolution = await this.resolutionRepository.create(patientID, value, time);
     return resolution;
   }
 
   async findPatientResolution(patient) {
-    let patientInfo;
+    let patientID;
     if (patient.name) {
-      patientInfo = await this.patientRepository.getByName(patient.name);
+      patientID = await this.patientRepository.getByName(patient.name);
     } else {
-      patientInfo = await this.patientRepository.getByID(patient.id);
+      patientID = patient.id;
     }
-    return this.getResolution(patientInfo);
+    return this.getResolution(patientID);
   }
 
   async deletePatientResolution(patientID) {
-    const patient = await this.patientRepository.getByID(patientID);
-    const resolution = await this.resolutionRepository.get(patient);
-    await this.resolutionRepository.delete(resolution);
-    return resolution;
+    await this.resolutionRepository.delete(patientID);
+    return { id: patientID };
   }
 
   async isExist(patient) {

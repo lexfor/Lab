@@ -41,10 +41,8 @@ describe('patient service unit tests', () => {
   });
 
   test('find patient resolution by id', async () => {
-    patientRepository.getByID.mockImplementation((value) => ({ id: value, name: 'Tim' }));
-    resolutionRepository.get.mockImplementation((patient) => {
-      expect(patient.id).toEqual('1111');
-      expect(patient.name).toEqual('Tim');
+    resolutionRepository.get.mockImplementation((patientID) => {
+      expect(patientID).toEqual('1111');
       return { id: '234', value: 'Good' };
     });
     const result = await patients.findPatientResolution({ id: '1111' });
@@ -53,10 +51,8 @@ describe('patient service unit tests', () => {
   });
 
   test('add patient resolution', async () => {
-    patientRepository.getByID.mockImplementation((value) => ({ id: value, name: 'Tim' }));
-    resolutionRepository.create.mockImplementation((patient, resolution, time) => {
-      expect(patient.id).toEqual('1111');
-      expect(patient.name).toEqual('Tim');
+    resolutionRepository.create.mockImplementation((patientID, resolution, time) => {
+      expect(patientID).toEqual('1111');
       expect(resolution).toEqual('aaaaaa');
       expect(time).toEqual(process.env.TTL_DELAY);
       return { id: '234', value: 'Good' };
@@ -67,19 +63,11 @@ describe('patient service unit tests', () => {
   });
 
   test('delete patient', async () => {
-    patientRepository.getByID.mockImplementation((value) => ({ id: value, name: 'Tim' }));
-    resolutionRepository.get.mockImplementation((patient) => {
-      expect(patient.id).toEqual('1111');
-      expect(patient.name).toEqual('Tim');
-      return { id: '234', value: 'bad' };
-    });
-    resolutionRepository.delete.mockImplementation((resolution) => {
-      expect(resolution.id).toEqual('234');
-      expect(resolution.value).toEqual('bad');
+    resolutionRepository.delete.mockImplementation((patientID) => {
+      expect(patientID).toEqual('1111');
     });
     const result = await patients.deletePatientResolution('1111');
-    expect(result.id).toEqual('234');
-    expect(result.value).toEqual('bad');
+    expect(result.id).toEqual('1111');
   });
 
   test('check is exist patient', async () => {
