@@ -64,7 +64,7 @@ export default class ResolutionSQL {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'DELETE FROM resolutions WHERE patient_id = ?';
       await queryAsync(sql, patientID);
-      return patientID;
+      return { id: patientID };
     } catch (e) {
       return e.message;
     }

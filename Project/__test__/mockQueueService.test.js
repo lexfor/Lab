@@ -14,12 +14,11 @@ describe('queue service unit tests', () => {
   );
 
   test('push patient in queue', async () => {
-    queueRepository.push.mockImplementation((user) => {
-      expect(user.id).toEqual('123');
-      expect(user.name).toEqual('Tim');
+    queueRepository.push.mockImplementation((userID) => {
+      expect(userID).toEqual('123');
       return { id: '123', value: 'good' };
     });
-    const result = await queue.push({ name: 'Tim', id: '123' });
+    const result = await queue.push('123');
     expect(result).toEqual({ id: '123', value: 'good' });
   });
 
@@ -41,37 +40,13 @@ describe('queue service unit tests', () => {
 
   test('check is exist patient', async () => {
     queueRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
-    patientRepository.getByID.mockImplementation((item) => {
-      switch (item) {
-        case 'aaa':
-          return { name: 'Tim', id: 'aaa' };
-        case 'bbb':
-          return { name: 'Dima', id: 'bbb' };
-        case 'ccc':
-          return { name: 'Andrei', id: 'ccc' };
-        default:
-          return 'N/A';
-      }
-    });
-    const result = await queue.isExist('Tim');
+    const result = await queue.isExist('aaa');
     expect(result).toEqual(true);
   });
 
   test('check is exist patient', async () => {
     queueRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
-    patientRepository.getByID.mockImplementation((item) => {
-      switch (item) {
-        case 'aaa':
-          return { name: 'Tim', id: 'aaa' };
-        case 'bbb':
-          return { name: 'Dima', id: 'bbb' };
-        case 'ccc':
-          return { name: 'Andrei', id: 'ccc' };
-        default:
-          return 'N/A';
-      }
-    });
-    const result = await queue.isExist('Anton');
+    const result = await queue.isExist('fff');
     expect(result).toEqual(false);
   });
 

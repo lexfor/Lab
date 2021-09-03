@@ -64,7 +64,7 @@ export default class PatientSQL {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'DELETE FROM patients WHERE id = ?';
       await queryAsync(sql, patientID);
-      return patientID;
+      return { id: patientID };
     } catch (e) {
       return e.message;
     }

@@ -7,6 +7,15 @@ export default class QueueController {
     this.queueService = queue;
   }
 
+  async checkIsPatientInQueue(patientID) {
+    const res = new RequestResult();
+    if (await this.queueService.isExist(patientID)) {
+      res.setValue = { name: NOT_AVAILABLE };
+      res.setStatus = STATUSES.UNAVAILABLE;
+    }
+    return res;
+  }
+
   async checkLength() {
     const res = new RequestResult();
     if (await this.queueService.isEmpty()) {
@@ -17,7 +26,10 @@ export default class QueueController {
   }
 
   async addValueInQueue(patientID) {
-    const res = new RequestResult();
+    const res = await this.checkIsPatientInQueue();
+    if (res.getStatus !== STATUSES.OK) {
+      return res;
+    }
     res.setValue = await this.queueService.push(patientID);
     return checkOutputStatus(res);
   }

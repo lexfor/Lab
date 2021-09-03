@@ -36,16 +36,17 @@ describe('queue controller unit tests', () => {
   });
 
   test('add value in queue', async () => {
-    patientsService.isExist.mockImplementation((body) => {
-      expect(body).toEqual('Andrei');
+    patientsService.isExist.mockImplementation((patientID) => {
+      expect(patientID).toEqual('123');
       return false;
     });
-    queueService.push.mockImplementation((body) => {
-      expect(body).toEqual('Andrei');
+    queueService.push.mockImplementation((patientID) => {
+      expect(patientID).toEqual('123');
       return { name: 'Andrei', id: '123' };
     });
-    const res = await queueController.addValueInQueue('Andrei');
+    const res = await queueController.addValueInQueue('123');
     expect(res.getValue.name).toEqual('Andrei');
+    expect(res.getValue.id).toEqual('123');
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
 

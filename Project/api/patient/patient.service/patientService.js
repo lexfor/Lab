@@ -20,18 +20,17 @@ export default class PatientService {
   }
 
   async findPatientResolution(patient) {
-    let patientID;
+    let patientID = patient.id;
     if (patient.name) {
-      patientID = await this.patientRepository.getByName(patient.name);
-    } else {
-      patientID = patient.id;
+      const patientInfo = await this.patientRepository.getByName(patient.name);
+      patientID = patientInfo.id;
     }
     return this.getResolution(patientID);
   }
 
   async deletePatientResolution(patientID) {
-    await this.resolutionRepository.delete(patientID);
-    return { id: patientID };
+    const result = await this.resolutionRepository.delete(patientID);
+    return result;
   }
 
   async isExist(patient) {

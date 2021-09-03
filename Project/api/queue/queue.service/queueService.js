@@ -21,13 +21,8 @@ export default class QueueService {
   }
 
   async isExist(value) {
-    const allPatientIDInQueue = await this.queueRepository.getAll();
-    let names = allPatientIDInQueue.map((patientID) => {
-      const res = this.patientRepository.getByID(patientID);
-      return res.name;
-    });
-    names = await Promise.all(names);
-    return names.indexOf(value) !== -1;
+    const patientsIDs = await this.queueRepository.getAll();
+    return patientsIDs.indexOf(value) !== -1;
   }
 
   async isEmpty() {

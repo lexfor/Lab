@@ -30,9 +30,8 @@ describe('patient service unit tests', () => {
 
   test('find patient resolution by name', async () => {
     patientRepository.getByName.mockImplementation((value) => ({ id: '123', name: value }));
-    resolutionRepository.get.mockImplementation((patient) => {
-      expect(patient.id).toEqual('123');
-      expect(patient.name).toEqual('Tim');
+    resolutionRepository.get.mockImplementation((patientID) => {
+      expect(patientID).toEqual('123');
       return { id: '234', value: 'Good' };
     });
     const result = await patients.findPatientResolution({ name: 'Tim' });
@@ -65,6 +64,7 @@ describe('patient service unit tests', () => {
   test('delete patient', async () => {
     resolutionRepository.delete.mockImplementation((patientID) => {
       expect(patientID).toEqual('1111');
+      return { id: patientID };
     });
     const result = await patients.deletePatientResolution('1111');
     expect(result.id).toEqual('1111');
