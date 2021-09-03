@@ -26,7 +26,7 @@ export default class QueueController {
   }
 
   async addValueInQueue(patientID) {
-    const res = await this.checkIsPatientInQueue();
+    const res = await this.checkIsPatientInQueue(patientID);
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }

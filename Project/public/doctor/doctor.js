@@ -4,20 +4,20 @@ async function getCurrent() {
   const response = await fetch('/doctor/patient/current');
   const result = await response.json();
   document.getElementById('currentNumber').innerHTML = result.name;
-  ws.send(result.name);
-  window.sessionStorage.setItem('current', result.id);
+  window.sessionStorage.setItem('currentPatientID', result.id);
 }
 
 async function next() {
   await fetch('/doctor/patient/next');
   await getCurrent();
+  ws.send('next');
 }
 
 async function setCurrentResolution() {
   const resolution = document.getElementById('resolutionText');
   const body = {
     value: resolution.value,
-    id: window.sessionStorage.getItem('current'),
+    id: window.sessionStorage.getItem('currentPatientID'),
   };
   const response = await fetch('/doctor/patient/current/resolution', {
     method: 'PUT',
@@ -40,13 +40,13 @@ async function findResolution() {
   const resolution = await response.json();
   const output = document.getElementById('resolutionOutput');
   output.value = resolution.value;
-  window.sessionStorage.setItem('foundedPatient', resolution.patient_id);
+  window.sessionStorage.setItem('foundedPatientID', resolution.patient_id);
 }
 
 async function deleteResolution() {
   const url = new URL('/doctor/patient/resolution', document.location.origin);
   const params = new URLSearchParams();
-  params.append('patient_id', window.sessionStorage.getItem('foundedPatient'));
+  params.append('patient_id', window.sessionStorage.getItem('foundedPatientID'));
   url.search = params.toString();
   await fetch(url.href, {
     method: 'DELETE',

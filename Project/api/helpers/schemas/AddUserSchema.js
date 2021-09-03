@@ -19,6 +19,6 @@ export const AddUserSchema = {
       type: 'string', maxLength: MAX_LENGTH, minLength: MIN_LENGTH, pattern: '(male)|(female)|(Male)|(Female)',
     },
   },
-  required: ['login', 'password'],
+  required: ['login', 'password', 'name', 'birthday', 'gender'],
   additionalProperties: false,
 };
