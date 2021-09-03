@@ -24,11 +24,7 @@ class Injector {
     this.queueRepository = new QueueRedis(client);
     this.authenticationRepository = new AuthenticationSQL(connection);
 
-    this.patientService = new PatientService(
-      this.patientRepository,
-      this.resolutionRepository,
-      this.queueRepository,
-    );
+    this.patientService = new PatientService(this.patientRepository, this.resolutionRepository);
     this.queueService = new QueueService(this.queueRepository, this.patientRepository);
     this.authenticationService = new AuthenticationService(
       this.authenticationRepository,

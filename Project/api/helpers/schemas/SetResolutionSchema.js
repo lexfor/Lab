@@ -6,7 +6,10 @@ export const SetResolutionSchema = {
     value: {
       type: 'string', maxLength: MAX_LENGTH, minLength: MIN_LENGTH, pattern: '[a-zA-Z]+',
     },
+    id: {
+      type: 'string',
+    },
   },
-  required: ['value'],
+  required: ['value', 'id'],
   additionalProperties: false,
 };

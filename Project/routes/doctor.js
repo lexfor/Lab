@@ -36,7 +36,7 @@ router.get('/patient/resolution', async (req, res, next) => {
 },
 
 async (req, res) => {
-  const result = await resolutionController.findResolutionByPatientName(req.query.value);
+  const result = await resolutionController.findResolution(req.query);
   res.status(result.getStatus).json(result.getValue);
 });
 
@@ -50,7 +50,7 @@ router.put('/patient/current/resolution', async (req, res, next) => {
 },
 
 async (req, res) => {
-  const result = await resolutionController.setResolutionForCurrentPatient(req.body.value);
+  const result = await resolutionController.setResolution(req.body.value, req.body.id);
   res.status(result.getStatus).json(result.getValue);
 });
 
@@ -64,7 +64,7 @@ router.delete('/patient/resolution', async (req, res, next) => {
 },
 
 async (req, res) => {
-  const result = await resolutionController.deletePatientResolution(req.query.value);
+  const result = await resolutionController.deletePatientResolution(req.query.patient_id);
   res.status(result.getStatus).json(result.getValue);
 });
 

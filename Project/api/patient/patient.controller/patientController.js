@@ -8,9 +8,9 @@ export default class PatientController {
     this.patientsService = patients;
   }
 
-  async checkIsExistPatient(patientName) {
+  async checkIsExistPatient(patient) {
     const res = new RequestResult();
-    if (!await this.patientsService.isExist(patientName)) {
+    if (!await this.patientsService.isExist(patient)) {
       res.setValue = { value: NOT_AVAILABLE };
       res.setStatus = STATUSES.NOT_FOUND;
     }
@@ -26,30 +26,34 @@ export default class PatientController {
     return res;
   }
 
-  async setResolutionForCurrentPatient(resolutionValue, delay = process.env.TTL_DELAY) {
+  async setResolution(resolutionValue, patientID, delay = process.env.TTL_DELAY) {
     const res = await this.checkCurrentPatient();
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.patientsService.addPatientResolution(resolutionValue, delay);
+    res.setValue = await this.patientsService.addPatientResolution(
+      resolutionValue,
+      patientID,
+      delay,
+    );
     return checkOutputStatus(res);
   }
 
-  async findResolutionByPatientName(patientName) {
-    const res = await this.checkIsExistPatient(patientName);
+  async findResolution(patient) {
+    const res = await this.checkIsExistPatient(patient);
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.patientsService.findPatientResolution(patientName);
+    res.setValue = await this.patientsService.findPatientResolution(patient);
     return checkOutputStatus(res);
   }
 
-  async deletePatientResolution(patientName) {
-    const res = await this.checkIsExistPatient(patientName);
+  async deletePatientResolution(patientID) {
+    const res = await this.checkIsExistPatient({ id: patientID });
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.patientsService.deletePatientResolution(patientName);
+    res.setValue = await this.patientsService.deletePatientResolution(patientID);
     return checkOutputStatus(res);
   }
 }

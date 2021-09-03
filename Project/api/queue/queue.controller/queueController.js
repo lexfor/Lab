@@ -16,9 +16,9 @@ export default class QueueController {
     return res;
   }
 
-  async addValueInQueue(patient) {
+  async addValueInQueue(patientID) {
     const res = new RequestResult();
-    res.setValue = await this.queueService.push(patient);
+    res.setValue = await this.queueService.push(patientID);
     return checkOutputStatus(res);
   }
 

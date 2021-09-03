@@ -2,8 +2,8 @@ import express from 'express';
 import Ajv from 'ajv';
 import jwt from 'jsonwebtoken';
 import { injector } from '../Injector.js';
-import { UserSchema } from '../api/helpers/schemas/UserSchema.js';
 import { STATUSES, NOT_AVAILABLE } from '../constants.js';
+import { UserSchema } from '../api/helpers/schemas/UserSchema.js';
 
 const { verify } = jwt;
 const router = express();
@@ -34,7 +34,7 @@ async (req, res) => {
   const authHeader = req.headers.authorization;
   const auth = authHeader.split(' ')[1];
   const user = verify(auth, process.env.TOKEN_KEY);
-  const result = await queueController.addValueInQueue(user);
+  const result = await queueController.addValueInQueue(user.id);
   res.status(result.getStatus).json(result.getValue);
 });
 
@@ -62,7 +62,9 @@ async (req, res) => {
   const authHeader = req.headers.authorization;
   const auth = authHeader.split(' ')[1];
   const user = verify(auth, process.env.TOKEN_KEY);
-  const result = await resolutionController.findResolutionByPatientName(user.name);
+  const result = await resolutionController.findResolution({
+    id: user.id,
+  });
   res.status(result.getStatus).json(result.getValue);
 });
 

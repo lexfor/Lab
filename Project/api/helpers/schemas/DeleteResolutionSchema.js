@@ -1,12 +1,10 @@
-import { MAX_LENGTH, MIN_LENGTH } from '../../../constants.js';
-
 export const DeleteResolutionSchema = {
   type: 'object',
   properties: {
-    value: {
-      type: 'string', maxLength: MAX_LENGTH, minLength: MIN_LENGTH, pattern: '[a-zA-Z]+',
+    patient_id: {
+      type: 'string',
     },
   },
-  required: ['value'],
+  required: ['patient_id'],
   additionalProperties: false,
 };

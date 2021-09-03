@@ -70,6 +70,17 @@ export default class PatientSQL {
     }
   }
 
+  async getAllIDs() {
+    try {
+      const queryAsync = promisify(this.connection.query).bind(this.connection);
+      const sql = 'SELECT id FROM patients';
+      const result = await queryAsync(sql);
+      return result.map((item) => item.id);
+    } catch (e) {
+      return e.message;
+    }
+  }
+
   async getAllNames() {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
