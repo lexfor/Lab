@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   app:
-    image: lexforor/lab
+    image: lexforor/lab:latest
     command: npm run start
     ports:
       - 3000:3000
