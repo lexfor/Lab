@@ -7,7 +7,7 @@ export function checkOutputStatus(res) {
       res.setValue = NOT_AVAILABLE;
       break;
     case 'no such user':
-      res.setStatus = STATUSES.NOT_FOUND;
+      res.setStatus = STATUSES.UNAUTHORISED;
       res.setValue = NOT_AVAILABLE;
       break;
     case 'timeout':
@@ -20,6 +20,14 @@ export function checkOutputStatus(res) {
       break;
     case 'not available':
       res.setStatus = STATUSES.UNAVAILABLE;
+      res.setValue = NOT_AVAILABLE;
+      break;
+    case 'wrong password':
+      res.setStatus = STATUSES.UNAUTHORISED;
+      res.setValue = NOT_AVAILABLE;
+      break;
+    case 'wrong token':
+      res.setStatus = STATUSES.FORBIDDEN;
       res.setValue = NOT_AVAILABLE;
       break;
     case 'pushed':

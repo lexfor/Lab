@@ -30,13 +30,12 @@ export default class AuthenticationSQL {
     }
   }
 
-  async getPatientByLogin(login) {
+  async getUser(login) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
-      const sql = `SELECT patients.*, users.password FROM patients
-        INNER JOIN users ON
-        patients.user_id = users.id AND
-        users.login = ?`;
+      const sql = `SELECT * FROM users
+        WHERE 
+        login = ?`;
       const result = await queryAsync(sql, login);
       return result[0];
     } catch (e) {

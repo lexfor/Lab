@@ -1,6 +1,5 @@
 import { v1 as uuidv1 } from 'uuid';
 import { promisify } from 'util';
-import { NOT_AVAILABLE } from '../../../constants.js';
 
 export default class ResolutionSQL {
   constructor(connection) {
@@ -44,16 +43,19 @@ export default class ResolutionSQL {
 
   async get(patientID) {
     try {
+      const resolution = { value: '' };
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'SELECT * FROM resolutions WHERE patient_id = ?';
       const result = await queryAsync(sql, patientID);
-      if (!result[0]) {
-        return { value: NOT_AVAILABLE };
-      }
-      if (new Date().getTime() - result[0].updatedTime > result[0].delay) {
-        return { value: NOT_AVAILABLE };
-      }
-      return result[0];
+      result.forEach((item) => {
+        if (item.value) {
+          if (new Date().getTime() - item.updatedTime < item.delay) {
+            resolution.value += item.value;
+            resolution.value += ' | ';
+          }
+        }
+      });
+      return resolution;
     } catch (e) {
       return e.message;
     }

@@ -6,7 +6,7 @@ export default class PatientSQL {
     this.connection = connection;
   }
 
-  async create(userID, patientName, patientBirthday, patientGender) {
+  async create(userID, patientName, patientBirthday, patientGender, patientMail) {
     try {
       const uuid = uuidv1();
       const data = {
@@ -14,6 +14,7 @@ export default class PatientSQL {
         name: patientName,
         birthday: patientBirthday,
         gender: patientGender,
+        mail: patientMail,
         user_id: userID,
       };
       const queryAsync = promisify(this.connection.query).bind(this.connection);
@@ -53,6 +54,17 @@ export default class PatientSQL {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'SELECT * FROM patients WHERE id = ?';
       const result = await queryAsync(sql, patientID);
+      return result[0];
+    } catch (e) {
+      return e.message;
+    }
+  }
+
+  async getByUserID(userID) {
+    try {
+      const queryAsync = promisify(this.connection.query).bind(this.connection);
+      const sql = 'SELECT * FROM patients WHERE user_id = ?';
+      const result = await queryAsync(sql, userID);
       return result[0];
     } catch (e) {
       return e.message;

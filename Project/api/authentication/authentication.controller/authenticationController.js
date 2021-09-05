@@ -3,8 +3,10 @@ import { checkOutputStatus } from '../../helpers/StatusHelper.js';
 import { STATUSES, NOT_AVAILABLE } from '../../../constants.js';
 
 export default class AuthenticationController {
-  constructor(authenticationService) {
+  constructor(authenticationService, patientService, jwtService) {
     this.authenticationService = authenticationService;
+    this.patientService = patientService;
+    this.jwtService = jwtService;
   }
 
   async checkIsUserExist(user) {
@@ -21,13 +23,32 @@ export default class AuthenticationController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.authenticationService.register(user);
+    const createdUser = await this.authenticationService.register(user);
+    res.setValue = await this.patientService.addPatient(
+      createdUser.id,
+      user.name,
+      user.birthday,
+      user.gender,
+      user.login,
+    );
     return checkOutputStatus(res);
   }
 
   async logIn(user) {
     const res = new RequestResult();
     res.setValue = await this.authenticationService.logIn(user);
+    checkOutputStatus(res);
+    if (res.getStatus === STATUSES.OK) {
+      res.setValue = await this.jwtService.createSign(res.getValue.id);
+    } else {
+      return res;
+    }
+    return checkOutputStatus(res);
+  }
+
+  async checkToken(token) {
+    const res = new RequestResult();
+    res.setValue = await this.jwtService.verifySign(token);
     return checkOutputStatus(res);
   }
 }

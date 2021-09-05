@@ -3,8 +3,9 @@ import { checkOutputStatus } from '../../helpers/StatusHelper.js';
 import { STATUSES, NOT_AVAILABLE } from '../../../constants.js';
 
 export default class QueueController {
-  constructor(queue) {
-    this.queueService = queue;
+  constructor(queueService, patientService) {
+    this.queueService = queueService;
+    this.patientService = patientService;
   }
 
   async checkIsPatientInQueue(patientID) {
@@ -25,12 +26,13 @@ export default class QueueController {
     return res;
   }
 
-  async addValueInQueue(patientID) {
-    const res = await this.checkIsPatientInQueue(patientID);
+  async addValueInQueue(userID) {
+    const patient = await this.patientService.findPatientByUser(userID);
+    const res = await this.checkIsPatientInQueue(patient.id);
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.queueService.push(patientID);
+    res.setValue = await this.queueService.push(patient.id);
     return checkOutputStatus(res);
   }
 
@@ -39,7 +41,8 @@ export default class QueueController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.queueService.getCurrent();
+    const patientID = await this.queueService.getCurrent();
+    res.setValue = await this.patientService.findPatientByID(patientID);
     return checkOutputStatus(res);
   }
 

@@ -12,6 +12,7 @@ export const STATUSES = {
   SERVER_ERROR: 500,
   UNAVAILABLE: 503,
   UNAUTHORISED: 401,
+  FORBIDDEN: 403,
 };
 
 export const SERVER_PORT = {

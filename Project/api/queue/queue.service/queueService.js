@@ -1,7 +1,6 @@
 export default class QueueService {
-  constructor(queueRepository, patientRepository) {
+  constructor(queueRepository) {
     this.queueRepository = queueRepository;
-    this.patientRepository = patientRepository;
   }
 
   async push(patientID) {
@@ -16,8 +15,7 @@ export default class QueueService {
 
   async getCurrent() {
     const patientID = await this.queueRepository.getFirst();
-    const patient = await this.patientRepository.getByID(patientID);
-    return patient;
+    return patientID;
   }
 
   async isExist(value) {

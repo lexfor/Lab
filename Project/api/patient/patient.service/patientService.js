@@ -1,42 +1,55 @@
-import { NOT_AVAILABLE } from '../../../constants.js';
-
 export default class PatientService {
-  constructor(patientRepository, resolutionRepository) {
+  constructor(patientRepository) {
     this.patientRepository = patientRepository;
-    this.resolutionRepository = resolutionRepository;
   }
 
-  async getResolution(patientID) {
-    const resolution = await this.resolutionRepository.get(patientID);
-    if (!resolution.value) {
-      return NOT_AVAILABLE;
-    }
-    return resolution;
+  async addPatient(userID, name, birthday, gender, email) {
+    const patient = await this.patientRepository.create(
+      userID,
+      name,
+      birthday,
+      gender,
+      email,
+    );
+    return patient;
   }
 
-  async addPatientResolution(value, patientID, time) {
-    const resolution = await this.resolutionRepository.create(patientID, value, time);
-    return resolution;
+  async findPatientByUser(userID) {
+    const patient = await this.patientRepository.getByUserID(userID);
+    return patient;
   }
 
-  async findPatientResolution(patient) {
-    let patientID = patient.id;
-    if (patient.name) {
-      const patientInfo = await this.patientRepository.getByName(patient.name);
+  async findPatientByName(patientName) {
+    const patient = await this.patientRepository.getByName(patientName);
+    return patient;
+  }
+
+  async findPatientByID(patientID) {
+    const patient = await this.patientRepository.getByID(patientID);
+    return patient;
+  }
+
+  async findPatient(user) {
+    let patientID;
+    if (user.name) {
+      const patientInfo = await this.findPatientByName(user.name);
       patientID = patientInfo.id;
+    } else {
+      const patient = await this.findPatientByUser(user.user_id);
+      patientID = patient.id;
     }
-    return this.getResolution(patientID);
-  }
-
-  async deletePatientResolution(patientID) {
-    const result = await this.resolutionRepository.delete(patientID);
-    return result;
+    return patientID;
   }
 
   async isExist(patient) {
     if (patient.name) {
       const values = await this.patientRepository.getAllNames();
       return values.indexOf(patient.name) !== -1;
+    }
+    if (patient.user_id) {
+      const patientInfo = await this.findPatientByUser(patient.user_id);
+      const values = await this.patientRepository.getAllIDs();
+      return values.indexOf(patientInfo.id) !== -1;
     }
     const values = await this.patientRepository.getAllIDs();
     return values.indexOf(patient.id) !== -1;

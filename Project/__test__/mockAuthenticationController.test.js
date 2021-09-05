@@ -1,12 +1,18 @@
 import AuthenticationService from '../api/authentication/authentication.service/authenticationService.js';
+import PatientService from '../api/patient/patient.service/patientService.js';
+import JwtService from '../api/authentication/authentication.service/jwtService.js';
 import AuthenticationController from '../api/authentication/authentication.controller/authenticationController.js';
 import { NOT_AVAILABLE, STATUSES } from '../constants';
 
 jest.mock('../api/authentication/authentication.service/authenticationService.js');
+jest.mock('../api/patient/patient.service/patientService.js');
+jest.mock('../api/authentication/authentication.service/jwtService.js');
 
 describe('queue controller unit tests', () => {
   const authenticationService = new AuthenticationService();
-  const authenticationController = new AuthenticationController(authenticationService);
+  const patientService = new PatientService();
+  const jwtService = new JwtService();
+  const authenticationController = new AuthenticationController(authenticationService, patientService, jwtService);
 
   test('is user exist', async () => {
     authenticationService.isExist.mockImplementation((user) => {
@@ -66,6 +72,18 @@ describe('queue controller unit tests', () => {
       expect(user.name).toEqual('Tim');
       return {
         login: 'thetim182001@mail.ru',
+        id: '1111',
+      };
+    });
+
+    patientService.addPatient.mockImplementation((UserID, name, birthday, gender, email ) => {
+      expect(UserID).toEqual('1111');
+      expect(birthday).toEqual('2001-02-18');
+      expect(gender).toEqual('male');
+      expect(name).toEqual('Tim');
+      expect(email).toEqual('thetim182001@mail.ru');
+      return {
+        email: 'thetim182001@mail.ru',
         birthday: '2001-02-18',
         gender: 'male',
         name: 'Tim',
@@ -80,7 +98,7 @@ describe('queue controller unit tests', () => {
       gender: 'male',
     });
     expect(res.getValue).toEqual({
-      login: 'thetim182001@mail.ru',
+      email: 'thetim182001@mail.ru',
       birthday: '2001-02-18',
       gender: 'male',
       name: 'Tim',
@@ -121,16 +139,16 @@ describe('queue controller unit tests', () => {
       };
     });
 
+    jwtService.createSign.mockImplementation((userID) => {
+      expect(userID).toEqual('2222');
+      return 'asdwav';
+    });
+
     const res = await authenticationController.logIn({
       login: 'thetim182001@mail.ru',
       password: '123',
     });
-    expect(res.getValue).toEqual({
-      id: '2222',
-      name: 'Tim',
-      birthday: '2001-02-18',
-      gender: 'male',
-    });
+    expect(res.getValue).toEqual('asdwav');
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
 });

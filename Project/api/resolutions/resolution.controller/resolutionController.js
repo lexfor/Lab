@@ -1,20 +1,12 @@
-import RequestResult from '../../RequestResult.js';
+import { NOT_AVAILABLE, STATUSES } from '../../../constants.js';
 import { checkOutputStatus } from '../../helpers/StatusHelper.js';
-import { STATUSES, NOT_AVAILABLE } from '../../../constants.js';
+import RequestResult from '../../RequestResult.js';
 
-export default class PatientController {
-  constructor(queue, patients) {
-    this.queueService = queue;
-    this.patientsService = patients;
-  }
-
-  async checkIsExistPatient(patient) {
-    const res = new RequestResult();
-    if (!await this.patientsService.isExist(patient)) {
-      res.setValue = { value: NOT_AVAILABLE };
-      res.setStatus = STATUSES.NOT_FOUND;
-    }
-    return res;
+export default class ResolutionController {
+  constructor(resolutionService, queueService, patientService) {
+    this.resolutionService = resolutionService;
+    this.queueService = queueService;
+    this.patientService = patientService;
   }
 
   async checkCurrentPatient() {
@@ -26,12 +18,21 @@ export default class PatientController {
     return res;
   }
 
+  async checkIsExistPatient(patient) {
+    const res = new RequestResult();
+    if (!await this.patientService.isExist(patient)) {
+      res.setValue = { value: NOT_AVAILABLE };
+      res.setStatus = STATUSES.NOT_FOUND;
+    }
+    return res;
+  }
+
   async setResolution(resolutionValue, patientID, delay = process.env.TTL_DELAY) {
     const res = await this.checkCurrentPatient();
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.patientsService.addPatientResolution(
+    res.setValue = await this.resolutionService.addPatientResolution(
       resolutionValue,
       patientID,
       delay,
@@ -44,7 +45,8 @@ export default class PatientController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.patientsService.findPatientResolution(patient);
+    const patientID = await this.patientService.findPatient(patient);
+    res.setValue = await this.resolutionService.getResolution(patientID);
     return checkOutputStatus(res);
   }
 
@@ -53,7 +55,7 @@ export default class PatientController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.patientsService.deletePatientResolution(patientID);
+    res.setValue = await this.resolutionService.deletePatientResolution(patientID);
     return checkOutputStatus(res);
   }
 }

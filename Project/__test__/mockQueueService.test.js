@@ -30,12 +30,8 @@ describe('queue service unit tests', () => {
 
   test('get current patient from queue', async () => {
     queueRepository.getFirst.mockResolvedValue('123');
-    patientRepository.getByID.mockImplementation((id) => {
-      expect(id).toEqual('123');
-      return { name: 'Tim', id: '123' };
-    });
     const result = await queue.getCurrent();
-    expect(result).toEqual({ name: 'Tim', id: '123' });
+    expect(result).toEqual('123');
   });
 
   test('check is exist patient', async () => {

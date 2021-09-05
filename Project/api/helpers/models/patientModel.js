@@ -7,6 +7,7 @@ export async function patientDefine(connection) {
     name VARCHAR(255),
     birthday VARCHAR(255),
     gender VARCHAR(255),
+    mail VARCHAR(255),
     user_id VARCHAR(255),
     PRIMARY KEY (id), 
     FOREIGN KEY (user_id) REFERENCES users(id))`;
