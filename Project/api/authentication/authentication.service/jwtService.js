@@ -3,13 +3,14 @@ import jwt from 'jsonwebtoken';
 const { sign, verify } = jwt;
 
 export default class JwtService {
-  async createSign(patientID) {
+  async createSign(patientID, tokenKey = process.env.TOKEN_KEY) {
     try {
       const token = sign({
         user_id: patientID,
-      }, process.env.TOKEN_KEY);
+      }, tokenKey);
       return token;
     } catch (e) {
+      console.log(e.message);
       return 'wrong sign';
     }
   }

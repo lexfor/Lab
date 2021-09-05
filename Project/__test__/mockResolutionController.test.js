@@ -8,7 +8,7 @@ jest.mock('../api/resolutions/resolution.service/resolutionService.js');
 jest.mock('../api/queue/queue.service/queueService.js');
 jest.mock('../api/patient/patient.service/patientService.js');
 
-describe('patient controller unit tests', () => {
+describe('resolution controller unit tests', () => {
   const patientsService = new PatientService();
   const resolutionService = new ResolutionService();
   const queueService = new QueueService();
@@ -24,6 +24,16 @@ describe('patient controller unit tests', () => {
       return true;
     });
     const res = await resolutionController.checkIsExistPatient({ name: 'Tim' });
+    expect(res.getValue).toEqual('');
+    expect(res.getStatus).toEqual(STATUSES.OK);
+  });
+
+  test('check is exist patient', async () => {
+    patientsService.isExist.mockImplementation((patient) => {
+      expect(patient.user_id).toEqual('1111');
+      return true;
+    });
+    const res = await resolutionController.checkIsExistPatient({ user_id: '1111' });
     expect(res.getValue).toEqual('');
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
@@ -54,7 +64,7 @@ describe('patient controller unit tests', () => {
 
   test('set resolution for current patient', async () => {
     queueService.isEmpty.mockResolvedValue(false);
-    resolutionService.addPatientResolution.mockImplementation((resolution, patientID, timeDelay) => {
+    resolutionService.addResolution.mockImplementation((resolution, patientID, timeDelay) => {
       expect(resolution).toEqual('good');
       expect(patientID).toEqual('1111');
       expect(timeDelay).toEqual(process.env.TTL_DELAY);
@@ -62,6 +72,7 @@ describe('patient controller unit tests', () => {
     });
     const res = await resolutionController.setResolution('good', '1111');
     expect(res.getValue.value).toEqual('good');
+    expect(res.getValue.id).toEqual('123');
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
 
@@ -74,7 +85,7 @@ describe('patient controller unit tests', () => {
 
   test('set resolution for current patient with ttl', async () => {
     queueService.isEmpty.mockResolvedValue(false);
-    resolutionService.addPatientResolution.mockImplementation((resolution, patientID, timeDelay) => {
+    resolutionService.addResolution.mockImplementation((resolution, patientID, timeDelay) => {
       expect(resolution).toEqual('good');
       expect(patientID).toEqual('1111');
       expect(timeDelay).toEqual(20000);
@@ -136,7 +147,7 @@ describe('patient controller unit tests', () => {
       expect(patient.id).toEqual('1111');
       return true;
     });
-    resolutionService.deletePatientResolution.mockImplementation((patientID) => {
+    resolutionService.deleteResolution.mockImplementation((patientID) => {
       expect(patientID).toEqual('1111');
       return { id: '2222', value: 'bad' };
     });

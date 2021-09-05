@@ -32,7 +32,7 @@ export default class ResolutionController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.resolutionService.addPatientResolution(
+    res.setValue = await this.resolutionService.addResolution(
       resolutionValue,
       patientID,
       delay,
@@ -55,7 +55,7 @@ export default class ResolutionController {
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }
-    res.setValue = await this.resolutionService.deletePatientResolution(patientID);
+    res.setValue = await this.resolutionService.deleteResolution(patientID);
     return checkOutputStatus(res);
   }
 }

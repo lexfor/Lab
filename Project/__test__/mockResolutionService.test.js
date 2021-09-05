@@ -3,7 +3,7 @@ import ResolutionSQL from '../api/resolutions/resolution.repository/resolutionSQ
 
 jest.mock('../api/resolutions/resolution.repository/resolutionSQL.js');
 
-describe('patient service unit tests', () => {
+describe('resolution service unit tests', () => {
   const resolutionRepository = new ResolutionSQL();
   const resolutionService = new ResolutionService(
     resolutionRepository,
@@ -12,7 +12,7 @@ describe('patient service unit tests', () => {
   test('get resolution', async () => {
     resolutionRepository.get.mockImplementation((patientID) => {
       expect(patientID).toEqual('1111');
-      return { id: '234', value: 'Good' };
+      return { id: '2222', value: 'Good' };
     });
     const result = await resolutionService.getResolution('1111');
     expect(result.patient_id).toEqual('1111');
@@ -26,7 +26,7 @@ describe('patient service unit tests', () => {
       expect(time).toEqual(process.env.TTL_DELAY);
       return { id: '234', value: 'Good' };
     });
-    const result = await resolutionService.addPatientResolution('aaaaaa', '1111', process.env.TTL_DELAY);
+    const result = await resolutionService.addResolution('aaaaaa', '1111', process.env.TTL_DELAY);
     expect(result.id).toEqual('234');
     expect(result.value).toEqual('Good');
   });
@@ -36,7 +36,7 @@ describe('patient service unit tests', () => {
       expect(patientID).toEqual('1111');
       return { id: patientID };
     });
-    const result = await resolutionService.deletePatientResolution('1111');
+    const result = await resolutionService.deleteResolution('1111');
     expect(result.id).toEqual('1111');
   });
 });

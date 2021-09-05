@@ -14,12 +14,12 @@ export default class ResolutionService {
     return result;
   }
 
-  async addPatientResolution(value, patientID, time) {
+  async addResolution(value, patientID, time) {
     const resolution = await this.resolutionRepository.create(patientID, value, time);
     return resolution;
   }
 
-  async deletePatientResolution(patientID) {
+  async deleteResolution(patientID) {
     const result = await this.resolutionRepository.delete(patientID);
     return result;
   }

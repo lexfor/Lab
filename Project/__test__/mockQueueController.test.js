@@ -38,7 +38,7 @@ describe('queue controller unit tests', () => {
   test('add value in queue', async () => {
     patientService.findPatientByUser.mockImplementation((userID) => {
       expect(userID).toEqual('1111');
-      return { id: '2222' };
+      return { id: '2222', name: 'Tim' };
     });
     queueService.isExist.mockImplementation((patientID) => {
       expect(patientID).toEqual('2222');

@@ -8,11 +8,15 @@ jest.mock('../api/authentication/authentication.service/authenticationService.js
 jest.mock('../api/patient/patient.service/patientService.js');
 jest.mock('../api/authentication/authentication.service/jwtService.js');
 
-describe('queue controller unit tests', () => {
+describe('authentication controller unit tests', () => {
   const authenticationService = new AuthenticationService();
   const patientService = new PatientService();
   const jwtService = new JwtService();
-  const authenticationController = new AuthenticationController(authenticationService, patientService, jwtService);
+  const authenticationController = new AuthenticationController(
+    authenticationService,
+    patientService,
+    jwtService,
+  );
 
   test('is user exist', async () => {
     authenticationService.isExist.mockImplementation((user) => {
@@ -76,7 +80,7 @@ describe('queue controller unit tests', () => {
       };
     });
 
-    patientService.addPatient.mockImplementation((UserID, name, birthday, gender, email ) => {
+    patientService.addPatient.mockImplementation((UserID, name, birthday, gender, email) => {
       expect(UserID).toEqual('1111');
       expect(birthday).toEqual('2001-02-18');
       expect(gender).toEqual('male');
@@ -97,12 +101,10 @@ describe('queue controller unit tests', () => {
       birthday: '2001-02-18',
       gender: 'male',
     });
-    expect(res.getValue).toEqual({
-      email: 'thetim182001@mail.ru',
-      birthday: '2001-02-18',
-      gender: 'male',
-      name: 'Tim',
-    });
+    expect(res.getValue.email).toEqual('thetim182001@mail.ru');
+    expect(res.getValue.birthday).toEqual('2001-02-18');
+    expect(res.getValue.gender).toEqual('male');
+    expect(res.getValue.name).toEqual('Tim');
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
 
@@ -133,9 +135,7 @@ describe('queue controller unit tests', () => {
       expect(user.password).toEqual('123');
       return {
         id: '2222',
-        name: 'Tim',
-        birthday: '2001-02-18',
-        gender: 'male',
+        login: user.login,
       };
     });
 
@@ -149,6 +149,17 @@ describe('queue controller unit tests', () => {
       password: '123',
     });
     expect(res.getValue).toEqual('asdwav');
+    expect(res.getStatus).toEqual(STATUSES.OK);
+  });
+
+  test('check jwt token', async () => {
+    jwtService.verifySign.mockImplementation((token) => {
+      expect(token).toEqual('asdwav');
+      return '1111';
+    });
+
+    const res = await authenticationController.checkToken('asdwav');
+    expect(res.getValue).toEqual('1111');
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
 });

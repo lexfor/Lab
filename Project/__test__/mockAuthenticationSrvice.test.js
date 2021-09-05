@@ -7,7 +7,7 @@ jest.mock('../api/authentication/authentication.repository/authenticationSQL.js'
 jest.mock('../api/patient/patient.repository/patientSQL.js');
 jest.mock('bcrypt');
 
-describe('queue controller unit tests', () => {
+describe('authentication service unit tests', () => {
   const patientRepository = new PatientSQL();
   const authenticationRepository = new AuthenticationSQL();
   const authenticationService = new AuthenticationService(
@@ -47,10 +47,11 @@ describe('queue controller unit tests', () => {
       expect(cryptPassword).toEqual('123');
       return false;
     });
-    await authenticationService.logIn({
+    const result = await authenticationService.logIn({
       login: 'thetim182001@mail.ru',
       password: '222',
     });
+    expect(result).toEqual('wrong password');
   });
 
   test('authentication user', async () => {
