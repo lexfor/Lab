@@ -1,8 +1,8 @@
 import express from 'express';
 import Ajv from 'ajv';
-import { injector } from '../Injector.js';
-import { STATUSES, NOT_AVAILABLE } from '../constants.js';
-import { UserSchema } from '../api/helpers/schemas/UserSchema.js';
+import { injector } from '../Injector';
+import { STATUSES, NOT_AVAILABLE } from '../constants';
+import { UserSchema } from '../api/helpers/schemas/UserSchema';
 
 const router = express();
 const ajv = new Ajv();

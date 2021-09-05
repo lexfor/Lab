@@ -1,11 +1,11 @@
-import AuthenticationService from '../api/authentication/authentication.service/authenticationService.js';
-import PatientService from '../api/patient/patient.service/patientService.js';
+import AuthenticationService from '../api/authentication/authentication.service';
+import PatientService from '../api/patient/patient.service';
 import JwtService from '../api/authentication/authentication.service/jwtService.js';
-import AuthenticationController from '../api/authentication/authentication.controller/authenticationController.js';
+import AuthenticationController from '../api/authentication/authentication.controller';
 import { NOT_AVAILABLE, STATUSES } from '../constants';
 
-jest.mock('../api/authentication/authentication.service/authenticationService.js');
-jest.mock('../api/patient/patient.service/patientService.js');
+jest.mock('../api/authentication/authentication.service');
+jest.mock('../api/patient/patient.service');
 jest.mock('../api/authentication/authentication.service/jwtService.js');
 
 describe('authentication controller unit tests', () => {

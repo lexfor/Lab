@@ -1,4 +1,4 @@
-import { NOT_AVAILABLE } from '../../../constants.js';
+import { NOT_AVAILABLE } from '../../../constants';
 
 export default class ResolutionService {
   constructor(resolutionRepository) {

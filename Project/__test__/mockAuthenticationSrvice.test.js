@@ -1,15 +1,15 @@
 import * as bcrypt from 'bcrypt';
-import AuthenticationService from '../api/authentication/authentication.service/authenticationService.js';
-import PatientSQL from '../api/patient/patient.repository/patientSQL.js';
-import AuthenticationSQL from '../api/authentication/authentication.repository/authenticationSQL.js';
+import AuthenticationService from '../api/authentication/authentication.service';
+import PatientRepository from '../api/patient/patient.repository';
+import AuthenticationRepository from '../api/authentication/authentication.repository';
 
-jest.mock('../api/authentication/authentication.repository/authenticationSQL.js');
-jest.mock('../api/patient/patient.repository/patientSQL.js');
+jest.mock('../api/authentication/authentication.repository');
+jest.mock('../api/patient/patient.repository');
 jest.mock('bcrypt');
 
 describe('authentication service unit tests', () => {
-  const patientRepository = new PatientSQL();
-  const authenticationRepository = new AuthenticationSQL();
+  const patientRepository = new PatientRepository();
+  const authenticationRepository = new AuthenticationRepository();
   const authenticationService = new AuthenticationService(
     authenticationRepository,
     patientRepository,

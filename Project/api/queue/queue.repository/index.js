@@ -1,6 +1,6 @@
 import { promisify } from 'util';
 
-export default class QueueRedis {
+export default class QueueRepository {
   constructor(redisClient) {
     this.client = redisClient;
   }

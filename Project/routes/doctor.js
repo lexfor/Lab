@@ -1,11 +1,11 @@
 import express from 'express';
 import Ajv from 'ajv';
 
-import { injector } from '../Injector.js';
-import { SetResolutionSchema } from '../api/helpers/schemas/SetResolutionSchema.js';
-import { DeleteResolutionSchema } from '../api/helpers/schemas/DeleteResolutionSchema.js';
-import { GetPatientSchema } from '../api/helpers/schemas/GetPatientSchema.js';
-import { STATUSES, NOT_AVAILABLE } from '../constants.js';
+import { injector } from '../Injector';
+import { SetResolutionSchema } from '../api/helpers/schemas/SetResolutionSchema';
+import { DeleteResolutionSchema } from '../api/helpers/schemas/DeleteResolutionSchema';
+import { GetPatientSchema } from '../api/helpers/schemas/GetPatientSchema';
+import { STATUSES, NOT_AVAILABLE } from '../constants';
 
 const router = express();
 const ajv = new Ajv();

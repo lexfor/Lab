@@ -1,7 +1,7 @@
 import { promisify } from 'util';
-import { patientDefine } from './models/patientModel.js';
-import { resolutionDefine } from './models/resolutionModel.js';
-import { userDefine } from './models/userModel.js';
+import { patientDefine } from './models/patientModel';
+import { resolutionDefine } from './models/resolutionModel';
+import { userDefine } from './models/userModel';
 
 export async function initializeDB(connection) {
   const queryAsync = promisify(connection.query).bind(connection);

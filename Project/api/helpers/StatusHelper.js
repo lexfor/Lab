@@ -1,4 +1,4 @@
-import { STATUSES, NOT_AVAILABLE } from '../../constants.js';
+import { STATUSES, NOT_AVAILABLE } from '../../constants';
 
 export function checkOutputStatus(res) {
   switch (res.getValue) {

@@ -1,10 +1,10 @@
-import ResolutionService from '../api/resolutions/resolution.service/resolutionService.js';
-import ResolutionSQL from '../api/resolutions/resolution.repository/resolutionSQL.js';
+import ResolutionService from '../api/resolutions/resolution.service';
+import ResolutionRepository from '../api/resolutions/resolution.repository';
 
-jest.mock('../api/resolutions/resolution.repository/resolutionSQL.js');
+jest.mock('../api/resolutions/resolution.repository');
 
 describe('resolution service unit tests', () => {
-  const resolutionRepository = new ResolutionSQL();
+  const resolutionRepository = new ResolutionRepository();
   const resolutionService = new ResolutionService(
     resolutionRepository,
   );

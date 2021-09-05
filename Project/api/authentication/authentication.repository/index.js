@@ -1,7 +1,7 @@
 import { promisify } from 'util';
 import { v1 as uuidv1 } from 'uuid';
 
-export default class AuthenticationSQL {
+export default class AuthenticationRepository {
   constructor(connection) {
     this.connection = connection;
   }

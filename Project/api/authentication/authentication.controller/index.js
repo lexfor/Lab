@@ -1,6 +1,6 @@
-import RequestResult from '../../RequestResult.js';
-import { checkOutputStatus } from '../../helpers/StatusHelper.js';
-import { STATUSES, NOT_AVAILABLE } from '../../../constants.js';
+import RequestResult from '../../RequestResult';
+import { checkOutputStatus } from '../../helpers/StatusHelper';
+import { STATUSES, NOT_AVAILABLE } from '../../../constants';
 
 export default class AuthenticationController {
   constructor(authenticationService, patientService, jwtService) {

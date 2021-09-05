@@ -1,12 +1,12 @@
-import ResolutionService from '../api/resolutions/resolution.service/resolutionService.js';
-import QueueService from '../api/queue/queue.service/queueService.js';
-import PatientService from '../api/patient/patient.service/patientService.js';
-import ResolutionController from '../api/resolutions/resolution.controller/resolutionController.js';
+import ResolutionService from '../api/resolutions/resolution.service';
+import QueueService from '../api/queue/queue.service';
+import PatientService from '../api/patient/patient.service';
+import ResolutionController from '../api/resolutions/resolution.controller';
 import { NOT_AVAILABLE, STATUSES } from '../constants';
 
-jest.mock('../api/resolutions/resolution.service/resolutionService.js');
-jest.mock('../api/queue/queue.service/queueService.js');
-jest.mock('../api/patient/patient.service/patientService.js');
+jest.mock('../api/resolutions/resolution.service');
+jest.mock('../api/queue/queue.service');
+jest.mock('../api/patient/patient.service');
 
 describe('resolution controller unit tests', () => {
   const patientsService = new PatientService();

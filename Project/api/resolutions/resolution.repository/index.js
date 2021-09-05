@@ -1,7 +1,7 @@
 import { v1 as uuidv1 } from 'uuid';
 import { promisify } from 'util';
 
-export default class ResolutionSQL {
+export default class ResolutionRepository {
   constructor(connection) {
     this.connection = connection;
   }

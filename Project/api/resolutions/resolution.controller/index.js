@@ -1,6 +1,6 @@
-import { NOT_AVAILABLE, STATUSES } from '../../../constants.js';
-import { checkOutputStatus } from '../../helpers/StatusHelper.js';
-import RequestResult from '../../RequestResult.js';
+import { NOT_AVAILABLE, STATUSES } from '../../../constants';
+import { checkOutputStatus } from '../../helpers/StatusHelper';
+import RequestResult from '../../RequestResult';
 
 export default class ResolutionController {
   constructor(resolutionService, queueService, patientService) {

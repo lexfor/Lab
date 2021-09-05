@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { SERVER_PORT } from './constants.js';
+import { SERVER_PORT } from './constants';
 
 dotenv.config();
 

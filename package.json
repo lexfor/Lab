@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "webpack",
-    "start": "node Project/index.js",
+    "start": "node --experimental-specifier-resolution=node Project/index.js",
     "lint": "eslint ./Project/api/**/*.js ./Project/routes/*.js ./Project/*.js --fix",
     "test": "jest --runInBand"
   },

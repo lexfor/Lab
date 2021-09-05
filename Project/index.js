@@ -1,11 +1,11 @@
 import express from 'express';
-import doctorRouter from './routes/doctor.js';
-import queueRouter from './routes/queue.js';
-import mainRouter from './routes/main.js';
-import loginRouter from './routes/login.js';
-import registerRouter from './routes/registration.js';
-import { createServer } from './websocketServer.js';
-import { envConfig } from './config.js';
+import doctorRouter from './routes/doctor';
+import queueRouter from './routes/queue';
+import mainRouter from './routes/main';
+import loginRouter from './routes/login';
+import registerRouter from './routes/registration';
+import { createServer } from './websocketServer';
+import { envConfig } from './config';
 
 const app = express();
 

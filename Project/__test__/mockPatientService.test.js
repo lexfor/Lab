@@ -1,10 +1,10 @@
-import PatientSQL from '../api/patient/patient.repository/patientSQL.js';
-import PatientService from '../api/patient/patient.service/patientService.js';
+import PatientRepository from '../api/patient/patient.repository';
+import PatientService from '../api/patient/patient.service';
 
-jest.mock('../api/patient/patient.repository/patientSQL.js');
+jest.mock('../api/patient/patient.repository/index.js');
 
 describe('patient service unit tests', () => {
-  const patientRepository = new PatientSQL();
+  const patientRepository = new PatientRepository();
   const patientService = new PatientService(
     patientRepository,
   );

@@ -1,29 +1,29 @@
-import AuthenticationController from './api/authentication/authentication.controller/authenticationController.js';
-import QueueController from './api/queue/queue.controller/queueController.js';
-import ResolutionController from './api/resolutions/resolution.controller/resolutionController.js';
-import AuthenticationService from './api/authentication/authentication.service/authenticationService.js';
-import ResolutionService from './api/resolutions/resolution.service/resolutionService.js';
-import PatientService from './api/patient/patient.service/patientService.js';
-import QueueService from './api/queue/queue.service/queueService.js';
-import JwtService from './api/authentication/authentication.service/jwtService.js';
-import AuthenticationSQL from './api/authentication/authentication.repository/authenticationSQL.js';
-import QueueRedis from './api/queue/queue.repository/queueRedis.js';
-import PatientSQL from './api/patient/patient.repository/patientSQL.js';
-import ResolutionSQL from './api/resolutions/resolution.repository/resolutionSQL.js';
-import { connection } from './api/helpers/DBconnection.js';
-import { initializeDB } from './api/helpers/DBInitializator.js';
-import { client } from './api/helpers/RedisConnection.js';
+import AuthenticationController from './api/authentication/authentication.controller';
+import QueueController from './api/queue/queue.controller';
+import ResolutionController from './api/resolutions/resolution.controller';
+import AuthenticationService from './api/authentication/authentication.service';
+import ResolutionService from './api/resolutions/resolution.service';
+import PatientService from './api/patient/patient.service';
+import QueueService from './api/queue/queue.service';
+import JwtService from './api/authentication/authentication.service/jwtService';
+import AuthenticationRepository from './api/authentication/authentication.repository';
+import QueueRepository from './api/queue/queue.repository';
+import PatientRepository from './api/patient/patient.repository';
+import ResolutionRepository from './api/resolutions/resolution.repository';
+import { connection } from './api/helpers/DBconnection';
+import { initializeDB } from './api/helpers/DBInitializator';
+import { client } from './api/helpers/RedisConnection';
 
 class Injector {
   constructor() {
     console.log('using SQL');
     initializeDB(connection).then(console.log('Database initialized'));
-    this.patientRepository = new PatientSQL(connection);
-    this.resolutionRepository = new ResolutionSQL(connection);
+    this.patientRepository = new PatientRepository(connection);
+    this.resolutionRepository = new ResolutionRepository(connection);
     console.log('using redis for queue');
     client.flushdb();
-    this.queueRepository = new QueueRedis(client);
-    this.authenticationRepository = new AuthenticationSQL(connection);
+    this.queueRepository = new QueueRepository(client);
+    this.authenticationRepository = new AuthenticationRepository(connection);
 
     this.patientService = new PatientService(this.patientRepository);
     this.queueService = new QueueService(this.queueRepository);

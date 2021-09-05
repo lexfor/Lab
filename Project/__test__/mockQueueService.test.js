@@ -1,13 +1,13 @@
-import QueueService from '../api/queue/queue.service/queueService.js';
-import QueueRedis from '../api/queue/queue.repository/queueRedis.js';
-import PatientSQL from '../api/patient/patient.repository/patientSQL.js';
+import QueueService from '../api/queue/queue.service';
+import QueueRepository from '../api/queue/queue.repository';
+import PatientRepository from '../api/patient/patient.repository';
 
-jest.mock('../api/queue/queue.repository/queueRedis.js');
-jest.mock('../api/patient/patient.repository/patientSQL.js');
+jest.mock('../api/queue/queue.repository/index.js');
+jest.mock('../api/patient/patient.repository/index.js');
 
 describe('queue service unit tests', () => {
-  const patientRepository = new PatientSQL();
-  const queueRepository = new QueueRedis();
+  const patientRepository = new PatientRepository();
+  const queueRepository = new QueueRepository();
   const queue = new QueueService(
     queueRepository,
     patientRepository,

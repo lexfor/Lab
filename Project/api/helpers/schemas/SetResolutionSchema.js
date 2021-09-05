@@ -1,4 +1,4 @@
-import { MAX_LENGTH, MIN_LENGTH } from '../../../constants.js';
+import { MAX_LENGTH, MIN_LENGTH } from '../../../constants';
 
 export const SetResolutionSchema = {
   type: 'object',
