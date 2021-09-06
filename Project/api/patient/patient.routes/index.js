@@ -6,12 +6,8 @@ import { UserSchema } from '../../helpers/schemas/UserSchema';
 
 const router = express();
 const ajv = new Ajv();
-const queueController = injector.getQueueController;
+const patientController = injector.getPatientController;
 const authenticationController = injector.getAuthenticationController;
-
-router.get('/queue', (req, res) => {
-  res.sendFile('./public/queue/queue.html', { root: './Project' });
-});
 
 router.post('/queue/patient', async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -30,17 +26,17 @@ router.post('/queue/patient', async (req, res, next) => {
   }
   next();
 }, async (req, res) => {
-  const result = await queueController.addValueInQueue(req.token.user_id);
+  const result = await patientController.addValueInQueue(req.token.user_id);
   res.status(result.getStatus).json(result.getValue);
 });
 
 router.get('/queue/current', async (req, res) => {
-  const result = await queueController.getCurrentInQueue();
+  const result = await patientController.getCurrentInQueue();
   res.status(result.getStatus).json(result.getValue);
 });
 
 router.get('/queue/next', async (req, res) => {
-  const result = await queueController.takeNextValueInQueue();
+  const result = await patientController.takeNextValueInQueue();
   res.status(result.getStatus).json(result.getValue);
 });
 

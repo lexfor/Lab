@@ -9,14 +9,6 @@ const router = express();
 const ajv = new Ajv();
 const authenticationController = injector.getAuthenticationController;
 
-router.get('/registration', (req, res) => {
-  res.sendFile('./public/registration/registration.html', { root: './Project' });
-});
-
-router.get('/login', (req, res) => {
-  res.sendFile('./public/login/login.html', { root: './Project' });
-});
-
 router.post('/registration', async (req, res, next) => {
   const validationResult = ajv.validate(AddUserSchema, req.body);
   if (validationResult) {

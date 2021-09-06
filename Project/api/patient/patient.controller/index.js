@@ -2,7 +2,7 @@ import RequestResult from '../../RequestResult';
 import { checkOutputStatus } from '../../helpers/StatusHelper';
 import { STATUSES, NOT_AVAILABLE } from '../../../constants';
 
-export default class QueueController {
+export default class PatientController {
   constructor(queueService, patientService) {
     this.queueService = queueService;
     this.patientService = patientService;

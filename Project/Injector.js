@@ -1,5 +1,5 @@
 import AuthenticationController from './api/authentication/authentication.controller';
-import QueueController from './api/queue/queue.controller';
+import PatientController from './api/patient/patient.controller';
 import ResolutionController from './api/resolutions/resolution.controller';
 import AuthenticationService from './api/authentication/authentication.service';
 import ResolutionService from './api/resolutions/resolution.service';
@@ -36,7 +36,7 @@ class Injector {
       this.patientService,
       this.jwtService,
     );
-    this.queueController = new QueueController(this.queueService, this.patientService);
+    this.patientController = new PatientController(this.queueService, this.patientService);
     this.resolutionController = new ResolutionController(
       this.resolutionService,
       this.queueService,
@@ -44,8 +44,8 @@ class Injector {
     );
   }
 
-  get getQueueController() {
-    return this.queueController;
+  get getPatientController() {
+    return this.patientController;
   }
 
   get getResolutionController() {

@@ -32,11 +32,7 @@ async function setCurrentResolution() {
 
 async function findResolution() {
   const input = document.getElementById('valueInput');
-  const url = new URL('/resolution', document.location.origin);
-  const params = new URLSearchParams();
-  params.append('name', input.value);
-  url.search = params.toString();
-  const response = await fetch(url.href);
+  const response = await fetch(`/${input.value}/resolution`);
   const resolution = await response.json();
   const output = document.getElementById('resolutionOutput');
   output.value = resolution.value;

@@ -1,5 +1,9 @@
 import express from 'express';
-import queueRouter from './api/queue/queue.routes';
+import patientRouter from './api/patient/patient.routes';
+import loginRouter from './routes/login';
+import registrationRouter from './routes/registration';
+import doctorRouter from './routes/doctor';
+import queueRouter from './routes/queue';
 import resolutionRouter from './api/resolutions/resolution.routes';
 import authenticationRouter from './api/authentication/authentication.routes';
 import { createServer } from './websocketServer';
@@ -16,9 +20,13 @@ app.get('/', (req, res) => {
   res.redirect('/login');
 });
 
-app.use('/', queueRouter);
+app.use('/', patientRouter);
 app.use('/', resolutionRouter);
 app.use('/', authenticationRouter);
+app.use('/', loginRouter);
+app.use('/', registrationRouter);
+app.use('/', doctorRouter);
+app.use('/', queueRouter);
 
 app.listen(envConfig.app.port, () => {
   createServer();
