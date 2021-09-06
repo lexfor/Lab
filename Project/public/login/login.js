@@ -5,7 +5,7 @@ async function logIn() {
     login: emailInput.value,
     password: passwordInput.value,
   };
-  const response = await fetch('/login/authentication', {
+  const response = await fetch('/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

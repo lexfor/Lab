@@ -11,7 +11,7 @@ async function register() {
     birthday: birthdayInput.value,
     gender: genderInput.value,
   };
-  const response = await fetch('/registration/user', {
+  const response = await fetch('/registration', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

@@ -1,14 +1,14 @@
 const ws = new WebSocket('ws://localhost:8080');
 
 async function getCurrent() {
-  const response = await fetch('/doctor/patient/current');
+  const response = await fetch('/queue/current');
   const result = await response.json();
   document.getElementById('currentNumber').innerHTML = result.name;
   window.sessionStorage.setItem('currentPatientID', result.id);
 }
 
 async function next() {
-  await fetch('/doctor/patient/next');
+  await fetch('/queue/next');
   await getCurrent();
   ws.send('next');
 }
@@ -19,7 +19,7 @@ async function setCurrentResolution() {
     value: resolution.value,
     id: window.sessionStorage.getItem('currentPatientID'),
   };
-  const response = await fetch('/doctor/patient/current/resolution', {
+  const response = await fetch('/resolution', {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -32,7 +32,7 @@ async function setCurrentResolution() {
 
 async function findResolution() {
   const input = document.getElementById('valueInput');
-  const url = new URL('/doctor/patient/resolution', document.location.origin);
+  const url = new URL('/resolution', document.location.origin);
   const params = new URLSearchParams();
   params.append('name', input.value);
   url.search = params.toString();
@@ -44,7 +44,7 @@ async function findResolution() {
 }
 
 async function deleteResolution() {
-  const url = new URL('/doctor/patient/resolution', document.location.origin);
+  const url = new URL('/resolution', document.location.origin);
   const params = new URLSearchParams();
   params.append('patient_id', window.sessionStorage.getItem('foundedPatientID'));
   url.search = params.toString();
