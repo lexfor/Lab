@@ -8,7 +8,7 @@ export default class AuthenticationService {
   async register(user) {
     const cryptUser = {
       login: user.login,
-      password: bcrypt.hashSync(user.password, 10),
+      password: await bcrypt.hashSync(user.password, 10),
       name: user.name,
       birthday: user.birthday,
       gender: user.gender,
@@ -22,7 +22,7 @@ export default class AuthenticationService {
     if (!foundedUser) {
       return 'no such user';
     }
-    if (bcrypt.compareSync(user.password, foundedUser.password)) {
+    if (await bcrypt.compareSync(user.password, foundedUser.password)) {
       return foundedUser;
     }
     return 'wrong password';
