@@ -19,7 +19,7 @@ describe('resolution service unit tests', () => {
     expect(result.value).toEqual('Good');
   });
 
-  test('add patient resolution', async () => {
+  test('added new resolution for patient', async () => {
     resolutionRepository.create.mockImplementation((patientID, resolution, time) => {
       expect(patientID).toEqual('1111');
       expect(resolution).toEqual('aaaaaa');
@@ -31,7 +31,7 @@ describe('resolution service unit tests', () => {
     expect(result.value).toEqual('Good');
   });
 
-  test('delete patient', async () => {
+  test('deleted all resolutions for that patients', async () => {
     resolutionRepository.delete.mockImplementation((patientID) => {
       expect(patientID).toEqual('1111');
       return { id: patientID };

@@ -9,7 +9,7 @@ export default class ResolutionController {
     this.patientService = patientService;
   }
 
-  async checkCurrentPatient() {
+  async checkCurrentPatientInQueue() {
     const res = new RequestResult();
     if (await this.queueService.isEmpty()) {
       res.setValue = { value: NOT_AVAILABLE };
@@ -28,7 +28,7 @@ export default class ResolutionController {
   }
 
   async setResolution(resolutionValue, patientID, delay = process.env.TTL_DELAY) {
-    const res = await this.checkCurrentPatient();
+    const res = await this.checkCurrentPatientInQueue();
     if (res.getStatus !== STATUSES.OK) {
       return res;
     }

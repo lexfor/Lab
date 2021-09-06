@@ -9,7 +9,7 @@ describe('patient service unit tests', () => {
     patientRepository,
   );
 
-  test('add patient', async () => {
+  test('create new patient', async () => {
     patientRepository.create.mockImplementation((userID, name, birthday, gender, email) => {
       expect(userID).toEqual('1111');
       expect(name).toEqual('Tim');
@@ -68,7 +68,7 @@ describe('patient service unit tests', () => {
     expect(result).toEqual('1111');
   });
 
-  test('find patient with id', async () => {
+  test('find patient with user id', async () => {
     patientRepository.getByUserID.mockImplementation((patientID) => {
       expect(patientID).toEqual('1111');
       return { id: '2222', name: 'Tim' };
@@ -77,13 +77,13 @@ describe('patient service unit tests', () => {
     expect(result).toEqual('2222');
   });
 
-  test('is exist patient by name', async () => {
+  test('check existed patient by name', async () => {
     patientRepository.getAllNames.mockResolvedValue(['Tim', 'Andrei', 'Dima']);
     const result = await patientService.isExist({ name: 'Tim' });
     expect(result).toEqual(true);
   });
 
-  test('is exist patient by user id', async () => {
+  test('check existed patient by user id', async () => {
     patientRepository.getByUserID.mockImplementation((userID) => {
       expect(userID).toEqual('123');
       return { id: '1111' };
@@ -93,25 +93,25 @@ describe('patient service unit tests', () => {
     expect(result).toEqual(true);
   });
 
-  test('is exist patient by id', async () => {
+  test('check existed patient by patient id', async () => {
     patientRepository.getAllIDs.mockResolvedValue(['1111', '2222', '3333']);
     const result = await patientService.isExist({ id: '1111' });
     expect(result).toEqual(true);
   });
 
-  test('is exist patient by id', async () => {
+  test('check not existed patient by patient id', async () => {
     patientRepository.getAllIDs.mockResolvedValue(['1111', '2222', '3333']);
     const result = await patientService.isExist({ id: '4444' });
     expect(result).toEqual(false);
   });
 
-  test('is no patients', async () => {
+  test('check is no patients', async () => {
     patientRepository.getAllNames.mockResolvedValue(['1111', '2222', '3333']);
     const result = await patientService.isEmpty();
     expect(result).toEqual(false);
   });
 
-  test('is no patients', async () => {
+  test('check is no patients', async () => {
     patientRepository.getAllNames.mockResolvedValue([]);
     const result = await patientService.isEmpty();
     expect(result).toEqual(true);

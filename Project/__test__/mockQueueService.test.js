@@ -22,7 +22,7 @@ describe('queue service unit tests', () => {
     expect(result.id).toEqual('123');
   });
 
-  test('pop patient from queue', async () => {
+  test('shift patient from queue', async () => {
     queueRepository.shift.mockResolvedValue('1111');
     const result = await queue.shift();
     expect(result).toEqual('1111');
@@ -34,25 +34,25 @@ describe('queue service unit tests', () => {
     expect(result).toEqual('1111');
   });
 
-  test('check is exist patient', async () => {
+  test('patient in queue', async () => {
     queueRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
     const result = await queue.isExist('aaa');
     expect(result).toEqual(true);
   });
 
-  test('check is exist patient', async () => {
+  test('no that patient in queue', async () => {
     queueRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
     const result = await queue.isExist('fff');
     expect(result).toEqual(false);
   });
 
-  test('check is patient storage empty', async () => {
+  test('queue not empty', async () => {
     queueRepository.getAll.mockImplementation(() => ['Tim', 'Dima', 'Andrei']);
     const result = await queue.isEmpty();
     expect(result).toEqual(false);
   });
 
-  test('check is patient storage empty', async () => {
+  test('queue empty', async () => {
     queueRepository.getAll.mockImplementation(() => []);
     const result = await queue.isEmpty();
     expect(result).toEqual(true);

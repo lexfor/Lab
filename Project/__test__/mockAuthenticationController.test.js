@@ -18,7 +18,7 @@ describe('authentication controller unit tests', () => {
     jwtService,
   );
 
-  test('is user exist', async () => {
+  test('check not existed user', async () => {
     authenticationService.isExist.mockImplementation((user) => {
       expect(user.login).toEqual('thetim182001@mail.ru');
       expect(user.password).toEqual('123');
@@ -38,7 +38,7 @@ describe('authentication controller unit tests', () => {
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
 
-  test('is user exist', async () => {
+  test('check existed user', async () => {
     authenticationService.isExist.mockImplementation((user) => {
       expect(user.login).toEqual('thetim182001@mail.ru');
       expect(user.password).toEqual('123');
@@ -58,7 +58,7 @@ describe('authentication controller unit tests', () => {
     expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
   });
 
-  test('register user', async () => {
+  test('register new user', async () => {
     authenticationService.isExist.mockImplementation((user) => {
       expect(user.login).toEqual('thetim182001@mail.ru');
       expect(user.password).toEqual('123');
@@ -108,7 +108,7 @@ describe('authentication controller unit tests', () => {
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
 
-  test('register existed user', async () => {
+  test('cant register already existed user', async () => {
     authenticationService.isExist.mockImplementation((user) => {
       expect(user.login).toEqual('thetim182001@mail.ru');
       expect(user.password).toEqual('123');
@@ -129,7 +129,7 @@ describe('authentication controller unit tests', () => {
     expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
   });
 
-  test('login user', async () => {
+  test('correct authentication', async () => {
     authenticationService.logIn.mockImplementation((user) => {
       expect(user.login).toEqual('thetim182001@mail.ru');
       expect(user.password).toEqual('123');
@@ -152,7 +152,7 @@ describe('authentication controller unit tests', () => {
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
 
-  test('check jwt token', async () => {
+  test('check correct jwt token', async () => {
     jwtService.verifySign.mockImplementation((token) => {
       expect(token).toEqual('asdwav');
       return '1111';

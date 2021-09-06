@@ -15,7 +15,7 @@ describe('authentication service unit tests', () => {
     patientRepository,
   );
 
-  test('register user', async () => {
+  test('create new user', async () => {
     authenticationRepository.create.mockImplementation((user) => {
       expect(user.login).toEqual('thetim182001@mail.ru');
       expect(user.birthday).toEqual('2001-02-18');
@@ -34,7 +34,7 @@ describe('authentication service unit tests', () => {
     expect(res.login).toEqual('thetim182001@mail.ru');
   });
 
-  test('authentication user', async () => {
+  test('not correct authentication user', async () => {
     authenticationRepository.getUser.mockImplementation((login) => {
       expect(login).toEqual('thetim182001@mail.ru');
       return {
@@ -54,7 +54,7 @@ describe('authentication service unit tests', () => {
     expect(result).toEqual('wrong password');
   });
 
-  test('authentication user', async () => {
+  test('correct authentication user', async () => {
     authenticationRepository.getUser.mockImplementation((login) => {
       expect(login).toEqual('thetim182001@mail.ru');
       return {
@@ -75,7 +75,7 @@ describe('authentication service unit tests', () => {
     });
   });
 
-  test('is user exist', async () => {
+  test('check existed user', async () => {
     authenticationRepository.getAllLogins.mockResolvedValue(['thetim182001@mail.ru', 'aliceAndreeva@mail.ru']);
 
     const result = await authenticationService.isExist({
@@ -85,7 +85,7 @@ describe('authentication service unit tests', () => {
     expect(result).toEqual(true);
   });
 
-  test('is user exist', async () => {
+  test('check not existed user', async () => {
     authenticationRepository.getAllLogins.mockResolvedValue(['aliceAndreeva@mail.ru']);
 
     const result = await authenticationService.isExist({

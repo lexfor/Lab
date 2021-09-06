@@ -1,8 +1,8 @@
-import { checkOutputStatus } from '../api/helpers/StatusHelper.js';
-import RequestResult from '../api/RequestResult.js';
-import { STATUSES } from '../constants.js';
+import { checkOutputStatus } from '../api/helpers/StatusHelper';
+import RequestResult from '../api/RequestResult';
+import { STATUSES } from '../constants';
 
-describe('Status helper', () => {
+describe('Status helper unit tests', () => {
   test('empty RequestResult', () => {
     const res = new RequestResult();
     expect(res.getValue).toEqual('');

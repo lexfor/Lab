@@ -11,7 +11,7 @@ describe('patient controller unit tests', () => {
   const queueService = new QueueService();
   const patientController = new PatientController(queueService, patientService);
 
-  test('check is patient already in queue', async () => {
+  test('check patient, that not in queue', async () => {
     queueService.isExist.mockImplementation((value) => {
       expect(value).toEqual('1111');
       return false;
@@ -21,14 +21,14 @@ describe('patient controller unit tests', () => {
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
 
-  test('check length', async () => {
+  test('empty patient queue', async () => {
     queueService.isEmpty.mockResolvedValue(true);
     const res = await patientController.checkLength();
     expect(res.getValue.name).toEqual(NOT_AVAILABLE);
     expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
   });
 
-  test('check length', async () => {
+  test('not empty patient queue', async () => {
     queueService.isEmpty.mockResolvedValue(false);
     const res = await patientController.checkLength();
     expect(res.getValue).toEqual('');
