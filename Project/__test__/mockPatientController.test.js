@@ -1,10 +1,9 @@
-import PatientService from '../api/patient/patient.service';
-import QueueService from '../api/queue/queue.service';
-import PatientController from '../api/patient/patient.controller';
+import { PatientService, PatientController } from '../api/patient';
+import { QueueService } from '../api/queue';
 import { NOT_AVAILABLE, STATUSES } from '../constants';
 
-jest.mock('../api/patient/patient.service');
-jest.mock('../api/queue/queue.service');
+jest.mock('../api/patient/service/patient.service');
+jest.mock('../api/queue/service/queue.service');
 
 describe('patient controller unit tests', () => {
   const patientService = new PatientService();

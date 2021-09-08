@@ -1,4 +1,4 @@
-export default class PatientService {
+class PatientService {
   constructor(patientRepository) {
     this.patientRepository = patientRepository;
   }
@@ -60,3 +60,5 @@ export default class PatientService {
     return result.length === 0;
   }
 }
+
+export { PatientService };

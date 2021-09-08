@@ -1,12 +1,11 @@
-import ResolutionService from '../api/resolutions/resolution.service';
-import QueueService from '../api/queue/queue.service';
-import PatientService from '../api/patient/patient.service';
-import ResolutionController from '../api/resolutions/resolution.controller';
+import { ResolutionService, ResolutionController } from '../api/resolutions';
+import { QueueService } from '../api/queue';
+import { PatientService } from '../api/patient';
 import { NOT_AVAILABLE, STATUSES } from '../constants';
 
-jest.mock('../api/resolutions/resolution.service');
-jest.mock('../api/queue/queue.service');
-jest.mock('../api/patient/patient.service');
+jest.mock('../api/resolutions/service/resolution.service');
+jest.mock('../api/queue/service/queue.service');
+jest.mock('../api/patient/service/patient.service');
 
 describe('resolution controller unit tests', () => {
   const patientsService = new PatientService();
@@ -59,7 +58,7 @@ describe('resolution controller unit tests', () => {
     queueService.isEmpty.mockResolvedValue(true);
     const res = await resolutionController.checkCurrentPatientInQueue();
     expect(res.getValue.value).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
+    expect(res.getStatus).toEqual(STATUSES.CONFLICT);
   });
 
   test('resolution added', async () => {
@@ -80,7 +79,7 @@ describe('resolution controller unit tests', () => {
     queueService.isEmpty.mockResolvedValue(true);
     const res = await resolutionController.setResolution('good', '1111');
     expect(res.getValue.value).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
+    expect(res.getStatus).toEqual(STATUSES.CONFLICT);
   });
 
   test('added resolution with custom ttl', async () => {

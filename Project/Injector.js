@@ -1,15 +1,12 @@
-import AuthenticationController from './api/authentication/authentication.controller';
-import PatientController from './api/patient/patient.controller';
-import ResolutionController from './api/resolutions/resolution.controller';
-import AuthenticationService from './api/authentication/authentication.service';
-import ResolutionService from './api/resolutions/resolution.service';
-import PatientService from './api/patient/patient.service';
-import QueueService from './api/queue/queue.service';
-import JwtService from './api/authentication/authentication.service/jwtService';
-import AuthenticationRepository from './api/authentication/authentication.repository';
-import QueueRepository from './api/queue/queue.repository';
-import PatientRepository from './api/patient/patient.repository';
-import ResolutionRepository from './api/resolutions/resolution.repository';
+import {
+  AuthenticationRepository,
+  AuthenticationService,
+  AuthenticationController,
+  JwtService,
+} from './api/authentication';
+import { PatientController, PatientRepository, PatientService } from './api/patient';
+import { ResolutionService, ResolutionRepository, ResolutionController } from './api/resolutions';
+import { QueueService, QueueRepository } from './api/queue';
 import { connection } from './api/helpers/DBconnection';
 import { initializeDB } from './api/helpers/DBInitializator';
 import { client } from './api/helpers/RedisConnection';

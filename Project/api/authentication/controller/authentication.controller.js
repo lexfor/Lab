@@ -2,7 +2,7 @@ import RequestResult from '../../RequestResult';
 import { checkOutputStatus } from '../../helpers/StatusHelper';
 import { STATUSES, NOT_AVAILABLE } from '../../../constants';
 
-export default class AuthenticationController {
+class AuthenticationController {
   constructor(authenticationService, patientService, jwtService) {
     this.authenticationService = authenticationService;
     this.patientService = patientService;
@@ -52,3 +52,5 @@ export default class AuthenticationController {
     return checkOutputStatus(res);
   }
 }
+
+export { AuthenticationController }

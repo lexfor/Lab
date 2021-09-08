@@ -1,7 +1,7 @@
 import { v1 as uuidv1 } from 'uuid';
 import { promisify } from 'util';
 
-export default class ResolutionRepository {
+class ResolutionRepository {
   constructor(connection) {
     this.connection = connection;
   }
@@ -83,3 +83,5 @@ export default class ResolutionRepository {
     }
   }
 }
+
+export { ResolutionRepository };

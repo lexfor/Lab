@@ -1,7 +1,7 @@
 import { promisify } from 'util';
 import { v1 as uuidv1 } from 'uuid';
 
-export default class PatientRepository {
+class PatientRepository {
   constructor(connection) {
     this.connection = connection;
   }
@@ -104,3 +104,5 @@ export default class PatientRepository {
     }
   }
 }
+
+export { PatientRepository };

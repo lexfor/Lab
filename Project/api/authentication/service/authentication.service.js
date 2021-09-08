@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 
-export default class AuthenticationService {
+class AuthenticationService {
   constructor(authenticationRepository) {
     this.authenticationRepository = authenticationRepository;
   }
@@ -33,3 +33,5 @@ export default class AuthenticationService {
     return values.indexOf(user.login) !== -1;
   }
 }
+
+export { AuthenticationService };

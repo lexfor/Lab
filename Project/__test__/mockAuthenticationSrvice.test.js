@@ -1,10 +1,9 @@
 import * as bcrypt from 'bcrypt';
-import AuthenticationService from '../api/authentication/authentication.service';
-import PatientRepository from '../api/patient/patient.repository';
-import AuthenticationRepository from '../api/authentication/authentication.repository';
+import { AuthenticationService, AuthenticationRepository } from '../api/authentication';
+import { PatientRepository } from '../api/patient';
 
-jest.mock('../api/authentication/authentication.repository');
-jest.mock('../api/patient/patient.repository');
+jest.mock('../api/authentication/repository/authentication.repository');
+jest.mock('../api/patient/repository/patient.repository');
 jest.mock('bcrypt');
 
 describe('authentication service unit tests', () => {

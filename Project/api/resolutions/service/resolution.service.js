@@ -1,6 +1,6 @@
 import { NOT_AVAILABLE } from '../../../constants';
 
-export default class ResolutionService {
+class ResolutionService {
   constructor(resolutionRepository) {
     this.resolutionRepository = resolutionRepository;
   }
@@ -24,3 +24,5 @@ export default class ResolutionService {
     return result;
   }
 }
+
+export { ResolutionService };

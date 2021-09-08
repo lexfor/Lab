@@ -2,7 +2,7 @@ import { NOT_AVAILABLE, STATUSES } from '../../../constants';
 import { checkOutputStatus } from '../../helpers/StatusHelper';
 import RequestResult from '../../RequestResult';
 
-export default class ResolutionController {
+class ResolutionController {
   constructor(resolutionService, queueService, patientService) {
     this.resolutionService = resolutionService;
     this.queueService = queueService;
@@ -13,7 +13,7 @@ export default class ResolutionController {
     const res = new RequestResult();
     if (await this.queueService.isEmpty()) {
       res.setValue = { value: NOT_AVAILABLE };
-      res.setStatus = STATUSES.UNAVAILABLE;
+      res.setStatus = STATUSES.CONFLICT;
     }
     return res;
   }
@@ -59,3 +59,5 @@ export default class ResolutionController {
     return checkOutputStatus(res);
   }
 }
+
+export { ResolutionController };

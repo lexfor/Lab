@@ -1,4 +1,4 @@
-export default class QueueService {
+class QueueService {
   constructor(queueRepository) {
     this.queueRepository = queueRepository;
   }
@@ -28,3 +28,5 @@ export default class QueueService {
     return allPatientInQueue.length === 0;
   }
 }
+
+export { QueueService };

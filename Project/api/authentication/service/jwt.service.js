@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 const { sign, verify } = jwt;
 
-export default class JwtService {
+class JwtService {
   async createSign(patientID, tokenKey = process.env.TOKEN_KEY) {
     try {
       const token = sign({
@@ -24,3 +24,5 @@ export default class JwtService {
     }
   }
 }
+
+export { JwtService };
