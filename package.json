@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "webpack",
-    "start": "node Project/index.js",
-    "lint": "eslint ./Project/api/**/*.js ./Project/routes/*.js --fix",
+    "start": "node --experimental-specifier-resolution=node Project/index.js",
+    "lint": "eslint ./Project/api/**/*.js  ./Project/*.js --fix",
     "test": "jest --runInBand"
   },
   "jest": {
@@ -38,14 +38,19 @@
   "dependencies": {
     "@babel/runtime": "^7.15.3",
     "ajv": "^6.12.6",
-    "body-parser": "^1.19.0",
+    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.3.0",
     "node-fetch": "^2.6.1",
     "path": "^0.12.7",
     "redis": "^3.1.2",
     "require": "^2.4.20",
-    "webpack": "^5.47.1"
+    "sequelize": "^6.6.5",
+    "uuid": "^8.3.2",
+    "webpack": "^5.47.1",
+    "ws": "^8.2.1"
   }
 }

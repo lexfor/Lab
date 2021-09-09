@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <title>Doctor's queue</title>
+ <link rel="stylesheet" type="text/css" href="queue.css">
+</head>
+<body>
+  <section class="section">
+    <p class="name">The queue</p>
+    <a href="/doctor" class="to-doctor">Doctor cabinet</a>
+    <button class="add-button" onclick="Add()"> Add me in queue</button>
+    <section class="current">
+      <p class="label">Current patient:</p>
+      <p class="number" id="currentNumber">Stack item value</p>
+    </section>
+  </section>
+  <section class="section">
+    <textarea class="result" id="resolution"></textarea>
+  </section>
+</body>
+  <script src="queue.js"></script>
+</html>

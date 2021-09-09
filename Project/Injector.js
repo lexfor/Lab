@@ -1,40 +1,56 @@
-import QueueController from './api/controllers/queueController.js';
-import ResolutionController from './api/controllers/resolutionController.js';
-import PatientsResolutionsService from './api/service/PatientsResolutionsService.js';
-import QueueService from './api/service/QueueService.js';
-
-import { queueInMemoryStorage } from './api/repositories/queueStorage.js';
-import { resolutionInMemoryStorage } from './api/repositories/resolutionStorage.js';
-import { queueInRedisStorage } from './api/repositories/queueRedis.js';
-import { resolutionInRedisStorage } from './api/repositories/resolutionRedis.js';
-
-import { envConfig } from './config.js';
+import {
+  AuthenticationRepository,
+  AuthenticationService,
+  AuthenticationController,
+  JwtService,
+} from './api/authentication';
+import { PatientController, PatientRepository, PatientService } from './api/patient';
+import { ResolutionService, ResolutionRepository, ResolutionController } from './api/resolutions';
+import { QueueService, QueueRepository } from './api/queue';
+import { connection } from './api/helpers/DBconnection';
+import { initializeDB } from './api/helpers/DBInitializator';
+import { client } from './api/helpers/RedisConnection';
 
 class Injector {
   constructor() {
-    switch (envConfig.storage.name) {
-      case 'redis':
-        this.queueStorage = queueInRedisStorage;
-        this.resolutionStorage = resolutionInRedisStorage;
-        break;
+    console.log('using SQL');
+    initializeDB(connection).then(console.log('Database initialized'));
+    this.patientRepository = new PatientRepository(connection);
+    this.resolutionRepository = new ResolutionRepository(connection);
+    console.log('using redis for queue');
+    client.flushdb();
+    this.queueRepository = new QueueRepository(client);
+    this.authenticationRepository = new AuthenticationRepository(connection);
 
-      default:
-        this.queueStorage = queueInMemoryStorage;
-        this.resolutionStorage = resolutionInMemoryStorage;
-    }
+    this.patientService = new PatientService(this.patientRepository);
+    this.queueService = new QueueService(this.queueRepository);
+    this.jwtService = new JwtService();
+    this.authenticationService = new AuthenticationService(this.authenticationRepository);
+    this.resolutionService = new ResolutionService(this.resolutionRepository);
 
-    this.resolutionService = new PatientsResolutionsService(this.resolutionStorage);
-    this.queueService = new QueueService(this.queueStorage);
-    this.queueController = new QueueController(this.queueService, this.resolutionService);
-    this.resolutionController = new ResolutionController(this.queueService, this.resolutionService);
+    this.authenticationController = new AuthenticationController(
+      this.authenticationService,
+      this.patientService,
+      this.jwtService,
+    );
+    this.patientController = new PatientController(this.queueService, this.patientService);
+    this.resolutionController = new ResolutionController(
+      this.resolutionService,
+      this.queueService,
+      this.patientService,
+    );
   }
 
-  get getQueueController() {
-    return this.queueController;
+  get getPatientController() {
+    return this.patientController;
   }
 
   get getResolutionController() {
     return this.resolutionController;
+  }
+
+  get getAuthenticationController() {
+    return this.authenticationController;
   }
 }
 

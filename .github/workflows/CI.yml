@@ -1,8 +1,6 @@
 name: CI
 
 on:
-  push:
-    branches: [ main, Lesson-** ]
   pull_request:
     branches: [ main ]
 
@@ -33,7 +31,7 @@ jobs:
           accessToken: ${{ secrets.GITHUB_TOKEN }} # optional, default is false
 
   install-n-lint:
-    name: check with eslint
+    name: check with eslint and tests
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -53,3 +51,6 @@ jobs:
 
       - name: Linting the code with ESLint
         run: npm run lint
+
+      - name: testing with unit tests
+        run: npm run test

@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  app:
+    image: lexforor/lab:latest
+    command: npm start
+    ports:
+      - 3000:3000
+      - 8080:8080
+    working_dir: /home/Lab
+    volumes:
+      - ./:/lab
+    environment:
+      NODE_ENV: dev
+      DEV_APP_PORT: 3000
+      TTL_DELAY: 30000
+      QUEUE_HOST: redis
+      STORAGE_HOST: db
+      TOKEN_KEY: EDABF42E713D54D6E24CECB25527F
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+  db:
+    image: mysql:8.0
+    restart: always
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent" ]
+      interval: 3s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - todo-mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=Timafifa14
+      - MYSQL_DATABASE=lab
+  redis:
+    image: redis:6.2
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+volumes:
+  todo-mysql-data:
