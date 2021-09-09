@@ -1,28 +1,23 @@
 import { promisify } from 'util';
 import { v1 as uuidv1 } from 'uuid';
+import ApiError from '../../helpers/ApiError';
+import { STATUSES } from '../../../constants';
 
 class PatientRepository {
   constructor(connection) {
     this.connection = connection;
   }
 
-  async create(userID, patientName, patientBirthday, patientGender, patientMail) {
+  async create(patientData) {
     try {
       const uuid = uuidv1();
-      const data = {
-        id: uuid,
-        name: patientName,
-        birthday: patientBirthday,
-        gender: patientGender,
-        mail: patientMail,
-        user_id: userID,
-      };
+      const data = { id: uuid, ...patientData };
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'INSERT INTO patients SET ?';
       await queryAsync(sql, data);
       return data;
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -30,11 +25,11 @@ class PatientRepository {
     try {
       const data = [patientName, patient.id];
       const queryAsync = promisify(this.connection.query).bind(this.connection);
-      const sql = 'UPDATE patients SET ? WHERE id = ?';
+      const sql = 'UPDATE patients SET $1 WHERE id = $2';
       await queryAsync(sql, data);
       return { id: patient.id, name: patientName };
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -45,7 +40,7 @@ class PatientRepository {
       const result = await queryAsync(sql, patientName);
       return result[0];
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -56,7 +51,7 @@ class PatientRepository {
       const result = await queryAsync(sql, patientID);
       return result[0];
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -67,7 +62,7 @@ class PatientRepository {
       const result = await queryAsync(sql, userID);
       return result[0];
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -78,7 +73,7 @@ class PatientRepository {
       await queryAsync(sql, patientID);
       return { id: patientID };
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -89,7 +84,7 @@ class PatientRepository {
       const result = await queryAsync(sql);
       return result.map((item) => item.id);
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -100,7 +95,7 @@ class PatientRepository {
       const result = await queryAsync(sql);
       return result.map((item) => item.name);
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 }

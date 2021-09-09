@@ -1,4 +1,6 @@
 import * as bcrypt from 'bcrypt';
+import ApiError from '../../helpers/ApiError';
+import { STATUSES } from '../../../constants';
 
 class AuthenticationService {
   constructor(authenticationRepository) {
@@ -9,9 +11,6 @@ class AuthenticationService {
     const cryptUser = {
       login: user.login,
       password: await bcrypt.hashSync(user.password, 10),
-      name: user.name,
-      birthday: user.birthday,
-      gender: user.gender,
     };
     const createdUser = await this.authenticationRepository.create(cryptUser);
     return createdUser;
@@ -20,17 +19,19 @@ class AuthenticationService {
   async logIn(user) {
     const foundedUser = await this.authenticationRepository.getUser(user.login);
     if (!foundedUser) {
-      return 'no such user';
+      throw new ApiError('no such user', STATUSES.UNAUTHORISED);
     }
     if (await bcrypt.compareSync(user.password, foundedUser.password)) {
       return foundedUser;
     }
-    return 'wrong password';
+    throw new ApiError('wrong password', STATUSES.UNAUTHORISED);
   }
 
   async isExist(user) {
     const values = await this.authenticationRepository.getAllLogins();
-    return values.indexOf(user.login) !== -1;
+    if (values.indexOf(user.login) !== -1) {
+      throw new ApiError('user already exist', STATUSES.BAD_REQUEST);
+    }
   }
 }
 

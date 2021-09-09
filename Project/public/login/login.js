@@ -12,9 +12,10 @@ async function logIn() {
     },
     body: JSON.stringify(body),
   });
-  const token = await response.json();
+  const res = await response.json();
   if (response.ok) {
-    window.sessionStorage.setItem('patient', token);
+    window.sessionStorage.setItem('jwt', res.jwt);
+    window.sessionStorage.setItem('patient', res.user_id);
     document.location.href = '/queue';
   }
 }

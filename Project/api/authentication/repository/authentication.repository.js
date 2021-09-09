@@ -1,5 +1,7 @@
 import { promisify } from 'util';
 import { v1 as uuidv1 } from 'uuid';
+import ApiError from '../../helpers/ApiError';
+import { STATUSES } from '../../../constants';
 
 class AuthenticationRepository {
   constructor(connection) {
@@ -9,13 +11,13 @@ class AuthenticationRepository {
   async create(user) {
     try {
       const uuid = uuidv1();
-      const data = { id: uuid, login: user.login, password: user.password };
+      const data = { id: uuid, ...user };
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'INSERT INTO users SET ?';
       await queryAsync(sql, data);
       return data;
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -26,7 +28,7 @@ class AuthenticationRepository {
       const result = await queryAsync(sql);
       return result.map((item) => item.login);
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -39,7 +41,7 @@ class AuthenticationRepository {
       const result = await queryAsync(sql, login);
       return result[0];
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 }

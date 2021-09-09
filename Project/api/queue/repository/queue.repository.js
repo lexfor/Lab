@@ -1,4 +1,6 @@
 import { promisify } from 'util';
+import ApiError from '../../helpers/ApiError';
+import { STATUSES } from '../../../constants';
 
 class QueueRepository {
   constructor(redisClient) {
@@ -11,7 +13,7 @@ class QueueRepository {
       await rpushAsync('queue', patientID);
       return patientID;
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -22,7 +24,7 @@ class QueueRepository {
       await lpopAsync('queue');
       return result;
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -32,7 +34,7 @@ class QueueRepository {
       const result = await lindexAsync('queue', 0);
       return result;
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -46,7 +48,7 @@ class QueueRepository {
       }
       return result;
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 }

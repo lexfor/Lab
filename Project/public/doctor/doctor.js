@@ -1,10 +1,15 @@
 const ws = new WebSocket('ws://localhost:8080');
+let foundedPatientID = null;
 
 async function getCurrent() {
   const response = await fetch('/queue/current');
-  const result = await response.json();
-  document.getElementById('currentNumber').innerHTML = result.name;
-  window.sessionStorage.setItem('currentPatientID', result.id);
+  if (response.ok) {
+    const result = await response.json();
+    document.getElementById('currentNumber').innerHTML = result.name;
+    window.sessionStorage.setItem('currentPatientID', result.id);
+  } else {
+    document.getElementById('currentNumber').innerHTML = 'N/A';
+  }
 }
 
 async function next() {
@@ -17,9 +22,8 @@ async function setCurrentResolution() {
   const resolution = document.getElementById('resolutionText');
   const body = {
     value: resolution.value,
-    id: window.sessionStorage.getItem('currentPatientID'),
   };
-  const response = await fetch('/resolution', {
+  const response = await fetch(`/patient/${window.sessionStorage.getItem('currentPatientID')}/resolution`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -32,24 +36,29 @@ async function setCurrentResolution() {
 
 async function findResolution() {
   const input = document.getElementById('valueInput');
-  const response = await fetch(`/${input.value}/resolution`);
-  const resolution = await response.json();
   const output = document.getElementById('resolutionOutput');
-  output.value = resolution.value;
-  window.sessionStorage.setItem('foundedPatientID', resolution.patient_id);
+  const url = new URL('/patient/resolution', document.location.origin);
+  const params = new URLSearchParams();
+  params.append('name', input.value);
+  url.search = params.toString();
+  const response = await fetch(url.href);
+  if (response.ok) {
+    const resolution = await response.json();
+    output.value = resolution.value;
+    foundedPatientID = resolution.patient_id;
+  } else {
+    output.value = 'N/A';
+  }
 }
 
 async function deleteResolution() {
-  const url = new URL('/resolution', document.location.origin);
-  const params = new URLSearchParams();
-  params.append('patient_id', window.sessionStorage.getItem('foundedPatientID'));
-  url.search = params.toString();
-  await fetch(url.href, {
+  await fetch(`/resolution/${foundedPatientID}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
     },
   });
+  foundedPatientID = null;
   const output = document.getElementById('resolutionOutput');
   output.value = 'N/A';
 }

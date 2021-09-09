@@ -10,30 +10,6 @@ describe('patient controller unit tests', () => {
   const queueService = new QueueService();
   const patientController = new PatientController(queueService, patientService);
 
-  test('check patient, that not in queue', async () => {
-    queueService.isExist.mockImplementation((value) => {
-      expect(value).toEqual('1111');
-      return false;
-    });
-    const res = await patientController.checkIsPatientInQueue('1111');
-    expect(res.getValue).toEqual('');
-    expect(res.getStatus).toEqual(STATUSES.OK);
-  });
-
-  test('empty patient queue', async () => {
-    queueService.isEmpty.mockResolvedValue(true);
-    const res = await patientController.checkLength();
-    expect(res.getValue.name).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
-  });
-
-  test('not empty patient queue', async () => {
-    queueService.isEmpty.mockResolvedValue(false);
-    const res = await patientController.checkLength();
-    expect(res.getValue).toEqual('');
-    expect(res.getStatus).toEqual(STATUSES.OK);
-  });
-
   test('add value in queue', async () => {
     patientService.findPatientByUser.mockImplementation((userID) => {
       expect(userID).toEqual('1111');
@@ -49,7 +25,7 @@ describe('patient controller unit tests', () => {
     });
     const res = await patientController.addValueInQueue('1111');
     expect(res.getValue).toEqual('2222');
-    expect(res.getStatus).toEqual(STATUSES.OK);
+    expect(res.getStatus).toEqual(STATUSES.ACCEPTED);
   });
 
   test('get current value from queue', async () => {
@@ -65,25 +41,11 @@ describe('patient controller unit tests', () => {
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
 
-  test('get current value from empty queue', async () => {
-    queueService.isEmpty.mockResolvedValue(true);
-    const res = await patientController.getCurrentInQueue();
-    expect(res.getValue.name).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
-  });
-
   test('take next value from queue', async () => {
     queueService.isEmpty.mockResolvedValue(false);
     queueService.shift.mockResolvedValue('1111');
     const res = await patientController.takeNextValueInQueue();
     expect(res.getValue).toEqual('1111');
     expect(res.getStatus).toEqual(STATUSES.OK);
-  });
-
-  test('take next value from empty queue', async () => {
-    queueService.isEmpty.mockResolvedValue(true);
-    const res = await patientController.takeNextValueInQueue();
-    expect(res.getValue.name).toEqual(NOT_AVAILABLE);
-    expect(res.getStatus).toEqual(STATUSES.UNAVAILABLE);
   });
 });

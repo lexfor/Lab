@@ -1,16 +1,21 @@
+import ApiError from '../../helpers/ApiError';
+
+import { STATUSES } from '../../../constants';
+
 class PatientService {
   constructor(patientRepository) {
     this.patientRepository = patientRepository;
   }
 
-  async addPatient(userID, name, birthday, gender, email) {
-    const patient = await this.patientRepository.create(
-      userID,
-      name,
-      birthday,
-      gender,
-      email,
-    );
+  async addPatient(userInfo, createdUser) {
+    const patientData = {
+      user_id: createdUser.id,
+      mail: userInfo.login,
+      name: userInfo.name,
+      birthday: userInfo.birthday,
+      gender: userInfo.gender,
+    };
+    const patient = await this.patientRepository.create(patientData);
     return patient;
   }
 
@@ -44,20 +49,23 @@ class PatientService {
   async isExist(patient) {
     if (patient.name) {
       const values = await this.patientRepository.getAllNames();
-      return values.indexOf(patient.name) !== -1;
+      if (values.indexOf(patient.name) === -1) {
+        throw new ApiError('no such patient', STATUSES.NOT_FOUND);
+      }
+      return;
     }
     if (patient.user_id) {
       const patientInfo = await this.findPatientByUser(patient.user_id);
       const values = await this.patientRepository.getAllIDs();
-      return values.indexOf(patientInfo.id) !== -1;
+      if (values.indexOf(patientInfo.id) === -1) {
+        throw new ApiError('no such patient', STATUSES.NOT_FOUND);
+      }
+      return;
     }
     const values = await this.patientRepository.getAllIDs();
-    return values.indexOf(patient.id) !== -1;
-  }
-
-  async isEmpty() {
-    const result = await this.patientRepository.getAllNames();
-    return result.length === 0;
+    if (values.indexOf(patient.id) === -1) {
+      throw new ApiError('no such patient', STATUSES.NOT_FOUND);
+    }
   }
 }
 

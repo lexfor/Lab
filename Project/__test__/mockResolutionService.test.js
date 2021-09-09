@@ -19,13 +19,17 @@ describe('resolution service unit tests', () => {
   });
 
   test('added new resolution for patient', async () => {
-    resolutionRepository.create.mockImplementation((patientID, resolution, time) => {
-      expect(patientID).toEqual('1111');
-      expect(resolution).toEqual('aaaaaa');
-      expect(time).toEqual(process.env.TTL_DELAY);
+    resolutionRepository.create.mockImplementation((data) => {
+      expect(data.patient_id).toEqual('1111');
+      expect(data.value).toEqual('aaaaaa');
+      expect(data.delay).toEqual(process.env.TTL_DELAY);
       return { id: '234', value: 'Good' };
     });
-    const result = await resolutionService.addResolution('aaaaaa', '1111', process.env.TTL_DELAY);
+    const result = await resolutionService.addResolution({
+      value: 'aaaaaa',
+      patient_id: '1111',
+      delay: process.env.TTL_DELAY,
+    });
     expect(result.id).toEqual('234');
     expect(result.value).toEqual('Good');
   });

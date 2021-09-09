@@ -1,6 +1,5 @@
 import RequestResult from '../../RequestResult';
-import { checkOutputStatus } from '../../helpers/StatusHelper';
-import { STATUSES, NOT_AVAILABLE } from '../../../constants';
+import { STATUSES } from '../../../constants';
 
 class PatientController {
   constructor(queueService, patientService) {
@@ -8,51 +7,47 @@ class PatientController {
     this.patientService = patientService;
   }
 
-  async checkIsPatientInQueue(patientID) {
-    const res = new RequestResult();
-    if (await this.queueService.isExist(patientID)) {
-      res.setValue = { name: NOT_AVAILABLE };
-      res.setStatus = STATUSES.UNAVAILABLE;
-    }
-    return res;
-  }
-
-  async checkLength() {
-    const res = new RequestResult();
-    if (await this.queueService.isEmpty()) {
-      res.setValue = { name: NOT_AVAILABLE };
-      res.setStatus = STATUSES.UNAVAILABLE;
-    }
-    return res;
-  }
-
   async addValueInQueue(userID) {
-    const patient = await this.patientService.findPatientByUser(userID);
-    const res = await this.checkIsPatientInQueue(patient.id);
-    if (res.getStatus !== STATUSES.OK) {
+    const res = new RequestResult();
+    try {
+      const patient = await this.patientService.findPatientByUser(userID);
+      await this.queueService.isExist(patient.id);
+      res.setValue = await this.queueService.push(patient.id);
+      res.setStatus = STATUSES.ACCEPTED;
+      return res;
+    } catch (e) {
+      res.setValue = e.message;
+      res.setStatus = e.status;
       return res;
     }
-    res.setValue = await this.queueService.push(patient.id);
-    return checkOutputStatus(res);
   }
 
   async getCurrentInQueue() {
-    const res = await this.checkLength();
-    if (res.getStatus !== STATUSES.OK) {
+    const res = new RequestResult();
+    try {
+      const patientID = await this.queueService.getCurrent();
+      res.setValue = await this.patientService.findPatientByID(patientID);
+      res.setStatus = STATUSES.OK;
+      return res;
+    } catch (e) {
+      res.setValue = e.message;
+      res.setStatus = e.status;
       return res;
     }
-    const patientID = await this.queueService.getCurrent();
-    res.setValue = await this.patientService.findPatientByID(patientID);
-    return checkOutputStatus(res);
   }
 
   async takeNextValueInQueue() {
-    const res = await this.checkLength();
-    if (res.getStatus !== STATUSES.OK) {
+    const res = new RequestResult();
+    try {
+      await this.queueService.isEmpty();
+      res.setValue = await this.queueService.shift();
+      res.setStatus = STATUSES.OK;
+      return res;
+    } catch (e) {
+      res.setValue = e.message;
+      res.setStatus = e.status;
       return res;
     }
-    res.setValue = await this.queueService.shift();
-    return checkOutputStatus(res);
   }
 }
 

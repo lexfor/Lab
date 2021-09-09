@@ -1,31 +1,39 @@
 const socket = new WebSocket('ws://localhost:8080');
 
 async function getSelectedResolution() {
-  const response = await fetch('/resolution', {
+  const textarea = document.getElementById('resolution');
+  const response = await fetch(`/patient/${window.sessionStorage.getItem('patient')}/resolution`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
-      Authorization: `Bearer ${window.sessionStorage.getItem('patient')}`,
+      Authorization: `Bearer ${window.sessionStorage.getItem('jwt')}`,
     },
   });
-  const json = await response.json();
-  const textarea = document.getElementById('resolution');
-  textarea.value = json.value;
+  if (response.ok) {
+    const json = await response.json();
+    textarea.value = json.value;
+  } else {
+    textarea.value = 'N/A';
+  }
 }
 
 async function getCurrent() {
   const response = await fetch('/queue/current');
   const result = await response.json();
-  document.getElementById('currentNumber').innerHTML = result.name;
+  if (response.ok) {
+    document.getElementById('currentNumber').innerHTML = result.name;
+  } else {
+    document.getElementById('currentNumber').innerHTML = 'N/A';
+  }
   await getSelectedResolution();
 }
 
 async function Add() {
-  await fetch('/queue/patient', {
+  await fetch(`/queue/patient/${window.sessionStorage.getItem('patient')}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
-      Authorization: `Bearer ${window.sessionStorage.getItem('patient')}`,
+      Authorization: `Bearer ${window.sessionStorage.getItem('jwt')}`,
     },
     body: JSON.stringify({}),
   });

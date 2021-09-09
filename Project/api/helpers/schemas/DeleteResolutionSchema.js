@@ -1,10 +1,12 @@
+import { MIN_LENGTH } from '../../../constants';
+
 export const DeleteResolutionSchema = {
   type: 'object',
   properties: {
-    patient_id: {
-      type: 'string',
+    id: {
+      type: 'string', minLength: MIN_LENGTH,
     },
   },
-  required: ['patient_id'],
+  required: ['id'],
   additionalProperties: false,
 };

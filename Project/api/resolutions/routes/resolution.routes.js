@@ -13,21 +13,19 @@ const ajv = new Ajv();
 const resolutionController = injector.getResolutionController;
 const authenticationController = injector.getAuthenticationController;
 
-router.get('/:name/resolution', async (req, res, next) => {
-  const validationResult = ajv.validate(GetPatientSchema, req.params);
+router.get('/patient/resolution', async (req, res, next) => {
+  const validationResult = ajv.validate(GetPatientSchema, req.query);
   if (validationResult) {
     await next();
   } else {
     res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
   }
 }, async (req, res) => {
-  const result = await resolutionController.findResolution({
-    name: req.params.name,
-  });
+  const result = await resolutionController.findResolution(req.query);
   res.status(result.getStatus).json(result.getValue);
 });
 
-router.get('/resolution', async (req, res, next) => {
+router.get('/patient/:id/resolution', async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     res.status(STATUSES.FORBIDDEN).json(NOT_AVAILABLE);
@@ -37,40 +35,41 @@ router.get('/resolution', async (req, res, next) => {
   if (user.getStatus !== STATUSES.OK) {
     res.status(user.getStatus).json(user.getValue);
   }
-  req.token = user.getValue;
-  const validationResult = ajv.validate(UserSchema, req.token);
+  const validationResult = ajv.validate(UserSchema, req.params);
   if (!validationResult) {
     res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
+  } else {
+    next();
   }
-  next();
 }, async (req, res) => {
   const result = await resolutionController.findResolution({
-    user_id: req.token.user_id,
+    user_id: req.params.id,
   });
   res.status(result.getStatus).json(result.getValue);
 });
 
-router.put('/resolution', async (req, res, next) => {
+router.put('/patient/:id/resolution', async (req, res, next) => {
   const validationResult = ajv.validate(SetResolutionSchema, req.body);
-  if (validationResult) {
+  const validationUserResult = ajv.validate(UserSchema, req.params);
+  if (validationResult && validationUserResult) {
     await next();
   } else {
     res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
   }
 }, async (req, res) => {
-  const result = await resolutionController.setResolution(req.body.value, req.body.id);
+  const result = await resolutionController.setResolution(req.body, req.params);
   res.status(result.getStatus).json(result.getValue);
 });
 
-router.delete('/resolution', async (req, res, next) => {
-  const validationResult = ajv.validate(DeleteResolutionSchema, req.query);
+router.delete('/resolution/:id', async (req, res, next) => {
+  const validationResult = ajv.validate(DeleteResolutionSchema, req.params);
   if (validationResult) {
     await next();
   } else {
     res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
   }
 }, async (req, res) => {
-  const result = await resolutionController.deletePatientResolution(req.query.patient_id);
+  const result = await resolutionController.deletePatientResolution(req.params);
   res.status(result.getStatus).json(result.getValue);
 });
 

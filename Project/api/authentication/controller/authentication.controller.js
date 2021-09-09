@@ -1,6 +1,5 @@
 import RequestResult from '../../RequestResult';
-import { checkOutputStatus } from '../../helpers/StatusHelper';
-import { STATUSES, NOT_AVAILABLE } from '../../../constants';
+import { STATUSES } from '../../../constants';
 
 class AuthenticationController {
   constructor(authenticationService, patientService, jwtService) {
@@ -9,48 +8,47 @@ class AuthenticationController {
     this.jwtService = jwtService;
   }
 
-  async checkIsUserExist(user) {
-    const res = new RequestResult();
-    if (await this.authenticationService.isExist(user)) {
-      res.setValue = { name: NOT_AVAILABLE };
-      res.setStatus = STATUSES.UNAVAILABLE;
-    }
-    return res;
-  }
-
   async registerUser(user) {
-    const res = await this.checkIsUserExist(user);
-    if (res.getStatus !== STATUSES.OK) {
+    const res = new RequestResult();
+    try {
+      await this.authenticationService.isExist(user);
+      const createdUser = await this.authenticationService.register(user);
+      res.setValue = await this.patientService.addPatient(user, createdUser);
+      res.setStatus = STATUSES.CREATED;
+      return res;
+    } catch (e) {
+      res.setValue = e.message;
+      res.setStatus = e.status;
       return res;
     }
-    const createdUser = await this.authenticationService.register(user);
-    res.setValue = await this.patientService.addPatient(
-      createdUser.id,
-      user.name,
-      user.birthday,
-      user.gender,
-      user.login,
-    );
-    return checkOutputStatus(res);
   }
 
   async logIn(user) {
     const res = new RequestResult();
-    res.setValue = await this.authenticationService.logIn(user);
-    checkOutputStatus(res);
-    if (res.getStatus === STATUSES.OK) {
+    try {
+      res.setValue = await this.authenticationService.logIn(user);
       res.setValue = await this.jwtService.createSign(res.getValue.id);
-    } else {
+      res.setStatus = STATUSES.OK;
+      return res;
+    } catch (e) {
+      res.setValue = e.message;
+      res.setStatus = e.status;
       return res;
     }
-    return checkOutputStatus(res);
   }
 
   async checkToken(token) {
     const res = new RequestResult();
-    res.setValue = await this.jwtService.verifySign(token);
-    return checkOutputStatus(res);
+    try {
+      res.setValue = await this.jwtService.verifySign(token);
+      res.setStatus = STATUSES.OK;
+      return res;
+    } catch (e) {
+      res.setValue = e.message;
+      res.setStatus = e.status;
+      return res;
+    }
   }
 }
 
-export { AuthenticationController }
+export { AuthenticationController };

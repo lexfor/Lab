@@ -1,3 +1,6 @@
+import ApiError from '../../helpers/ApiError';
+import { STATUSES } from '../../../constants';
+
 class QueueService {
   constructor(queueRepository) {
     this.queueRepository = queueRepository;
@@ -15,17 +18,24 @@ class QueueService {
 
   async getCurrent() {
     const patientID = await this.queueRepository.getFirst();
+    if (!patientID) {
+      throw new ApiError('no patient in queue', STATUSES.NOT_FOUND);
+    }
     return patientID;
   }
 
   async isExist(value) {
     const patientsIDs = await this.queueRepository.getAll();
-    return patientsIDs.indexOf(value) !== -1;
+    if (patientsIDs.indexOf(value) !== -1) {
+      throw new ApiError('patient already in queue', STATUSES.CONFLICT);
+    }
   }
 
   async isEmpty() {
     const allPatientInQueue = await this.queueRepository.getAll();
-    return allPatientInQueue.length === 0;
+    if (allPatientInQueue.length === 0) {
+      throw new ApiError('queue is empty', STATUSES.CONFLICT);
+    }
   }
 }
 

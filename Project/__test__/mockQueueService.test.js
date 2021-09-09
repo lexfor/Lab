@@ -32,28 +32,4 @@ describe('queue service unit tests', () => {
     const result = await queue.getCurrent();
     expect(result).toEqual('1111');
   });
-
-  test('patient in queue', async () => {
-    queueRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
-    const result = await queue.isExist('aaa');
-    expect(result).toEqual(true);
-  });
-
-  test('no that patient in queue', async () => {
-    queueRepository.getAll.mockImplementation(() => ['aaa', 'bbb', 'ccc']);
-    const result = await queue.isExist('fff');
-    expect(result).toEqual(false);
-  });
-
-  test('queue not empty', async () => {
-    queueRepository.getAll.mockImplementation(() => ['Tim', 'Dima', 'Andrei']);
-    const result = await queue.isEmpty();
-    expect(result).toEqual(false);
-  });
-
-  test('queue empty', async () => {
-    queueRepository.getAll.mockImplementation(() => []);
-    const result = await queue.isEmpty();
-    expect(result).toEqual(true);
-  });
 });

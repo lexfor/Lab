@@ -1,17 +1,18 @@
 import jwt from 'jsonwebtoken';
+import ApiError from '../../helpers/ApiError';
+import { STATUSES } from '../../../constants';
 
 const { sign, verify } = jwt;
 
 class JwtService {
-  async createSign(patientID, tokenKey = process.env.TOKEN_KEY) {
+  async createSign(userID, tokenKey = process.env.TOKEN_KEY) {
     try {
       const token = sign({
-        user_id: patientID,
+        user_id: userID,
       }, tokenKey);
-      return token;
+      return { jwt: token, user_id: userID };
     } catch (e) {
-      console.log(e.message);
-      return 'wrong sign';
+      throw new ApiError('wrong sign', STATUSES.SERVER_ERROR);
     }
   }
 
@@ -20,7 +21,7 @@ class JwtService {
       const patientID = verify(token, process.env.TOKEN_KEY);
       return patientID;
     } catch (e) {
-      return 'wrong token';
+      throw new ApiError('wrong token', STATUSES.FORBIDDEN);
     }
   }
 }

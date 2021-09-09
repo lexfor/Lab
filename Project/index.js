@@ -30,5 +30,5 @@ app.use('/', queueRouter);
 
 app.listen(envConfig.app.port, () => {
   createServer();
-  console.log(`Express web app available at localhost: ${envConfig.app.port}`);
+  console.log(`Express web app available at http://localhost:${envConfig.app.port}`);
 });

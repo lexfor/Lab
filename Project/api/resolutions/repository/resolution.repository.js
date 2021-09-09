@@ -1,27 +1,27 @@
 import { v1 as uuidv1 } from 'uuid';
 import { promisify } from 'util';
+import ApiError from '../../helpers/ApiError';
+import { STATUSES } from '../../../constants';
 
 class ResolutionRepository {
   constructor(connection) {
     this.connection = connection;
   }
 
-  async create(patientID, resolutionValue, time) {
+  async create(values) {
     try {
       const uuid = uuidv1();
       const data = {
+        ...values,
         id: uuid,
-        value: resolutionValue,
-        delay: time,
         updatedTime: new Date().getTime(),
-        patient_id: patientID,
       };
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'INSERT INTO resolutions SET ? ';
       await queryAsync(sql, data);
       return data;
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -33,11 +33,11 @@ class ResolutionRepository {
         updatedTime: new Date().getTime(),
       }, resolution.id];
       const queryAsync = promisify(this.connection.query).bind(this.connection);
-      const sql = 'UPDATE resolutions SET ? WHERE id = ?';
+      const sql = 'UPDATE resolutions SET $1 WHERE id = $2';
       await queryAsync(sql, data);
       return { id: resolution.id, name: resolutionValue };
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -57,7 +57,7 @@ class ResolutionRepository {
       });
       return resolution;
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -68,7 +68,7 @@ class ResolutionRepository {
       await queryAsync(sql, patientID);
       return { id: patientID };
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
@@ -79,7 +79,7 @@ class ResolutionRepository {
       const result = await queryAsync(sql);
       return result;
     } catch (e) {
-      return e.message;
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 }
