@@ -8,11 +8,11 @@ class ResolutionController {
     this.patientService = patientService;
   }
 
-  async setResolution(values, patient, TTLDelay = process.env.TTL_DELAY) {
+  async setResolution(values, patient, doctor, TTLDelay = process.env.TTL_DELAY) {
     const res = new RequestResult();
     try {
       const data = { ...values, patient_id: patient.id, delay: TTLDelay };
-      await this.queueService.isEmpty();
+      await this.queueService.isEmpty(doctor.firstName, doctor.specializationName);
       res.setValue = await this.resolutionService.addResolution(data);
       res.setStatus = STATUSES.CREATED;
       return res;
@@ -23,11 +23,11 @@ class ResolutionController {
     }
   }
 
-  async findResolution(patient) {
+  async findResolution({ userID }) {
     const res = new RequestResult();
     try {
-      await this.patientService.isExist(patient);
-      const patientID = await this.patientService.findPatient(patient);
+      await this.patientService.isExist({ userID });
+      const patientID = await this.patientService.findPatient({ userID });
       res.setValue = await this.resolutionService.getResolution(patientID);
       res.setStatus = STATUSES.OK;
       return res;

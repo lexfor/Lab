@@ -7,12 +7,12 @@ class PatientController {
     this.patientService = patientService;
   }
 
-  async addValueInQueue(userID) {
+  async addValueInQueue(userID, doctorName, doctorType) {
     const res = new RequestResult();
     try {
       const patient = await this.patientService.findPatientByUser(userID);
-      await this.queueService.isExist(patient.id);
-      res.setValue = await this.queueService.push(patient.id);
+      await this.queueService.isExist(patient.id, doctorName, doctorType);
+      res.setValue = await this.queueService.push(patient.id, doctorName, doctorType);
       res.setStatus = STATUSES.ACCEPTED;
       return res;
     } catch (e) {
@@ -22,10 +22,10 @@ class PatientController {
     }
   }
 
-  async getCurrentInQueue() {
+  async getCurrentInQueue(doctorName, doctorType) {
     const res = new RequestResult();
     try {
-      const patientID = await this.queueService.getCurrent();
+      const patientID = await this.queueService.getCurrent(doctorName, doctorType);
       res.setValue = await this.patientService.findPatientByID(patientID);
       res.setStatus = STATUSES.OK;
       return res;
@@ -36,11 +36,11 @@ class PatientController {
     }
   }
 
-  async takeNextValueInQueue() {
+  async takeNextValueInQueue(doctorName, doctorType) {
     const res = new RequestResult();
     try {
-      await this.queueService.isEmpty();
-      res.setValue = await this.queueService.shift();
+      await this.queueService.isEmpty(doctorName, doctorType);
+      res.setValue = await this.queueService.shift(doctorName, doctorType);
       res.setStatus = STATUSES.OK;
       return res;
     } catch (e) {

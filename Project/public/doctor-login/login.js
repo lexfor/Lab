@@ -5,7 +5,7 @@ async function logIn() {
     login: emailInput.value,
     password: passwordInput.value,
   };
-  const response = await fetch('/login', {
+  const response = await fetch('/doctor/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -16,6 +16,6 @@ async function logIn() {
   if (response.ok) {
     window.sessionStorage.setItem('jwt', res.jwt);
     window.sessionStorage.setItem('patient', res.user_id);
-    document.location.href = '/queue';
+    document.location.href = '/doctor';
   }
 }

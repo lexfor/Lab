@@ -10,6 +10,11 @@
     <p class="name">The queue</p>
     <a href="/doctor" class="to-doctor">Doctor cabinet</a>
     <button class="add-button" onclick="Add()"> Add me in queue</button>
+    <input list="doctorsType" name="doctorType" id="doctorTypesInput"
+     onchange="getAllDoctorsBySpecializations()" placeholder="Doctor type">
+    <datalist id="doctorsType"></datalist>
+    <input list="doctorsNames" name="doctorName" id="doctorNamesInput" placeholder="Doctor name">
+    <datalist id="doctorsNames"></datalist>
     <section class="current">
       <p class="label">Current patient:</p>
       <p class="number" id="currentNumber">Stack item value</p>

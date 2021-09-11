@@ -4,10 +4,16 @@ export default class RequestResult {
     this.value = '';
   }
 
+  /**
+   * @param {number} status
+   */
   set setStatus(status) {
     this.status = status;
   }
 
+  /**
+   * @param {string} value
+   */
   set setValue(value) {
     this.value = value;
   }

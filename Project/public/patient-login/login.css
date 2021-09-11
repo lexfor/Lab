@@ -1,0 +1,29 @@
+.section {
+    border-style: solid;
+    border-width: thin;
+    border-color: #C0C3C3;
+    margin-top: 5em;
+    margin-left: 35em;
+    margin-right: 35em;
+}
+
+.label {
+    display: block;
+    margin-left: 10.5em;
+}
+
+.section > input {
+    display: block;
+    margin-bottom: 5em;
+    margin-left: 9em;
+}
+
+#register {
+    margin-left: 5em;
+    margin-bottom: 2em;
+}
+
+#login {
+    margin-left: 12em;
+    margin-bottom: 2em;
+}

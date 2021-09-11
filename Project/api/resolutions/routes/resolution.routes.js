@@ -49,15 +49,26 @@ router.get('/patient/:id/resolution', async (req, res, next) => {
 });
 
 router.put('/patient/:id/resolution', async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    res.status(STATUSES.FORBIDDEN).json(NOT_AVAILABLE);
+  }
+
+  const auth = authHeader.split(' ')[1];
+  const { value: { user_id: userID } } = await authenticationController.checkToken(auth);
+  const [{ firstName, specializationName }] = await injector.doctorRepository.getDoctorByID(userID);
+  req.data = { firstName, specializationName };
+
   const validationResult = ajv.validate(SetResolutionSchema, req.body);
   const validationUserResult = ajv.validate(UserSchema, req.params);
   if (validationResult && validationUserResult) {
-    await next();
+    next();
   } else {
     res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
   }
 }, async (req, res) => {
-  const result = await resolutionController.setResolution(req.body, req.params);
+  const result = await resolutionController.setResolution(req.body, req.params, req.data);
   res.status(result.getStatus).json(result.getValue);
 });
 

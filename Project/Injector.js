@@ -6,6 +6,7 @@ import {
 } from './api/authentication';
 import { PatientController, PatientRepository, PatientService } from './api/patient';
 import { ResolutionService, ResolutionRepository, ResolutionController } from './api/resolutions';
+import { DoctorController, DoctorRepository, DoctorService } from './api/doctor';
 import { QueueService, QueueRepository } from './api/queue';
 import { connection } from './api/helpers/DBconnection';
 import { initializeDB } from './api/helpers/DBInitializator';
@@ -18,26 +19,34 @@ class Injector {
     this.patientRepository = new PatientRepository(connection);
     this.resolutionRepository = new ResolutionRepository(connection);
     console.log('using redis for queue');
-    client.flushdb();
+    // client.flushdb();
     this.queueRepository = new QueueRepository(client);
     this.authenticationRepository = new AuthenticationRepository(connection);
+    this.doctorRepository = new DoctorRepository(connection);
 
     this.patientService = new PatientService(this.patientRepository);
     this.queueService = new QueueService(this.queueRepository);
     this.jwtService = new JwtService();
     this.authenticationService = new AuthenticationService(this.authenticationRepository);
     this.resolutionService = new ResolutionService(this.resolutionRepository);
+    this.doctorService = new DoctorService(this.doctorRepository);
 
     this.authenticationController = new AuthenticationController(
       this.authenticationService,
       this.patientService,
       this.jwtService,
     );
-    this.patientController = new PatientController(this.queueService, this.patientService);
+    this.patientController = new PatientController(
+      this.queueService,
+      this.patientService,
+    );
     this.resolutionController = new ResolutionController(
       this.resolutionService,
       this.queueService,
       this.patientService,
+    );
+    this.doctorController = new DoctorController(
+      this.doctorRepository,
     );
   }
 
@@ -51,6 +60,10 @@ class Injector {
 
   get getAuthenticationController() {
     return this.authenticationController;
+  }
+
+  get getDoctorController() {
+    return this.doctorController;
   }
 }
 

@@ -2,7 +2,7 @@ import express from 'express';
 
 const router = express();
 
-router.get('/queue', (req, res) => {
+router.get('/', (req, res) => {
   res.sendFile('./public/queue/queue.html', { root: './Project' });
 });
 

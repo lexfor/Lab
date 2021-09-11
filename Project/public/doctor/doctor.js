@@ -2,7 +2,14 @@ const ws = new WebSocket('ws://localhost:8080');
 let foundedPatientID = null;
 
 async function getCurrent() {
-  const response = await fetch('/queue/current');
+  const response = await fetch('/queue/current', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      Authorization: `Bearer ${window.sessionStorage.getItem('jwt')}`,
+    },
+  });
+
   if (response.ok) {
     const result = await response.json();
     document.getElementById('currentNumber').innerHTML = result.name;
@@ -13,9 +20,20 @@ async function getCurrent() {
 }
 
 async function next() {
-  await fetch('/queue/next');
-  await getCurrent();
-  ws.send('next');
+  const response = await fetch('/queue/next', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      Authorization: `Bearer ${window.sessionStorage.getItem('jwt')}`,
+    },
+  });
+
+  if (response.ok) {
+    const { firstName: doctorName, specializationName: doctorType } = await response.json();
+
+    await getCurrent();
+    ws.send('next');
+  }
 }
 
 async function setCurrentResolution() {
@@ -27,6 +45,7 @@ async function setCurrentResolution() {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
+      Authorization: `Bearer ${window.sessionStorage.getItem('jwt')}`,
     },
     body: JSON.stringify(body),
   });

@@ -21,10 +21,10 @@ router.post('/registration', async (req, res, next) => {
   res.status(result.getStatus).json(result.getValue);
 });
 
-router.post('/login', async (req, res, next) => {
+router.post('/patient/login', async (req, res, next) => {
   const validationResult = ajv.validate(LogingSchema, req.body);
   if (validationResult) {
-    await next();
+    next();
   } else {
     res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
   }

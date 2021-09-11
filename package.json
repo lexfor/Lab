@@ -7,6 +7,7 @@
   "scripts": {
     "build": "webpack",
     "start": "node --experimental-specifier-resolution=node Project/index.js",
+    "dev": "nodemon --experimental-specifier-resolution=node Project/index.js",
     "lint": "eslint ./Project/api/**/*.js  ./Project/*.js --fix",
     "test": "jest --runInBand"
   },
@@ -33,6 +34,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.4",
     "jest": "^27.0.6",
+    "nodemon": "^2.0.12",
     "webpack-cli": "^4.7.2"
   },
   "dependencies": {

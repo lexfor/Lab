@@ -6,33 +6,34 @@ class QueueService {
     this.queueRepository = queueRepository;
   }
 
-  async push(patientID) {
-    const result = await this.queueRepository.push(patientID);
+  async push(patientID, doctorName, doctorType) {
+    const result = await this.queueRepository.push(patientID, doctorName, doctorType);
     return result;
   }
 
-  async shift() {
-    const result = await this.queueRepository.shift();
+  async shift(doctorName, doctorType) {
+    const result = await this.queueRepository.shift(doctorName, doctorType);
     return result;
   }
 
-  async getCurrent() {
-    const patientID = await this.queueRepository.getFirst();
+  async getCurrent(doctorName, doctorType) {
+    const patientID = await this.queueRepository.getFirst(doctorName, doctorType);
+
     if (!patientID) {
       throw new ApiError('no patient in queue', STATUSES.NOT_FOUND);
     }
     return patientID;
   }
 
-  async isExist(value) {
-    const patientsIDs = await this.queueRepository.getAll();
+  async isExist(value, doctorName, doctorType) {
+    const patientsIDs = await this.queueRepository.getAll(doctorName, doctorType);
     if (patientsIDs.indexOf(value) !== -1) {
       throw new ApiError('patient already in queue', STATUSES.CONFLICT);
     }
   }
 
-  async isEmpty() {
-    const allPatientInQueue = await this.queueRepository.getAll();
+  async isEmpty(doctorName, doctorType) {
+    const allPatientInQueue = await this.queueRepository.getAll(doctorName, doctorType);
     if (allPatientInQueue.length === 0) {
       throw new ApiError('queue is empty', STATUSES.CONFLICT);
     }
