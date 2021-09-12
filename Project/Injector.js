@@ -46,7 +46,7 @@ class Injector {
       this.patientService,
     );
     this.doctorController = new DoctorController(
-      this.doctorRepository,
+      this.doctorService,
     );
   }
 

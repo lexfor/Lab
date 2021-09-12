@@ -1,6 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-plusplus */
-
 const ws = new WebSocket('ws://localhost:8080');
 let foundedPatientID = null;
 
@@ -31,8 +28,6 @@ async function onInput() {
   if (response.ok) {
     const json = await response.json();
     search.innerHTML = '';
-
-    console.log(json);
 
     json.forEach((element) => {
       const option = document.createElement('option');
@@ -82,10 +77,11 @@ async function refreshTableContent(patient_id) {
 
     if (tableContent) {
       table.innerHTML = '';
-      const id = 1;
+      let id = 0;
 
       tableContent.forEach((element) => {
         const tr = document.createElement('tr');
+        id += 1;
 
         addTD(id, tr);
         addTD(element.doctor_specialization, tr);

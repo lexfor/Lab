@@ -15,7 +15,7 @@ class ResolutionService {
     return result;
   }
 
-  async getAlResolutions(patientID) {
+  async getAllResolutions(patientID) {
     const resolutions = await this.resolutionRepository.getAllResolutions(patientID);
     if (!resolutions) {
       throw new ApiError('no resolutions', STATUSES.NOT_FOUND);

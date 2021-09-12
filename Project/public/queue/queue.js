@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-plusplus */
 const socket = new WebSocket('ws://localhost:8080');
 
 const doctorsType = document.getElementById('doctorsType');
@@ -37,7 +35,7 @@ async function refreshTableContent() {
       tableContent.forEach((element) => {
         const tr = document.createElement('tr');
 
-        addTD(id, tr);
+        addTD(id++, tr);
         addTD(element.doctor_specialization, tr);
         addTD(element.doctor_name, tr);
         addTD(element.value, tr);
@@ -67,15 +65,17 @@ async function getSelectedResolution() {
 }
 
 async function getCurrent(doctorTypeValue, doctorNameValue) {
-  const response = await fetch(`/queue/current?doctorTypeValue=${doctorTypeValue}&doctorNameValue=${doctorNameValue}`);
-  const result = await response.json();
+  if (doctorTypeValue && doctorNameValue) {
+    const response = await fetch(`/queue/current?doctorTypeValue=${doctorTypeValue}&doctorNameValue=${doctorNameValue}`);
+    const result = await response.json();
 
-  if (response.ok) {
-    document.getElementById('currentNumber').innerHTML = result.name;
-  } else {
-    document.getElementById('currentNumber').innerHTML = 'N/A';
+    if (response.ok) {
+      document.getElementById('currentNumber').innerHTML = result.name;
+    } else {
+      document.getElementById('currentNumber').innerHTML = 'N/A';
+    }
+    await getSelectedResolution();
   }
-  await getSelectedResolution();
 }
 
 async function Add() {

@@ -49,12 +49,12 @@ class ResolutionController {
     try {
       await this.patientService.isExist({ user_id });
       const patientID = await this.patientService.findPatient({ user_id });
-      res.setValue = await this.resolutionService.getAlResolutions(patientID);
+      res.setValue = await this.resolutionService.getAllResolutions(patientID);
       res.setStatus = STATUSES.OK;
       return res;
     } catch (e) {
       try {
-        res.setValue = await this.resolutionService.getAlResolutions(user_id);
+        res.setValue = await this.resolutionService.getAllResolutions(user_id);
         res.setStatus = STATUSES.OK;
         return res;
       } catch (error) {

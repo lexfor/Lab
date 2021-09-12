@@ -5,6 +5,10 @@ import jwt from 'jsonwebtoken';
 // import { injector } from '../../../Injector';
 
 export default class DoctorController {
+  constructor(services) {
+    this.services = services;
+  }
+
   async login(req, res, injector) {
     const { login, password } = req.body;
 

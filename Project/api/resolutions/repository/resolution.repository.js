@@ -63,18 +63,11 @@ class ResolutionRepository {
 
   async getAllResolutions(patientID) {
     try {
-      const resolution = { value: '' };
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'SELECT * FROM resolutions WHERE patient_id = ?';
-      const result = await queryAsync(sql, patientID);
-      // result.forEach((item) => {
-      //   if (item.value) {
-      //     if (new Date().getTime() - item.updatedTime < item.delay) {
-      //       resolution.value += item.value;
-      //       resolution.value += ' | ';
-      //     }
-      //   }
-      // });
+      const result = (await queryAsync(sql, patientID))
+        .filter((item) => new Date().getTime() - item.updatedTime > item.delay);
+
       return result;
     } catch (e) {
       throw new ApiError(e.message, STATUSES.SERVER_ERROR);
