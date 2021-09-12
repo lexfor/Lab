@@ -8,6 +8,8 @@ export async function resolutionDefine(connection) {
     delay INT,
     updatedTime VARCHAR(255),
     patient_id VARCHAR(255),
+    doctor_name VARCHAR(255),
+    doctor_specialization VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (patient_id) REFERENCES patients(id))`;
   await queryAsync(sqlQuery);

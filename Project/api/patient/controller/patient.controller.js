@@ -49,6 +49,19 @@ class PatientController {
       return res;
     }
   }
+
+  async findAllPatientsWithCondition({ patientInfo }) {
+    const res = new RequestResult();
+    try {
+      res.setValue = await this.patientService.getAllPatientWithCondition(patientInfo);
+      res.setStatus = STATUSES.OK;
+      return res;
+    } catch (e) {
+      res.setValue = e.message;
+      res.setStatus = e.status;
+      return res;
+    }
+  }
 }
 
 export { PatientController };

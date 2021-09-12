@@ -67,6 +67,12 @@ class PatientService {
       throw new ApiError('no such patient', STATUSES.NOT_FOUND);
     }
   }
+
+  async getAllPatientWithCondition(patientInfo) {
+    const allPatient = await this.patientRepository.getAllPatientWithConditions(patientInfo);
+
+    return allPatient || null;
+  }
 }
 
 export { PatientService };

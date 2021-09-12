@@ -1,11 +1,53 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-plusplus */
 const socket = new WebSocket('ws://localhost:8080');
 
 const doctorsType = document.getElementById('doctorsType');
 const doctorsNames = document.getElementById('doctorsNames');
 const doctorTypesInput = document.getElementById('doctorTypesInput');
 const doctorNamesInput = document.getElementById('doctorNamesInput');
+const table = document.getElementById('table');
 
-// doctorsType.addEventListener('change', async () => await getAllDoctorsBySpecializations());
+function addTD(key, tr) {
+  const td = document.createElement('td');
+  if (key) {
+    td.innerText = key;
+  } else {
+    td.innerText = '---';
+  }
+  tr.appendChild(td);
+}
+
+async function refreshTableContent() {
+  const getResolutions = await fetch(`/patient/${window.sessionStorage.getItem('patient')}/resolutions`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      Authorization: `Bearer ${window.sessionStorage.getItem('jwt')}`,
+    },
+  });
+
+  if (getResolutions.ok) {
+    const tableContent = await getResolutions.json();
+
+    if (tableContent) {
+      table.innerHTML = '';
+      const id = 1;
+
+      tableContent.forEach((element) => {
+        const tr = document.createElement('tr');
+
+        addTD(id, tr);
+        addTD(element.doctor_specialization, tr);
+        addTD(element.doctor_name, tr);
+        addTD(element.value, tr);
+        addTD(new Date(+element.updatedTime).toISOString().substr(0, 10), tr);
+
+        table.appendChild(tr);
+      });
+    }
+  }
+}
 
 async function getSelectedResolution() {
   const textarea = document.getElementById('resolution');
@@ -97,6 +139,9 @@ window.onload = async () => {
       doctorsType.appendChild(option);
     });
   }
+
+  refreshTableContent();
+
   // if (!window.sessionStorage.getItem('patient')) {
   //   document.location.href = '/login';
   // }

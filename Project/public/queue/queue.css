@@ -68,3 +68,54 @@
     text-decoration: none;
 }
 
+#medicalCard{
+  padding: 0px 35px;
+  height: 60vh;
+
+  border: 5px solid;
+}
+
+table {
+  display: flex;
+    flex-flow: column;
+    height: 100%;
+    width: 100%;
+}
+
+thead{
+  flex: 0 0 auto;
+  width: calc(100% - 0.9em);
+  /* color: white; */
+  font-family: 'Montserrat Subrayada', sans-serif;
+  font-size: 20px;
+}
+
+tbody{
+  flex: 1 1 auto;
+  display: block;       
+  overflow-y: auto;    
+  overflow-x: hidden; 
+}
+
+table tbody tr {
+  border-radius: 0px;
+  width: 100%;
+  /* border-top: 1px solid; */
+}
+
+table tbody td {
+  border-radius: 0px;
+
+  border-right: 1px solid;
+  border-left: 1px solid;
+}
+
+table thead, table tbody tr {
+  display: table;
+  table-layout: fixed;
+}
+
+td, th {
+ text-align: center;
+}
+

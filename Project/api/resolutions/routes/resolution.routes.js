@@ -7,6 +7,7 @@ import { DeleteResolutionSchema } from '../../helpers/schemas/DeleteResolutionSc
 import { GetPatientSchema } from '../../helpers/schemas/GetPatientSchema';
 import { STATUSES, NOT_AVAILABLE } from '../../../constants';
 import { UserSchema } from '../../helpers/schemas/UserSchema';
+import { PatientController } from '../../patient';
 
 const router = express();
 const ajv = new Ajv();
@@ -45,6 +46,7 @@ router.get('/patient/:id/resolution', async (req, res, next) => {
   const result = await resolutionController.findResolution({
     user_id: req.params.id,
   });
+
   res.status(result.getStatus).json(result.getValue);
 });
 
@@ -81,6 +83,55 @@ router.delete('/resolution/:id', async (req, res, next) => {
   }
 }, async (req, res) => {
   const result = await resolutionController.deletePatientResolution(req.params);
+  res.status(result.getStatus).json(result.getValue);
+});
+
+router.get('/patient/:id/resolutions', async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    res.status(STATUSES.FORBIDDEN).json(NOT_AVAILABLE);
+  }
+  const auth = authHeader.split(' ')[1];
+  const user = await authenticationController.checkToken(auth);
+  if (user.getStatus !== STATUSES.OK) {
+    res.status(user.getStatus).json(user.getValue);
+  }
+  const validationResult = ajv.validate(UserSchema, req.params);
+  if (!validationResult) {
+    res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
+  } else {
+    next();
+  }
+}, async (req, res) => {
+  const result = await resolutionController.findAllResolutions({
+    user_id: req.params.id,
+  });
+  res.status(result.getStatus).json(result.getValue);
+});
+
+router.get('/patients', async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    res.status(STATUSES.FORBIDDEN).json(NOT_AVAILABLE);
+  }
+  const auth = authHeader.split(' ')[1];
+  const user = await authenticationController.checkToken(auth);
+  if (user.getStatus !== STATUSES.OK) {
+    res.status(user.getStatus).json(user.getValue);
+  }
+
+  // const validationResult = ajv.validate(UserSchema, req.params);
+  // if (!validationResult) {
+  //   res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
+  // } else {
+  //   next();
+  // }
+  next();
+}, async (req, res) => {
+  const result = await injector.patientController.findAllPatientsWithCondition({
+    patientInfo: req.query.patientInfo,
+  });
+
   res.status(result.getStatus).json(result.getValue);
 });
 
