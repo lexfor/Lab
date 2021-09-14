@@ -18,6 +18,35 @@ describe('resolution service unit tests', () => {
     expect(result.value).toEqual('Good');
   });
 
+  test('get all resolutions', async () => {
+    resolutionRepository.getAllResolutions.mockImplementation((patientID) => {
+      expect(patientID).toEqual('1111');
+      return [
+        {
+          id: '2222',
+          value: 'Good',
+          doctorName: 'Oleg',
+          doctorSpecialization: 'surgeon',
+        },
+        {
+          id: '3333',
+          value: 'Bad',
+          doctorName: 'Oleg',
+          doctorSpecialization: 'surgeon',
+        },
+      ];
+    });
+    const result = await resolutionService.getAllResolutions('1111');
+    expect(result[0].id).toEqual('2222');
+    expect(result[0].value).toEqual('Good');
+    expect(result[0].doctorName).toEqual('Oleg');
+    expect(result[0].doctorSpecialization).toEqual('surgeon');
+    expect(result[1].id).toEqual('3333');
+    expect(result[1].value).toEqual('Bad');
+    expect(result[1].doctorName).toEqual('Oleg');
+    expect(result[1].doctorSpecialization).toEqual('surgeon');
+  });
+
   test('added new resolution for patient', async () => {
     resolutionRepository.create.mockImplementation((data) => {
       expect(data.patient_id).toEqual('1111');

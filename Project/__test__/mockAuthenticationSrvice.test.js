@@ -1,8 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { AuthenticationService, AuthenticationRepository } from '../api/authentication';
 import { PatientRepository } from '../api/patient';
-import ApiError from '../api/helpers/ApiError';
-import { STATUSES } from '../constants';
 
 jest.mock('../api/authentication/repository/authentication.repository');
 jest.mock('../api/patient/repository/patient.repository');

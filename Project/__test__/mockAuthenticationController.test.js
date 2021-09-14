@@ -1,6 +1,6 @@
 import { PatientService } from '../api/patient';
 import { AuthenticationController, AuthenticationService, JwtService } from '../api/authentication';
-import { NOT_AVAILABLE, STATUSES } from '../constants';
+import { STATUSES } from '../constants';
 import ApiError from '../api/helpers/ApiError';
 
 jest.mock('../api/authentication/service/authentication.service');
