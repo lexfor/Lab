@@ -3,27 +3,32 @@ import { QueueService } from '../api/queue';
 import { PatientService } from '../api/patient';
 import { STATUSES } from '../constants';
 import ApiError from '../api/helpers/ApiError';
-import doctor from "../routes/doctor";
+import { DoctorService } from '../api/doctor';
 
 jest.mock('../api/resolutions/service/resolution.service');
 jest.mock('../api/queue/service/queue.service');
 jest.mock('../api/patient/service/patient.service');
+jest.mock('../api/doctor/service/doctor.service');
 
 describe('resolution controller unit tests', () => {
   const patientsService = new PatientService();
   const resolutionService = new ResolutionService();
   const queueService = new QueueService();
+  const doctorService = new DoctorService();
   const resolutionController = new ResolutionController(
     resolutionService,
     queueService,
     patientsService,
+    doctorService,
   );
 
   test('resolution added', async () => {
-    queueService.isEmpty.mockImplementation((name, specialization) => {
-      expect(name).toEqual('Oleg');
-      expect(specialization).toEqual('surgeon');
-      return false;
+    doctorService.getDoctorByID.mockImplementation((userID) => {
+      expect(userID).toEqual('2222');
+      return { firstName: 'Oleg', specializationName: 'surgeon', doctorID: '3333' };
+    });
+    queueService.isEmpty.mockImplementation((id) => {
+      expect(id).toEqual('3333');
     });
     resolutionService.addResolution.mockImplementation((data) => {
       expect(data.value).toEqual('good');
@@ -36,7 +41,7 @@ describe('resolution controller unit tests', () => {
     const res = await resolutionController.setResolution(
       { value: 'good' },
       { id: '1111' },
-      { firstName: 'Oleg', specializationName: 'surgeon' },
+      '2222',
     );
     expect(res.getValue.value).toEqual('good');
     expect(res.getValue.id).toEqual('123');
@@ -44,24 +49,29 @@ describe('resolution controller unit tests', () => {
   });
 
   test('cant set resolution with no patients in queue', async () => {
-    queueService.isEmpty.mockImplementation((name, specialization) => {
-      expect(name).toEqual('Oleg');
-      expect(specialization).toEqual('surgeon');
+    doctorService.getDoctorByID.mockImplementation((userID) => {
+      expect(userID).toEqual('2222');
+      return { firstName: 'Oleg', specializationName: 'surgeon', doctorID: '3333' };
+    });
+    queueService.isEmpty.mockImplementation((id) => {
+      expect(id).toEqual('3333');
       throw new ApiError('empty', STATUSES.CONFLICT);
     });
     const res = await resolutionController.setResolution(
       { value: 'good' },
       { id: '1111' },
-      { firstName: 'Oleg', specializationName: 'surgeon' },
+      '2222',
     );
     expect(res.getStatus).toEqual(STATUSES.CONFLICT);
   });
 
   test('added resolution with custom ttl', async () => {
-    queueService.isEmpty.mockImplementation((name, specialization) => {
-      expect(name).toEqual('Oleg');
-      expect(specialization).toEqual('surgeon');
-      return false;
+    doctorService.getDoctorByID.mockImplementation((userID) => {
+      expect(userID).toEqual('2222');
+      return { firstName: 'Oleg', specializationName: 'surgeon', doctorID: '3333' };
+    });
+    queueService.isEmpty.mockImplementation((id) => {
+      expect(id).toEqual('3333');
     });
     resolutionService.addResolution.mockImplementation((data) => {
       expect(data.value).toEqual('good');
@@ -74,7 +84,7 @@ describe('resolution controller unit tests', () => {
     const res = await resolutionController.setResolution(
       { value: 'good' },
       { id: '1111' },
-      { firstName: 'Oleg', specializationName: 'surgeon' },
+      '2222',
       20000,
     );
     expect(res.getValue.value).toEqual('good');
@@ -82,45 +92,34 @@ describe('resolution controller unit tests', () => {
   });
 
   test('found patient resolution by id', async () => {
-    patientsService.isExist.mockImplementation((patient) => {
-      expect(patient.userID).toEqual('1111');
-      return true;
+    patientsService.isExist.mockImplementation((user) => {
+      expect(user.userID).toEqual('1111');
     });
-    patientsService.findPatient.mockImplementation((patient) => {
-      expect(patient.userID).toEqual('1111');
+    patientsService.findPatient.mockImplementation((user) => {
+      expect(user.userID).toEqual('1111');
       return '2222';
     });
-    resolutionService.getResolution.mockImplementation((patientID) => {
+    resolutionService.getAllResolutions.mockImplementation((patientID) => {
       expect(patientID).toEqual('2222');
-      return { value: 'good' };
+      return [
+        { value: 'good' },
+        { value: 'bad' },
+      ];
     });
     const res = await resolutionController.findResolution({ userID: '1111' });
-    expect(res.getValue.value).toEqual('good');
+    expect(res.getValue[0].value).toEqual('good');
+    expect(res.getValue[1].value).toEqual('bad');
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
 
   test('deleted patient resolution', async () => {
-    patientsService.isExist.mockImplementation((patient) => {
-      expect(patient.id).toEqual('1111');
-    });
-    resolutionService.isExist.mockImplementation((patientID) => {
-      expect(patientID).toEqual('1111');
-    });
     resolutionService.deleteResolution.mockImplementation((patientID) => {
       expect(patientID).toEqual('1111');
       return { id: '2222', value: 'bad' };
     });
-    const res = await resolutionController.deletePatientResolution({ id: '1111' });
+    const res = await resolutionController.deletePatientResolution('1111');
     expect(res.getValue.value).toEqual('bad');
     expect(res.getValue.id).toEqual('2222');
-    expect(res.getStatus).toEqual(STATUSES.ACCEPTED);
-  });
-
-  test('deleted patient resolution', async () => {
-    resolutionService.deleteResolution.mockImplementation((id) => {
-      expect(id).toEqual('1111');
-    });
-    const res = await resolutionController.deletePatientResolution({ id: '1111' });
     expect(res.getStatus).toEqual(STATUSES.ACCEPTED);
   });
 });

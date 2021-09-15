@@ -41,45 +41,24 @@ class ResolutionRepository {
     }
   }
 
-  async get(patientID) {
-    try {
-      const resolution = { value: '' };
-      const queryAsync = promisify(this.connection.query).bind(this.connection);
-      const sql = 'SELECT * FROM resolutions WHERE patient_id = ?';
-      const result = await queryAsync(sql, patientID);
-      result.forEach((item) => {
-        if (item.value) {
-          if (new Date().getTime() - item.updatedTime < item.delay) {
-            resolution.value += item.value;
-            resolution.value += ' | ';
-          }
-        }
-      });
-      return resolution;
-    } catch (e) {
-      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
-    }
-  }
-
   async getAllResolutions(patientID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'SELECT * FROM resolutions WHERE patient_id = ?';
-      const result = (await queryAsync(sql, patientID))
-        .filter((item) => new Date().getTime() - item.updatedTime > item.delay);
-
+      let result = (await queryAsync(sql, patientID));
+      result = result.filter((item) => new Date().getTime() - item.updatedTime < item.delay);
       return result;
     } catch (e) {
       throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
-  async delete(patientID) {
+  async delete(resolutionID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'DELETE FROM resolutions WHERE id = ?';
-      await queryAsync(sql, patientID);
-      return { id: patientID };
+      await queryAsync(sql, resolutionID);
+      return { id: resolutionID };
     } catch (e) {
       throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }

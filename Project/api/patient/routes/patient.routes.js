@@ -1,71 +1,51 @@
 import express from 'express';
-import Ajv from 'ajv';
 import { injector } from '../../../Injector';
-import { STATUSES, NOT_AVAILABLE } from '../../../constants';
-import { UserSchema } from '../../helpers/schemas/UserSchema';
+import {
+  addResolutionMiddleware,
+  authenticationMiddleware,
+  checkIDMiddleware,
+} from '../../helpers/middleware';
 
 const router = express();
-const ajv = new Ajv();
 const patientController = injector.getPatientController;
-const authenticationController = injector.getAuthenticationController;
+const resolutionController = injector.getResolutionController;
 
-router.post('/queue/patient/:id', async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    res.status(STATUSES.FORBIDDEN).json(NOT_AVAILABLE);
-  }
-
-  const auth = authHeader.split(' ')[1];
-  const user = await authenticationController.checkToken(auth);
-
-  if (user.getStatus !== STATUSES.OK) {
-    res.status(user.getStatus).json(user.getValue);
-  }
-
-  const validationResult = ajv.validate(UserSchema, req.params);
-  if (!validationResult) {
-    res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
-  } else {
-    next();
-  }
+router.get('/me/resolutions', async (req, res, next) => {
+  await authenticationMiddleware(req, res);
+  next();
 }, async (req, res) => {
-  const { doctorType, doctorName } = req.body;
-
-  const result = await patientController.addValueInQueue(req.params.id, doctorName, doctorType);
+  const result = await resolutionController.findResolution({
+    userID: req.userID,
+  });
   res.status(result.getStatus).json(result.getValue);
 });
 
-router.get('/queue/current', async (req, res) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader) {
-    res.status(STATUSES.FORBIDDEN).json(NOT_AVAILABLE);
-  }
-
-  const auth = authHeader.split(' ')[1];
-  const { value: { user_id: userID } } = await authenticationController.checkToken(auth);
-  const [{ firstName, specializationName }] = await injector.doctorRepository.getDoctorByID(userID);
-
-  const result = await patientController.getCurrentInQueue(firstName, specializationName);
+router.put('/patient/:id/resolution', async (req, res, next) => {
+  await authenticationMiddleware(req, res);
+  addResolutionMiddleware(req, res, next);
+}, async (req, res) => {
+  const result = await resolutionController.setResolution(req.body, req.params, req.userID);
   res.status(result.getStatus).json(result.getValue);
 });
 
-router.get('/queue/next', async (req, res) => {
-  const authHeader = req.headers.authorization;
+router.get('/patient/:id/resolutions', async (req, res, next) => {
+  await authenticationMiddleware(req, res);
+  checkIDMiddleware(req, res, next);
+}, async (req, res) => {
+  const result = await resolutionController.findAllResolutions({
+    patientID: req.params.id,
+  });
+  res.status(result.getStatus).json(result.getValue);
+});
 
-  if (!authHeader) {
-    res.status(STATUSES.FORBIDDEN).json(NOT_AVAILABLE);
-  }
-
-  const auth = authHeader.split(' ')[1];
-  const { value: { user_id: userID } } = await authenticationController.checkToken(auth);
-  const [{ firstName, specializationName }] = await injector.doctorRepository.getDoctorByID(userID);
-
-  const shift = await patientController.takeNextValueInQueue(firstName, specializationName);
-  const result = { ...shift, firstName, specializationName };
-  const { status } = result;
-  res.status(status).json(result);
+router.get('/patients', async (req, res, next) => {
+  await authenticationMiddleware(req, res);
+  next();
+}, async (req, res) => {
+  const result = await patientController.findAllPatients({
+    patientInfo: req.query.patientInfo,
+  });
+  res.status(result.getStatus).json(result.getValue);
 });
 
 export default router;

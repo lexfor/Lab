@@ -32,12 +32,28 @@ class AuthenticationRepository {
     }
   }
 
-  async getUser(login) {
+  async getPatient(login) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = `SELECT * FROM users
         WHERE 
         login = ?`;
+      const result = await queryAsync(sql, login);
+      return result[0];
+    } catch (e) {
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
+    }
+  }
+
+  async getDoctor(login) {
+    try {
+      const queryAsync = promisify(this.connection.query).bind(this.connection);
+      const sql = `SELECT * FROM users
+                          JOIN doctors ON 
+                          doctors.user_id = users.id
+                          WHERE
+                          login = ?
+                          `;
       const result = await queryAsync(sql, login);
       return result[0];
     } catch (e) {

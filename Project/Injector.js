@@ -7,7 +7,7 @@ import {
 import { PatientController, PatientRepository, PatientService } from './api/patient';
 import { ResolutionService, ResolutionRepository, ResolutionController } from './api/resolutions';
 import { DoctorController, DoctorRepository, DoctorService } from './api/doctor';
-import { QueueService, QueueRepository } from './api/queue';
+import { QueueService, QueueRepository, QueueController } from './api/queue';
 import { connection } from './api/helpers/DBconnection';
 import { initializeDB } from './api/helpers/DBInitializator';
 import { client } from './api/helpers/RedisConnection';
@@ -37,15 +37,20 @@ class Injector {
       this.jwtService,
     );
     this.patientController = new PatientController(
-      this.queueService,
       this.patientService,
     );
     this.resolutionController = new ResolutionController(
       this.resolutionService,
       this.queueService,
       this.patientService,
+      this.doctorService,
     );
     this.doctorController = new DoctorController(
+      this.doctorService,
+    );
+    this.queueController = new QueueController(
+      this.queueService,
+      this.patientService,
       this.doctorService,
     );
   }
@@ -64,6 +69,10 @@ class Injector {
 
   get getDoctorController() {
     return this.doctorController;
+  }
+
+  get getQueueController() {
+    return this.queueController;
   }
 }
 

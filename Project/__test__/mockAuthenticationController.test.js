@@ -87,8 +87,8 @@ describe('authentication controller unit tests', () => {
     expect(res.getStatus).toEqual(STATUSES.BAD_REQUEST);
   });
 
-  test('correct authentication', async () => {
-    authenticationService.logIn.mockImplementation((user) => {
+  test('correct patient authentication', async () => {
+    authenticationService.patientLogin.mockImplementation((user) => {
       expect(user.login).toEqual('thetim182001@mail.ru');
       expect(user.password).toEqual('123');
       return {
@@ -102,7 +102,30 @@ describe('authentication controller unit tests', () => {
       return 'asdwav';
     });
 
-    const res = await authenticationController.logIn({
+    const res = await authenticationController.patientLogin({
+      login: 'thetim182001@mail.ru',
+      password: '123',
+    });
+    expect(res.getValue).toEqual('asdwav');
+    expect(res.getStatus).toEqual(STATUSES.OK);
+  });
+
+  test('correct doctor authentication', async () => {
+    authenticationService.doctorLogin.mockImplementation((user) => {
+      expect(user.login).toEqual('thetim182001@mail.ru');
+      expect(user.password).toEqual('123');
+      return {
+        id: '2222',
+        login: user.login,
+      };
+    });
+
+    jwtService.createSign.mockImplementation((userID) => {
+      expect(userID).toEqual('2222');
+      return 'asdwav';
+    });
+
+    const res = await authenticationController.doctorLogin({
       login: 'thetim182001@mail.ru',
       password: '123',
     });

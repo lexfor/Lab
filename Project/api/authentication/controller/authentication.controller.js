@@ -23,10 +23,24 @@ class AuthenticationController {
     }
   }
 
-  async logIn(user) {
+  async patientLogin(user) {
     const res = new RequestResult();
     try {
-      res.setValue = await this.authenticationService.logIn(user);
+      res.setValue = await this.authenticationService.patientLogin(user);
+      res.setValue = await this.jwtService.createSign(res.getValue.id);
+      res.setStatus = STATUSES.OK;
+      return res;
+    } catch (e) {
+      res.setValue = e.message;
+      res.setStatus = e.status;
+      return res;
+    }
+  }
+
+  async doctorLogin(user) {
+    const res = new RequestResult();
+    try {
+      res.setValue = await this.authenticationService.doctorLogin(user);
       res.setValue = await this.jwtService.createSign(res.getValue.id);
       res.setStatus = STATUSES.OK;
       return res;

@@ -1,6 +1,3 @@
-const ws = new WebSocket('ws://localhost:8080');
-let foundedPatientID = null;
-
 const searchInput = document.getElementById('searchInput');
 const search = document.getElementById('search');
 const table = document.getElementById('table');
@@ -48,6 +45,7 @@ async function deleteButton(event) {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
+      Authorization: `Bearer ${window.sessionStorage.getItem('jwt')}`,
     },
   });
 
@@ -64,6 +62,7 @@ async function deleteButton(event) {
 }
 
 async function refreshTableContent(patient_id) {
+  console.log('refresh doctor table');
   const getResolutions = await fetch(`/patient/${patient_id}/resolutions`, {
     method: 'GET',
     headers: {
@@ -108,10 +107,10 @@ async function refreshTableContent(patient_id) {
 }
 
 async function onChange() {
+  console.log('Onchange');
   const searchInputValue = searchInput.value;
   const option = document.getElementById(searchInputValue);
   const { patient_id } = option;
-
   if (patient_id) {
     refreshTableContent(patient_id);
   } else {
@@ -120,7 +119,7 @@ async function onChange() {
 }
 
 async function getCurrent() {
-  const response = await fetch('/queue/current', {
+  const response = await fetch('/me/current', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -138,7 +137,7 @@ async function getCurrent() {
 }
 
 async function next() {
-  const response = await fetch('/queue/next', {
+  const response = await fetch('/me/next', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -147,10 +146,7 @@ async function next() {
   });
 
   if (response.ok) {
-    const { firstName: doctorName, specializationName: doctorType } = await response.json();
-
     await getCurrent();
-    ws.send('next');
   }
 }
 
@@ -168,36 +164,6 @@ async function setCurrentResolution() {
     body: JSON.stringify(body),
   });
   await response.json();
-  ws.send(resolution.value);
-}
-
-async function findResolution() {
-  const input = document.getElementById('valueInput');
-  const output = document.getElementById('resolutionOutput');
-  const url = new URL('/patient/resolution', document.location.origin);
-  const params = new URLSearchParams();
-  params.append('name', input.value);
-  url.search = params.toString();
-  const response = await fetch(url.href);
-  if (response.ok) {
-    const resolution = await response.json();
-    output.value = resolution.value;
-    foundedPatientID = resolution.patient_id;
-  } else {
-    output.value = 'N/A';
-  }
-}
-
-async function deleteResolution() {
-  await fetch(`/resolution/${foundedPatientID}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-    },
-  });
-  foundedPatientID = null;
-  const output = document.getElementById('resolutionOutput');
-  output.value = 'N/A';
 }
 
 getCurrent();

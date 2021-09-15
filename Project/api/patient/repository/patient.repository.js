@@ -99,7 +99,7 @@ class PatientRepository {
     }
   }
 
-  async getAllPatientWithConditions(patientInfo) {
+  async getAllPatients(patientInfo) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = `

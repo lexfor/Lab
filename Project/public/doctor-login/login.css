@@ -27,3 +27,9 @@
     margin-left: 12em;
     margin-bottom: 2em;
 }
+
+#back {
+    display: inline-block;
+    margin-left: 5em;
+    text-decoration: none;
+}

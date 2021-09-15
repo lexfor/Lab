@@ -16,10 +16,21 @@ class AuthenticationService {
     return createdUser;
   }
 
-  async logIn(user) {
-    const foundedUser = await this.authenticationRepository.getUser(user.login);
+  async patientLogin(user) {
+    const foundedUser = await this.authenticationRepository.getPatient(user.login);
     if (!foundedUser) {
       throw new ApiError('no such user', STATUSES.UNAUTHORISED);
+    }
+    if (await bcrypt.compareSync(user.password, foundedUser.password)) {
+      return foundedUser;
+    }
+    throw new ApiError('wrong password', STATUSES.UNAUTHORISED);
+  }
+
+  async doctorLogin(user) {
+    const foundedUser = await this.authenticationRepository.getDoctor(user.login);
+    if (!foundedUser) {
+      throw new ApiError('no such doctor', STATUSES.UNAUTHORISED);
     }
     if (await bcrypt.compareSync(user.password, foundedUser.password)) {
       return foundedUser;

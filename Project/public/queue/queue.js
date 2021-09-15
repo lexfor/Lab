@@ -1,5 +1,3 @@
-const socket = new WebSocket('ws://localhost:8080');
-
 const doctorsType = document.getElementById('doctorsType');
 const doctorsNames = document.getElementById('doctorsNames');
 const doctorTypesInput = document.getElementById('doctorTypesInput');
@@ -17,7 +15,7 @@ function addTD(key, tr) {
 }
 
 async function refreshTableContent() {
-  const getResolutions = await fetch(`/patient/${window.sessionStorage.getItem('patient')}/resolutions`, {
+  const getResolutions = await fetch('/me/resolutions', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -30,16 +28,17 @@ async function refreshTableContent() {
 
     if (tableContent) {
       table.innerHTML = '';
-      const id = 1;
+      let id = 1;
 
       tableContent.forEach((element) => {
         const tr = document.createElement('tr');
 
-        addTD(id++, tr);
+        addTD(id, tr);
         addTD(element.doctor_specialization, tr);
         addTD(element.doctor_name, tr);
         addTD(element.value, tr);
         addTD(new Date(+element.updatedTime).toISOString().substr(0, 10), tr);
+        id += 1;
 
         table.appendChild(tr);
       });
@@ -47,26 +46,17 @@ async function refreshTableContent() {
   }
 }
 
-async function getSelectedResolution() {
-  const textarea = document.getElementById('resolution');
-  const response = await fetch(`/patient/${window.sessionStorage.getItem('patient')}/resolution`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-      Authorization: `Bearer ${window.sessionStorage.getItem('jwt')}`,
-    },
-  });
-  if (response.ok) {
-    const json = await response.json();
-    textarea.value = json.value;
-  } else {
-    textarea.value = 'N/A';
-  }
-}
-
-async function getCurrent(doctorTypeValue, doctorNameValue) {
-  if (doctorTypeValue && doctorNameValue) {
-    const response = await fetch(`/queue/current?doctorTypeValue=${doctorTypeValue}&doctorNameValue=${doctorNameValue}`);
+async function getCurrent() {
+  const doctorNameValue = doctorNamesInput.value;
+  const { doctorID } = document.getElementById(doctorNameValue);
+  if (doctorID) {
+    const response = await fetch(`/queue/${doctorID}/current`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        Authorization: `Bearer ${window.sessionStorage.getItem('jwt')}`,
+      },
+    });
     const result = await response.json();
 
     if (response.ok) {
@@ -74,35 +64,29 @@ async function getCurrent(doctorTypeValue, doctorNameValue) {
     } else {
       document.getElementById('currentNumber').innerHTML = 'N/A';
     }
-    await getSelectedResolution();
   }
 }
 
 async function Add() {
-  const doctorTypeValue = doctorTypesInput.value;
   const doctorNameValue = doctorNamesInput.value;
-
-  const response = await fetch(`/queue/patient/${window.sessionStorage.getItem('patient')}`, {
+  const ID = document.getElementById(doctorNameValue).doctorID;
+  const response = await fetch(`/queue/${ID}/patient/me`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
       Authorization: `Bearer ${window.sessionStorage.getItem('jwt')}`,
     },
-    body: JSON.stringify({
-      doctorType: doctorTypeValue,
-      doctorName: doctorNameValue,
-    }),
   });
 
   if (response.ok) {
-    await getCurrent(doctorTypeValue, doctorNameValue);
+    await getCurrent();
   }
 }
 
 async function getAllDoctorsBySpecializations() {
   const ID = doctorTypesInput.value;
   const doctorsTypeID = document.getElementById(ID).specializationID;
-  const response = await fetch(`/doctor/allDoctorsBySpecializations?typeID=${doctorsTypeID}`);
+  const response = await fetch(`/doctor/specialization/${doctorsTypeID}`);
 
   if (response.ok) {
     const json = await response.json();
@@ -112,18 +96,17 @@ async function getAllDoctorsBySpecializations() {
     json.forEach((element) => {
       const option = document.createElement('option');
       option.value = element.firstName;
+      option.id = element.firstName;
       option.label = element.email;
+      option.doctorID = element.doctorID;
 
       doctorsNames.appendChild(option);
     });
   }
-  // if (!window.sessionStorage.getItem('patient')) {
-  //   document.location.href = '/login';
-  // }
 }
 
 window.onload = async () => {
-  const response = await fetch('/doctor/allSpecializations');
+  const response = await fetch('/doctor/specializations');
 
   if (response.ok) {
     const json = await response.json();
@@ -139,16 +122,4 @@ window.onload = async () => {
       doctorsType.appendChild(option);
     });
   }
-
-  refreshTableContent();
-
-  // if (!window.sessionStorage.getItem('patient')) {
-  //   document.location.href = '/login';
-  // }
 };
-
-getCurrent();
-
-socket.addEventListener('message', () => {
-  getCurrent();
-});

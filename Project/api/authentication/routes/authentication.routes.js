@@ -1,35 +1,28 @@
 import express from 'express';
-import Ajv from 'ajv';
 import { injector } from '../../../Injector';
-import { AddUserSchema } from '../../helpers/schemas/AddUserSchema';
-import { LogingSchema } from '../../helpers/schemas/LogingSchema';
-import { NOT_AVAILABLE, STATUSES } from '../../../constants';
+import { addUserMiddleware, loginMiddleware } from '../../helpers/middleware';
 
 const router = express();
-const ajv = new Ajv();
 const authenticationController = injector.getAuthenticationController;
 
 router.post('/registration', async (req, res, next) => {
-  const validationResult = ajv.validate(AddUserSchema, req.body);
-  if (validationResult) {
-    await next();
-  } else {
-    res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
-  }
+  addUserMiddleware(req, res, next);
 }, async (req, res) => {
   const result = await authenticationController.registerUser(req.body);
   res.status(result.getStatus).json(result.getValue);
 });
 
 router.post('/patient/login', async (req, res, next) => {
-  const validationResult = ajv.validate(LogingSchema, req.body);
-  if (validationResult) {
-    next();
-  } else {
-    res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
-  }
+  loginMiddleware(req, res, next);
 }, async (req, res) => {
-  const result = await authenticationController.logIn(req.body);
+  const result = await authenticationController.patientLogin(req.body);
+  res.status(result.getStatus).json(result.getValue);
+});
+
+router.post('/doctor/login', async (req, res, next) => {
+  loginMiddleware(req, res, next);
+}, async (req, res) => {
+  const result = await authenticationController.doctorLogin(req.body);
   res.status(result.getStatus).json(result.getValue);
 });
 

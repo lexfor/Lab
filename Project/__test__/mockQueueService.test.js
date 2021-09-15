@@ -13,33 +13,30 @@ describe('queue service unit tests', () => {
   );
 
   test('push patient in queue', async () => {
-    queueRepository.push.mockImplementation((userID, name, type) => {
-      expect(userID).toEqual('123');
-      expect(name).toEqual('Oleg');
-      expect(type).toEqual('surgeon');
+    queueRepository.push.mockImplementation((userID, doctorID) => {
+      expect(userID).toEqual('1111');
+      expect(doctorID).toEqual('2222');
       return { id: '123' };
     });
-    const result = await queue.push('123', 'Oleg', 'surgeon');
+    const result = await queue.push('1111', '2222');
     expect(result.id).toEqual('123');
   });
 
   test('shift patient from queue', async () => {
-    queueRepository.shift.mockImplementation((name, type) => {
-      expect(name).toEqual('Oleg');
-      expect(type).toEqual('surgeon');
-      return '1111';
+    queueRepository.shift.mockImplementation((doctorID) => {
+      expect(doctorID).toEqual('1111');
+      return '2222';
     });
-    const result = await queue.shift('Oleg', 'surgeon');
-    expect(result).toEqual('1111');
+    const result = await queue.shift('1111');
+    expect(result).toEqual('2222');
   });
 
   test('get current patient from queue', async () => {
-    queueRepository.getFirst.mockImplementation((name, type) => {
-      expect(name).toEqual('Oleg');
-      expect(type).toEqual('surgeon');
-      return '1111';
+    queueRepository.getFirst.mockImplementation((doctorID) => {
+      expect(doctorID).toEqual('1111');
+      return '2222';
     });
-    const result = await queue.getCurrent('Oleg', 'surgeon');
-    expect(result).toEqual('1111');
+    const result = await queue.getCurrent('1111');
+    expect(result).toEqual('2222');
   });
 });

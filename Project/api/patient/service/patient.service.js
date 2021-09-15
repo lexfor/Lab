@@ -40,7 +40,7 @@ class PatientService {
       const patientInfo = await this.findPatientByName(user.name);
       patientID = patientInfo.id;
     } else {
-      const patient = await this.findPatientByUser(user.user_id);
+      const patient = await this.findPatientByUser(user.userID);
       patientID = patient.id;
     }
     return patientID;
@@ -54,8 +54,8 @@ class PatientService {
       }
       return;
     }
-    if (patient.user_id) {
-      const patientInfo = await this.findPatientByUser(patient.user_id);
+    if (patient.userID) {
+      const patientInfo = await this.findPatientByUser(patient.userID);
       const values = await this.patientRepository.getAllIDs();
       if (values.indexOf(patientInfo.id) === -1) {
         throw new ApiError('no such patient', STATUSES.NOT_FOUND);
@@ -68,8 +68,8 @@ class PatientService {
     }
   }
 
-  async getAllPatientWithCondition(patientInfo) {
-    const allPatient = await this.patientRepository.getAllPatientWithConditions(patientInfo);
+  async getAllPatients(patientInfo) {
+    const allPatient = await this.patientRepository.getAllPatients(patientInfo);
 
     return allPatient || null;
   }

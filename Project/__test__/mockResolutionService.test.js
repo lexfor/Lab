@@ -8,16 +8,6 @@ describe('resolution service unit tests', () => {
     resolutionRepository,
   );
 
-  test('get resolution', async () => {
-    resolutionRepository.get.mockImplementation((patientID) => {
-      expect(patientID).toEqual('1111');
-      return { id: '2222', value: 'Good' };
-    });
-    const result = await resolutionService.getResolution('1111');
-    expect(result.patient_id).toEqual('1111');
-    expect(result.value).toEqual('Good');
-  });
-
   test('get all resolutions', async () => {
     resolutionRepository.getAllResolutions.mockImplementation((patientID) => {
       expect(patientID).toEqual('1111');
@@ -64,9 +54,9 @@ describe('resolution service unit tests', () => {
   });
 
   test('deleted all resolutions for that patients', async () => {
-    resolutionRepository.delete.mockImplementation((patientID) => {
-      expect(patientID).toEqual('1111');
-      return { id: patientID };
+    resolutionRepository.delete.mockImplementation((resolutionID) => {
+      expect(resolutionID).toEqual('1111');
+      return { id: resolutionID };
     });
     const result = await resolutionService.deleteResolution('1111');
     expect(result.id).toEqual('1111');

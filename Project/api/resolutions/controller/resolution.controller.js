@@ -2,15 +2,17 @@ import { STATUSES } from '../../../constants';
 import RequestResult from '../../RequestResult';
 
 class ResolutionController {
-  constructor(resolutionService, queueService, patientService) {
+  constructor(resolutionService, queueService, patientService, doctorService) {
     this.resolutionService = resolutionService;
     this.queueService = queueService;
     this.patientService = patientService;
+    this.doctorService = doctorService;
   }
 
-  async setResolution(values, patient, doctor, TTLDelay = process.env.TTL_DELAY) {
+  async setResolution(values, patient, userID, TTLDelay = process.env.TTL_DELAY) {
     const res = new RequestResult();
     try {
+      const doctor = await this.doctorService.getDoctorByID(userID);
       const data = {
         ...values,
         patient_id: patient.id,
@@ -18,7 +20,7 @@ class ResolutionController {
         doctor_name: doctor.firstName,
         doctor_specialization: doctor.specializationName,
       };
-      await this.queueService.isEmpty(doctor.firstName, doctor.specializationName);
+      await this.queueService.isEmpty(doctor.doctorID);
       res.setValue = await this.resolutionService.addResolution(data);
       res.setStatus = STATUSES.CREATED;
       return res;
@@ -29,12 +31,12 @@ class ResolutionController {
     }
   }
 
-  async findResolution({ userID }) {
+  async findResolution(user) {
     const res = new RequestResult();
     try {
-      await this.patientService.isExist({ userID });
-      const patientID = await this.patientService.findPatient({ userID });
-      res.setValue = await this.resolutionService.getResolution(patientID);
+      await this.patientService.isExist(user);
+      const patientID = await this.patientService.findPatient(user);
+      res.setValue = await this.resolutionService.getAllResolutions(patientID);
       res.setStatus = STATUSES.OK;
       return res;
     } catch (e) {
@@ -44,33 +46,24 @@ class ResolutionController {
     }
   }
 
-  async findAllResolutions({ user_id }) {
+  async findAllResolutions({ patientID }) {
     const res = new RequestResult();
     try {
-      await this.patientService.isExist({ user_id });
-      const patientID = await this.patientService.findPatient({ user_id });
+      await this.patientService.isExist({ id: patientID });
       res.setValue = await this.resolutionService.getAllResolutions(patientID);
       res.setStatus = STATUSES.OK;
       return res;
     } catch (e) {
-      try {
-        res.setValue = await this.resolutionService.getAllResolutions(user_id);
-        res.setStatus = STATUSES.OK;
-        return res;
-      } catch (error) {
-        res.setValue = e.message;
-        res.setStatus = e.status;
-        return res;
-      }
+      res.setValue = e.message;
+      res.setStatus = e.status;
+      return res;
     }
   }
 
-  async deletePatientResolution(patient) {
+  async deletePatientResolution(resolutionID) {
     const res = new RequestResult();
     try {
-      // await this.patientService.isExist(patient);
-      // await this.resolutionService.isExist(patient.id);
-      res.setValue = await this.resolutionService.deleteResolution(patient.id);
+      res.setValue = await this.resolutionService.deleteResolution(resolutionID);
       res.setStatus = STATUSES.ACCEPTED;
       return res;
     } catch (e) {
