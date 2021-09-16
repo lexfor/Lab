@@ -4,6 +4,7 @@ async function register() {
   const nameInput = document.getElementById('name');
   const birthdayInput = document.getElementById('birthday');
   const genderInput = document.getElementById('gender');
+
   const reqBodyInput = {
     login: emailInput.value,
     password: passwordInput.value,
@@ -19,6 +20,6 @@ async function register() {
     body: JSON.stringify(reqBodyInput),
   });
   if (response.ok) {
-    document.location.href = '/login';
+    document.location.href = '/patient/login';
   }
 }

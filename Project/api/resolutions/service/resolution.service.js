@@ -6,13 +6,13 @@ class ResolutionService {
     this.resolutionRepository = resolutionRepository;
   }
 
-  async getResolution(patientID) {
-    const resolution = await this.resolutionRepository.get(patientID);
-    if (!resolution.value) {
+  async getAllResolutions(patientID) {
+    const resolutions = await this.resolutionRepository.getAllResolutions(patientID);
+    if (!resolutions) {
       throw new ApiError('no resolutions', STATUSES.NOT_FOUND);
     }
-    const result = { value: resolution.value, patient_id: patientID };
-    return result;
+
+    return resolutions;
   }
 
   async addResolution(data) {
@@ -20,16 +20,9 @@ class ResolutionService {
     return resolution;
   }
 
-  async deleteResolution(patientID) {
-    const result = await this.resolutionRepository.delete(patientID);
+  async deleteResolution(resolutionID) {
+    const result = await this.resolutionRepository.delete(resolutionID);
     return result;
-  }
-
-  async isExist(patientID) {
-    const result = await this.resolutionRepository.get(patientID);
-    if (!result.value) {
-      throw new ApiError('no such resolutions', STATUSES.NOT_FOUND);
-    }
   }
 }
 

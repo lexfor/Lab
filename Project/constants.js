@@ -22,4 +22,9 @@ export const SERVER_PORT = {
   APP_PORT: 3000,
 };
 
+export const ROLES = {
+  DOCTOR: 'doctor',
+  PATIENT: 'patient',
+};
+
 export const NOT_AVAILABLE = 'N/A';

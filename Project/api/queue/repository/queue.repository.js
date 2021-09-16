@@ -7,41 +7,41 @@ class QueueRepository {
     this.client = redisClient;
   }
 
-  async push(patientID) {
+  async push(patientID, doctorID) {
     try {
       const rpushAsync = promisify(this.client.rpush).bind(this.client);
-      await rpushAsync('queue', patientID);
+      await rpushAsync(`queueTo${doctorID}`, patientID);
       return patientID;
     } catch (e) {
       throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
-  async shift() {
+  async shift(doctorID) {
     try {
-      const result = this.getFirst();
+      const result = this.getFirst(doctorID);
       const lpopAsync = promisify(this.client.lpop).bind(this.client);
-      await lpopAsync('queue');
+      await lpopAsync(`queueTo${doctorID}`);
       return result;
     } catch (e) {
       throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
-  async getFirst() {
+  async getFirst(doctorID) {
     try {
       const lindexAsync = promisify(this.client.lindex).bind(this.client);
-      const result = await lindexAsync('queue', 0);
+      const result = await lindexAsync(`queueTo${doctorID}`, 0);
       return result;
     } catch (e) {
       throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
 
-  async getAll() {
+  async getAll(doctorID) {
     try {
       const lrangeAsync = promisify(this.client.lrange).bind(this.client);
-      const result = await lrangeAsync('queue', 0, -1);
+      const result = await lrangeAsync(`queueTo${doctorID}`, 0, -1);
 
       if (result.length === 0) {
         return [];

@@ -98,6 +98,21 @@ class PatientRepository {
       throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }
+
+  async getAllPatients(patientInfo) {
+    try {
+      const queryAsync = promisify(this.connection.query).bind(this.connection);
+      const sql = `
+      SELECT * 
+      FROM patients
+      WHERE name LIKE'%${patientInfo}%'
+      OR mail LIKE '%${patientInfo}%'`;
+      const result = await queryAsync(sql);
+      return result;
+    } catch (e) {
+      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
+    }
+  }
 }
 
 export { PatientRepository };

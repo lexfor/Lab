@@ -68,12 +68,22 @@ describe('patient service unit tests', () => {
     expect(result).toEqual('1111');
   });
 
+  test('get all patient with condition', async () => {
+    patientRepository.getAllPatients.mockImplementation((patientInfo) => {
+      expect(patientInfo).toEqual('Tim');
+      return [{ id: '1111', name: 'Tim' }];
+    });
+    const result = await patientService.getAllPatients('Tim');
+    expect(result[0].id).toEqual('1111');
+    expect(result[0].name).toEqual('Tim');
+  });
+
   test('find patient with user id', async () => {
     patientRepository.getByUserID.mockImplementation((patientID) => {
       expect(patientID).toEqual('1111');
       return { id: '2222', name: 'Tim' };
     });
-    const result = await patientService.findPatient({ user_id: '1111' });
+    const result = await patientService.findPatient({ userID: '1111' });
     expect(result).toEqual('2222');
   });
 });

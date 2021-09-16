@@ -2,7 +2,7 @@ import express from 'express';
 
 const router = express();
 
-router.get('/doctor', (req, res) => {
+router.get('/', (req, res) => {
   res.sendFile('./public/doctor/doctor.html', { root: './Project' });
 });
 

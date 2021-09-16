@@ -32,15 +32,24 @@ class AuthenticationRepository {
     }
   }
 
-  async getUser(login) {
+  async getUser(login, role) {
     try {
+      console.log(login, role);
+      let joinCond = '';
+      if (role === 'doctor') {
+        joinCond = `
+        JOIN doctors ON 
+        doctors.user_id = users.id`;
+      }
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = `SELECT * FROM users
+        ${joinCond}
         WHERE 
         login = ?`;
       const result = await queryAsync(sql, login);
       return result[0];
     } catch (e) {
+      console.log(e);
       throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }

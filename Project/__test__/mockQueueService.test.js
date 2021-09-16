@@ -13,23 +13,30 @@ describe('queue service unit tests', () => {
   );
 
   test('push patient in queue', async () => {
-    queueRepository.push.mockImplementation((userID) => {
-      expect(userID).toEqual('123');
+    queueRepository.push.mockImplementation((userID, doctorID) => {
+      expect(userID).toEqual('1111');
+      expect(doctorID).toEqual('2222');
       return { id: '123' };
     });
-    const result = await queue.push('123');
+    const result = await queue.push('1111', '2222');
     expect(result.id).toEqual('123');
   });
 
   test('shift patient from queue', async () => {
-    queueRepository.shift.mockResolvedValue('1111');
-    const result = await queue.shift();
-    expect(result).toEqual('1111');
+    queueRepository.shift.mockImplementation((doctorID) => {
+      expect(doctorID).toEqual('1111');
+      return '2222';
+    });
+    const result = await queue.shift('1111');
+    expect(result).toEqual('2222');
   });
 
   test('get current patient from queue', async () => {
-    queueRepository.getFirst.mockResolvedValue('1111');
-    const result = await queue.getCurrent();
-    expect(result).toEqual('1111');
+    queueRepository.getFirst.mockImplementation((doctorID) => {
+      expect(doctorID).toEqual('1111');
+      return '2222';
+    });
+    const result = await queue.getCurrent('1111');
+    expect(result).toEqual('2222');
   });
 });

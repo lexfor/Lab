@@ -8,16 +8,32 @@
 <body>
   <section class="section">
     <p class="name">The queue</p>
-    <a href="/doctor" class="to-doctor">Doctor cabinet</a>
     <button class="add-button" onclick="Add()"> Add me in queue</button>
-    <section class="current">
+    <input list="doctorsType" name="doctorType" id="doctorTypesInput"
+     onchange="getAllDoctorsBySpecializations()" placeholder="Doctor type">
+    <datalist id="doctorsType"></datalist>
+    <input list="doctorsNames" name="doctorName" id="doctorNamesInput" onchange="getCurrent()" placeholder="Doctor name">
+    <datalist id="doctorsNames"></datalist>
+    <section class="current" style="display: flex; flex-direction: column;">
       <p class="label">Current patient:</p>
-      <p class="number" id="currentNumber">Stack item value</p>
+      <div  style="display: flex; justify-content: space-between;" >
+        <p class="number" id="currentNumber">Stack item value</p>
+        <button id="reload" onclick="refreshTableContent()" style="width: 35%; height: 50px; align-self: center;">
+          Refresh table content
+        </button>
+      </div>
     </section>
   </section>
-  <section class="section">
-    <textarea class="result" id="resolution"></textarea>
-  </section>
+  <div id="medicalCard">
+      <table>
+        <caption style="margin: 20px 0; font-size: 40px;">Medical cards</caption>
+        <thead>
+          <tr><td>№</td><td>Specialist</td><td>Doctor Name</td><td>Resolution</td><td>Date</td></tr>
+        </thead>
+        <tbody id="table"></tbody>
+      </table>
+    </div>
+  </div>
 </body>
   <script src="queue.js"></script>
 </html>

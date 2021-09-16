@@ -16,8 +16,8 @@ class AuthenticationService {
     return createdUser;
   }
 
-  async logIn(user) {
-    const foundedUser = await this.authenticationRepository.getUser(user.login);
+  async login(user, role) {
+    const foundedUser = await this.authenticationRepository.getUser(user.login, role);
     if (!foundedUser) {
       throw new ApiError('no such user', STATUSES.UNAUTHORISED);
     }

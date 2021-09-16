@@ -1,4 +1,4 @@
-export const UserSchema = {
+export const IDSchema = {
   type: 'object',
   properties: {
     id: {
@@ -6,5 +6,5 @@ export const UserSchema = {
     },
   },
   required: ['id'],
-  additionalProperties: true,
+  additionalProperties: false,
 };

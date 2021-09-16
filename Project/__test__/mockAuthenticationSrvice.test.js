@@ -1,8 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { AuthenticationService, AuthenticationRepository } from '../api/authentication';
 import { PatientRepository } from '../api/patient';
-import ApiError from '../api/helpers/ApiError';
-import { STATUSES } from '../constants';
 
 jest.mock('../api/authentication/repository/authentication.repository');
 jest.mock('../api/patient/repository/patient.repository');
@@ -32,9 +30,10 @@ describe('authentication service unit tests', () => {
     expect(res.login).toEqual('thetim182001@mail.ru');
   });
 
-  test('correct authentication user', async () => {
-    authenticationRepository.getUser.mockImplementation((login) => {
+  test('correct patient authentication', async () => {
+    authenticationRepository.getUser.mockImplementation((login, role) => {
       expect(login).toEqual('thetim182001@mail.ru');
+      expect(role).toEqual('patient');
       return {
         id: '2222',
         login: 'thetim182001@mail.ru',
@@ -47,9 +46,9 @@ describe('authentication service unit tests', () => {
       return true;
     });
 
-    await authenticationService.logIn({
+    await authenticationService.login({
       login: 'thetim182001@mail.ru',
       password: '123',
-    });
+    }, 'patient');
   });
 });

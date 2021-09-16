@@ -23,10 +23,10 @@ class AuthenticationController {
     }
   }
 
-  async logIn(user) {
+  async login(user, role) {
     const res = new RequestResult();
     try {
-      res.setValue = await this.authenticationService.logIn(user);
+      res.setValue = await this.authenticationService.login(user, role);
       res.setValue = await this.jwtService.createSign(res.getValue.id);
       res.setStatus = STATUSES.OK;
       return res;

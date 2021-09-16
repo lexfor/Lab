@@ -1,6 +1,6 @@
 import { PatientService } from '../api/patient';
 import { AuthenticationController, AuthenticationService, JwtService } from '../api/authentication';
-import { NOT_AVAILABLE, STATUSES } from '../constants';
+import { STATUSES } from '../constants';
 import ApiError from '../api/helpers/ApiError';
 
 jest.mock('../api/authentication/service/authentication.service');
@@ -87,10 +87,11 @@ describe('authentication controller unit tests', () => {
     expect(res.getStatus).toEqual(STATUSES.BAD_REQUEST);
   });
 
-  test('correct authentication', async () => {
-    authenticationService.logIn.mockImplementation((user) => {
+  test('correct patient authentication', async () => {
+    authenticationService.login.mockImplementation((user, role) => {
       expect(user.login).toEqual('thetim182001@mail.ru');
       expect(user.password).toEqual('123');
+      expect(role).toEqual('patient');
       return {
         id: '2222',
         login: user.login,
@@ -102,10 +103,34 @@ describe('authentication controller unit tests', () => {
       return 'asdwav';
     });
 
-    const res = await authenticationController.logIn({
+    const res = await authenticationController.login({
       login: 'thetim182001@mail.ru',
       password: '123',
+    }, 'patient');
+    expect(res.getValue).toEqual('asdwav');
+    expect(res.getStatus).toEqual(STATUSES.OK);
+  });
+
+  test('correct doctor authentication', async () => {
+    authenticationService.login.mockImplementation((user, role) => {
+      expect(user.login).toEqual('thetim182001@mail.ru');
+      expect(user.password).toEqual('123');
+      expect(role).toEqual('doctor');
+      return {
+        id: '2222',
+        login: user.login,
+      };
     });
+
+    jwtService.createSign.mockImplementation((userID) => {
+      expect(userID).toEqual('2222');
+      return 'asdwav';
+    });
+
+    const res = await authenticationController.login({
+      login: 'thetim182001@mail.ru',
+      password: '123',
+    }, 'doctor');
     expect(res.getValue).toEqual('asdwav');
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
