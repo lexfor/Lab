@@ -62,7 +62,6 @@ async function deleteButton(event) {
 }
 
 async function refreshTableContent(patient_id) {
-  console.log('refresh doctor table');
   const getResolutions = await fetch(`/patient/${patient_id}/resolutions`, {
     method: 'GET',
     headers: {
@@ -107,7 +106,6 @@ async function refreshTableContent(patient_id) {
 }
 
 async function onChange() {
-  console.log('Onchange');
   const searchInputValue = searchInput.value;
   const option = document.getElementById(searchInputValue);
   const { patient_id } = option;
@@ -119,7 +117,7 @@ async function onChange() {
 }
 
 async function getCurrent() {
-  const response = await fetch('/me/current', {
+  const response = await fetch('/queue/me/current', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -137,7 +135,7 @@ async function getCurrent() {
 }
 
 async function next() {
-  const response = await fetch('/me/next', {
+  const response = await fetch('/queue/me/next', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

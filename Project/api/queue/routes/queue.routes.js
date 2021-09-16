@@ -17,6 +17,14 @@ router.post('/queue/:queueID/patient/me', async (req, res, next) => {
   res.status(result.getStatus).json(result.getValue);
 });
 
+router.get('/queue/me/current', async (req, res, next) => {
+  await authenticationMiddleware(req, res);
+  next();
+}, async (req, res) => {
+  const result = await queueController.getCurrentInMyQueue(req.userID);
+  res.status(result.getStatus).json(result.getValue);
+});
+
 router.get('/queue/:id/current', async (req, res, next) => {
   await authenticationMiddleware(req, res);
   checkIDMiddleware(req, res, next);
@@ -25,15 +33,7 @@ router.get('/queue/:id/current', async (req, res, next) => {
   res.status(result.getStatus).json(result.getValue);
 });
 
-router.get('/me/current', async (req, res, next) => {
-  await authenticationMiddleware(req, res);
-  next();
-}, async (req, res) => {
-  const result = await queueController.getCurrentInMyQueue(req.userID);
-  res.status(result.getStatus).json(result.getValue);
-});
-
-router.get('/me/next', async (req, res, next) => {
+router.get('/queue/me/next', async (req, res, next) => {
   await authenticationMiddleware(req, res);
   next();
 }, async (req, res) => {

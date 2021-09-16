@@ -31,8 +31,9 @@ describe('authentication service unit tests', () => {
   });
 
   test('correct patient authentication', async () => {
-    authenticationRepository.getPatient.mockImplementation((login) => {
+    authenticationRepository.getUser.mockImplementation((login, role) => {
       expect(login).toEqual('thetim182001@mail.ru');
+      expect(role).toEqual('patient');
       return {
         id: '2222',
         login: 'thetim182001@mail.ru',
@@ -45,30 +46,9 @@ describe('authentication service unit tests', () => {
       return true;
     });
 
-    await authenticationService.patientLogin({
+    await authenticationService.login({
       login: 'thetim182001@mail.ru',
       password: '123',
-    });
-  });
-
-  test('correct doctor authentication', async () => {
-    authenticationRepository.getDoctor.mockImplementation((login) => {
-      expect(login).toEqual('thetim182001@mail.ru');
-      return {
-        id: '2222',
-        login: 'thetim182001@mail.ru',
-        password: '123',
-      };
-    });
-    bcrypt.compareSync.mockImplementation((password, cryptPassword) => {
-      expect(password).toEqual('123');
-      expect(cryptPassword).toEqual('123');
-      return true;
-    });
-
-    await authenticationService.doctorLogin({
-      login: 'thetim182001@mail.ru',
-      password: '123',
-    });
+    }, 'patient');
   });
 });

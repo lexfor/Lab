@@ -88,9 +88,10 @@ describe('authentication controller unit tests', () => {
   });
 
   test('correct patient authentication', async () => {
-    authenticationService.patientLogin.mockImplementation((user) => {
+    authenticationService.login.mockImplementation((user, role) => {
       expect(user.login).toEqual('thetim182001@mail.ru');
       expect(user.password).toEqual('123');
+      expect(role).toEqual('patient');
       return {
         id: '2222',
         login: user.login,
@@ -102,18 +103,19 @@ describe('authentication controller unit tests', () => {
       return 'asdwav';
     });
 
-    const res = await authenticationController.patientLogin({
+    const res = await authenticationController.login({
       login: 'thetim182001@mail.ru',
       password: '123',
-    });
+    }, 'patient');
     expect(res.getValue).toEqual('asdwav');
     expect(res.getStatus).toEqual(STATUSES.OK);
   });
 
   test('correct doctor authentication', async () => {
-    authenticationService.doctorLogin.mockImplementation((user) => {
+    authenticationService.login.mockImplementation((user, role) => {
       expect(user.login).toEqual('thetim182001@mail.ru');
       expect(user.password).toEqual('123');
+      expect(role).toEqual('doctor');
       return {
         id: '2222',
         login: user.login,
@@ -125,10 +127,10 @@ describe('authentication controller unit tests', () => {
       return 'asdwav';
     });
 
-    const res = await authenticationController.doctorLogin({
+    const res = await authenticationController.login({
       login: 'thetim182001@mail.ru',
       password: '123',
-    });
+    }, 'doctor');
     expect(res.getValue).toEqual('asdwav');
     expect(res.getStatus).toEqual(STATUSES.OK);
   });

@@ -10,7 +10,7 @@ const router = express();
 const patientController = injector.getPatientController;
 const resolutionController = injector.getResolutionController;
 
-router.get('/me/resolutions', async (req, res, next) => {
+router.get('/patient/me/resolutions', async (req, res, next) => {
   await authenticationMiddleware(req, res);
   next();
 }, async (req, res) => {
