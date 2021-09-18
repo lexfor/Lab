@@ -1,6 +1,6 @@
 import { MAX_LENGTH, MIN_LENGTH } from '../../../constants';
 
-export const SetResolutionSchema = {
+export const ValueSchema = {
   type: 'object',
   properties: {
     value: {

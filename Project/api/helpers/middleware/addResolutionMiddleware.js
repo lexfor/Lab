@@ -1,12 +1,12 @@
 import Ajv from 'ajv';
 import { NOT_AVAILABLE, STATUSES } from '../../../constants';
-import { SetResolutionSchema } from '../schemas/SetResolutionSchema';
+import { ValueSchema } from '../schemas/valueSchema';
 import { IDSchema } from '../schemas/IDSchema';
 
 const ajv = new Ajv();
 
 function addResolutionMiddleware(req, res, next) {
-  const validationResult = ajv.validate(SetResolutionSchema, req.body);
+  const validationResult = ajv.validate(ValueSchema, req.body);
   const validationUserResult = ajv.validate(IDSchema, req.params);
   if (validationResult && validationUserResult) {
     next();

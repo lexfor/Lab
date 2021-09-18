@@ -42,8 +42,8 @@ class QueueController {
     const res = new RequestResult();
     try {
       const doctor = await this.doctorService.getDoctorByID(userID);
-      await this.queueService.isEmpty(doctor.doctorID);
-      const patientID = await this.queueService.getCurrent(doctor.doctorID);
+      await this.queueService.isEmpty(doctor.doctor_id);
+      const patientID = await this.queueService.getCurrent(doctor.doctor_id);
       res.setValue = await this.patientService.findPatientByID(patientID);
       res.setStatus = STATUSES.OK;
       return res;
@@ -58,8 +58,8 @@ class QueueController {
     const res = new RequestResult();
     try {
       const doctor = await this.doctorService.getDoctorByID(userID);
-      await this.queueService.isEmpty(doctor.doctorID);
-      res.setValue = await this.queueService.shift(doctor.doctorID);
+      await this.queueService.isEmpty(doctor.doctor_id);
+      res.setValue = await this.queueService.shift(doctor.doctor_id);
       res.setStatus = STATUSES.OK;
       return res;
     } catch (e) {

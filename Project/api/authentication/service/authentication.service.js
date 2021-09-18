@@ -10,7 +10,7 @@ class AuthenticationService {
   async register(user) {
     const cryptUser = {
       login: user.login,
-      password: await bcrypt.hashSync(user.password, 10),
+      password: await bcrypt.hashSync(user.password, +process.env.SALT),
     };
     const createdUser = await this.authenticationRepository.create(cryptUser);
     return createdUser;

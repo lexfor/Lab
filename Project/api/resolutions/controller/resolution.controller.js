@@ -17,10 +17,10 @@ class ResolutionController {
         ...values,
         patient_id: patient.id,
         delay: TTLDelay,
-        doctor_name: doctor.firstName,
-        doctor_specialization: doctor.specializationName,
+        doctor_name: doctor.first_name,
+        doctor_specialization: doctor.name,
       };
-      await this.queueService.isEmpty(doctor.doctorID);
+      await this.queueService.isEmpty(doctor.doctor_id);
       res.setValue = await this.resolutionService.addResolution(data);
       res.setStatus = STATUSES.CREATED;
       return res;

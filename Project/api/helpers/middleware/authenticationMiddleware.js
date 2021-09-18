@@ -16,7 +16,7 @@ async function authenticationMiddleware(req, res) {
   if (user.getStatus !== STATUSES.OK) {
     res.status(user.getStatus).json(user.getValue);
   }
-  req.userID = user.getValue.user_id;
+  req.userID = user.getValue.userID;
 }
 
 export { authenticationMiddleware };

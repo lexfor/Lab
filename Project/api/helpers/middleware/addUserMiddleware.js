@@ -1,11 +1,11 @@
 import Ajv from 'ajv';
-import { AddUserSchema } from '../schemas/AddUserSchema';
+import { UserSchema } from '../schemas/UserSchema';
 import { NOT_AVAILABLE, STATUSES } from '../../../constants';
 
 const ajv = new Ajv();
 
 function addUserMiddleware(req, res, next) {
-  const validationResult = ajv.validate(AddUserSchema, req.body);
+  const validationResult = ajv.validate(UserSchema, req.body);
   if (validationResult) {
     next();
   } else {

@@ -95,10 +95,10 @@ async function getAllDoctorsBySpecializations() {
 
     json.forEach((element) => {
       const option = document.createElement('option');
-      option.value = element.firstName;
-      option.id = element.firstName;
+      option.value = element.first_name;
+      option.id = element.first_name;
       option.label = element.email;
-      option.doctorID = element.doctorID;
+      option.doctorID = element.id;
 
       doctorsNames.appendChild(option);
     });
@@ -115,9 +115,9 @@ window.onload = async () => {
 
     json.forEach((element) => {
       const option = document.createElement('option');
-      option.value = element.specializationName;
-      option.id = element.specializationName;
-      option.specializationID = element.specializationID;
+      option.value = element.name;
+      option.id = element.name;
+      option.specializationID = element.id;
 
       doctorsType.appendChild(option);
     });

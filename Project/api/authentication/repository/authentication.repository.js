@@ -34,22 +34,20 @@ class AuthenticationRepository {
 
   async getUser(login, role) {
     try {
-      console.log(login, role);
-      let joinCond = '';
+      let join = '';
       if (role === 'doctor') {
-        joinCond = `
+        join = `
         JOIN doctors ON 
         doctors.user_id = users.id`;
       }
       const queryAsync = promisify(this.connection.query).bind(this.connection);
-      const sql = `SELECT * FROM users
-        ${joinCond}
+      const sql = `SELECT users.* FROM users
+        ${join}
         WHERE 
         login = ?`;
       const result = await queryAsync(sql, login);
       return result[0];
     } catch (e) {
-      console.log(e);
       throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }
   }

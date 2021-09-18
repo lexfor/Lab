@@ -7,7 +7,6 @@ clone project:
 
     git clone https://github.com/lexfor/Lab.git
     cd Lab
-    git checkout Lesson-7_Project
 
 install all dependencies:
 
@@ -49,3 +48,8 @@ Then open
 
     http://localhost:3000/
 
+*TTL*
+
+TTL set by default for each resolution, for change TTL default value, change .env file:
+
+    TTL_DELAY=<your delay>

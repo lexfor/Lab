@@ -8,9 +8,9 @@ class JwtService {
   async createSign(userID, tokenKey = process.env.TOKEN_KEY) {
     try {
       const token = sign({
-        user_id: userID,
+        userID,
       }, tokenKey);
-      return { jwt: token, user_id: userID };
+      return { jwt: token };
     } catch (e) {
       throw new ApiError('wrong sign', STATUSES.SERVER_ERROR);
     }
@@ -18,8 +18,8 @@ class JwtService {
 
   verifySign(token) {
     try {
-      const patientID = verify(token, process.env.TOKEN_KEY);
-      return patientID;
+      const userID = verify(token, process.env.TOKEN_KEY);
+      return userID;
     } catch (e) {
       throw new ApiError('wrong token', STATUSES.FORBIDDEN);
     }

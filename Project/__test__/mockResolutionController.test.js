@@ -25,7 +25,7 @@ describe('resolution controller unit tests', () => {
   test('resolution added', async () => {
     doctorService.getDoctorByID.mockImplementation((userID) => {
       expect(userID).toEqual('2222');
-      return { firstName: 'Oleg', specializationName: 'surgeon', doctorID: '3333' };
+      return { first_name: 'Oleg', name: 'surgeon', doctor_id: '3333' };
     });
     queueService.isEmpty.mockImplementation((id) => {
       expect(id).toEqual('3333');
@@ -51,7 +51,7 @@ describe('resolution controller unit tests', () => {
   test('cant set resolution with no patients in queue', async () => {
     doctorService.getDoctorByID.mockImplementation((userID) => {
       expect(userID).toEqual('2222');
-      return { firstName: 'Oleg', specializationName: 'surgeon', doctorID: '3333' };
+      return { first_name: 'Oleg', name: 'surgeon', doctor_id: '3333' };
     });
     queueService.isEmpty.mockImplementation((id) => {
       expect(id).toEqual('3333');
@@ -68,7 +68,7 @@ describe('resolution controller unit tests', () => {
   test('added resolution with custom ttl', async () => {
     doctorService.getDoctorByID.mockImplementation((userID) => {
       expect(userID).toEqual('2222');
-      return { firstName: 'Oleg', specializationName: 'surgeon', doctorID: '3333' };
+      return { first_name: 'Oleg', name: 'surgeon', doctor_id: '3333' };
     });
     queueService.isEmpty.mockImplementation((id) => {
       expect(id).toEqual('3333');

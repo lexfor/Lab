@@ -24,8 +24,8 @@ class DoctorRepository {
       const sql = `
       SELECT * FROM doctors
       JOIN doctor_specialization
-      ON doctors.doctorID = doctor_specialization.doctorID 
-      WHERE doctor_specialization.specializationID = ?`;
+      ON doctors.id = doctor_specialization.doctor_id 
+      WHERE doctor_specialization.specialization_id = ?`;
       const result = await queryAsync(sql, specializationsID);
       return result;
     } catch (e) {
@@ -39,9 +39,9 @@ class DoctorRepository {
       const sql = `
       SELECT * FROM doctors
       JOIN doctor_specialization
-      ON doctor_specialization.doctorID = doctors.doctorID 
-      JOIN specializations
-      ON doctor_specialization.specializationID = specializations.specializationID
+      ON doctor_specialization.doctor_id = doctors.id 
+      INNER JOIN specializations
+      ON doctor_specialization.specialization_id = specializations.id
       WHERE user_id = ?`;
       const result = await queryAsync(sql, userID);
       return result[0];

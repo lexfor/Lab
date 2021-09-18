@@ -19,7 +19,6 @@ async function logIn() {
 
   if (response.ok) {
     window.sessionStorage.setItem('jwt', res.jwt);
-    window.sessionStorage.setItem('patient', res.user_id);
     document.location.href = '/queue';
   }
 }

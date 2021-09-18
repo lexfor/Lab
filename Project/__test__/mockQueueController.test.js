@@ -53,7 +53,7 @@ describe('queue controller unit tests', () => {
   test('take next value from queue', async () => {
     doctorService.getDoctorByID.mockImplementation((id) => {
       expect(id).toEqual('1111');
-      return { doctorID: '2222', name: 'Tim' };
+      return { doctor_id: '2222', name: 'Tim' };
     });
     queueService.isEmpty.mockImplementation((id) => {
       expect(id).toEqual('2222');
@@ -70,7 +70,7 @@ describe('queue controller unit tests', () => {
   test('get current from doctor queue', async () => {
     doctorService.getDoctorByID.mockImplementation((id) => {
       expect(id).toEqual('1111');
-      return { doctorID: '2222', name: 'Tim' };
+      return { doctor_id: '2222', name: 'Tim' };
     });
     queueService.isEmpty.mockImplementation((id) => {
       expect(id).toEqual('2222');

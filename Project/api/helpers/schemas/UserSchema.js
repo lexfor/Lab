@@ -1,6 +1,6 @@
 import { MAX_LENGTH, MIN_LENGTH } from '../../../constants';
 
-export const AddUserSchema = {
+export const UserSchema = {
   type: 'object',
   properties: {
     login: {

@@ -1,4 +1,4 @@
-export const AddInQueueSchema = {
+export const QueueIDSchema = {
   type: 'object',
   properties: {
     queueID: {
