@@ -6,11 +6,20 @@ class DoctorService {
     this.doctorRepository = doctorRepository;
   }
 
+  /**
+   * Get all doctors specializations
+   * @returns {array} array of specializations
+   */
   async getAllSpecializations() {
     const result = await this.doctorRepository.getAllSpecializations();
     return result;
   }
 
+  /**
+   * Get all doctors by specialization
+   * @param {string} specializationsID
+   * @returns {array} array of doctors
+   */
   async allDoctorsBySpecializations(specializationsID) {
     const result = await this.doctorRepository.allDoctorsBySpecializations(specializationsID);
     if (!result) {
@@ -19,6 +28,11 @@ class DoctorService {
     return result;
   }
 
+  /**
+   * Get doctor by ID
+   * @param {string} userID
+   * @returns {object} founded doctor
+   */
   async getDoctorByID(userID) {
     const result = await this.doctorRepository.getDoctorByID(userID);
     if (!result) {

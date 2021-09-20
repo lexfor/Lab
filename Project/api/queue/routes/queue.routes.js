@@ -1,7 +1,7 @@
 import express from 'express';
 import { injector } from '../../../Injector';
 import {
-  addInQueueMiddleware,
+  checkQueueIDMiddleware,
   authenticationMiddleware,
   checkIDMiddleware,
 } from '../../helpers/middleware';
@@ -11,7 +11,7 @@ const queueController = injector.getQueueController;
 
 router.post('/queue/:queueID/patient/me', async (req, res, next) => {
   await authenticationMiddleware(req, res);
-  addInQueueMiddleware(req, res, next);
+  checkQueueIDMiddleware(req, res, next);
 }, async (req, res) => {
   const result = await queueController.addValueInQueue(req.userID, req.params.queueID);
   res.status(result.getStatus).json(result.getValue);

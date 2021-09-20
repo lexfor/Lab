@@ -7,6 +7,12 @@ class QueueRepository {
     this.client = redisClient;
   }
 
+  /**
+   * Push patient in queue
+   * @param {string} patientID
+   * @param {string} doctorID
+   * @returns {string} patient ID
+   */
   async push(patientID, doctorID) {
     try {
       const rpushAsync = promisify(this.client.rpush).bind(this.client);
@@ -17,6 +23,11 @@ class QueueRepository {
     }
   }
 
+  /**
+   * Shift patient from queue
+   * @param {string} doctorID
+   * @returns {string} prev patient ID
+   */
   async shift(doctorID) {
     try {
       const result = this.getFirst(doctorID);
@@ -28,6 +39,11 @@ class QueueRepository {
     }
   }
 
+  /**
+   * Get first patient from queue
+   * @param {string} doctorID
+   * @returns {string} first in queue patient ID
+   */
   async getFirst(doctorID) {
     try {
       const lindexAsync = promisify(this.client.lindex).bind(this.client);
@@ -38,6 +54,11 @@ class QueueRepository {
     }
   }
 
+  /**
+   * Get all patients in queue
+   * @param {string} doctorID
+   * @returns {array} patient patients IDs
+   */
   async getAll(doctorID) {
     try {
       const lrangeAsync = promisify(this.client.lrange).bind(this.client);

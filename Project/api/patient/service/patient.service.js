@@ -7,6 +7,12 @@ class PatientService {
     this.patientRepository = patientRepository;
   }
 
+  /**
+   * Add new patient
+   * @param {object} userInfo
+   * @param {object} createdUser
+   * @returns {object} patient Data
+   */
   async addPatient(userInfo, createdUser) {
     const patientData = {
       user_id: createdUser.id,
@@ -19,21 +25,41 @@ class PatientService {
     return patient;
   }
 
+  /**
+   * Find patient by user ID
+   * @param {string} userID
+   * @returns {object} patient Data
+   */
   async findPatientByUser(userID) {
     const patient = await this.patientRepository.getByUserID(userID);
     return patient;
   }
 
+  /**
+   * Find patient by name
+   * @param {string} patientName
+   * @returns {object} patient Data
+   */
   async findPatientByName(patientName) {
     const patient = await this.patientRepository.getByName(patientName);
     return patient;
   }
 
+  /**
+   * Find patient by ID
+   * @param {string} patientID
+   * @returns {object} patient Data
+   */
   async findPatientByID(patientID) {
     const patient = await this.patientRepository.getByID(patientID);
     return patient;
   }
 
+  /**
+   * Find patient by name or by ID
+   * @param {object} user name or ID
+   * @returns {object} patient ID
+   */
   async findPatient(user) {
     let patientID;
     if (user.name) {
@@ -46,6 +72,10 @@ class PatientService {
     return patientID;
   }
 
+  /**
+   * Check is exist patient by name, user ID, ID
+   * @param {object} patient name or ID or user ID
+   */
   async isExist(patient) {
     if (patient.name) {
       const values = await this.patientRepository.getAllNames();
@@ -68,6 +98,11 @@ class PatientService {
     }
   }
 
+  /**
+   * Get all patients by part of data
+   * @param {string} patientInfo
+   * @returns {array} founded patients
+   */
   async getAllPatients(patientInfo) {
     const allPatient = await this.patientRepository.getAllPatients(patientInfo);
 

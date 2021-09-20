@@ -1,5 +1,5 @@
 import { STATUSES } from '../../../constants';
-import RequestResult from '../../RequestResult';
+import RequestResult from '../../helpers/RequestResult';
 
 class ResolutionController {
   constructor(resolutionService, queueService, patientService, doctorService) {
@@ -9,6 +9,14 @@ class ResolutionController {
     this.doctorService = doctorService;
   }
 
+  /**
+   * Create new resolution
+   * @param {object} values
+   * @param {object} patient
+   * @param {string} userID
+   * @param {string} TTLDelay
+   * @returns {object} resolution data and status
+   */
   async setResolution(values, patient, userID, TTLDelay = process.env.TTL_DELAY) {
     const res = new RequestResult();
     try {
@@ -31,6 +39,11 @@ class ResolutionController {
     }
   }
 
+  /**
+   * find patient resolution by name or user ID
+   * @param {object} user
+   * @returns {object} resolution data and status
+   */
   async findResolution(user) {
     const res = new RequestResult();
     try {
@@ -46,6 +59,11 @@ class ResolutionController {
     }
   }
 
+  /**
+   * Find all patient resolutions
+   * @param {object} patient
+   * @returns {object} resolution data and status
+   */
   async findAllResolutions({ patientID }) {
     const res = new RequestResult();
     try {
@@ -60,6 +78,11 @@ class ResolutionController {
     }
   }
 
+  /**
+   * Delete resolution by ID
+   * @param {string} resolutionID
+   * @returns {object} resolution data and status
+   */
   async deletePatientResolution(resolutionID) {
     const res = new RequestResult();
     try {

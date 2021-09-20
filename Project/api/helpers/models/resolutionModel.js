@@ -6,7 +6,7 @@ export async function resolutionDefine(connection) {
     id VARCHAR(255),
     value VARCHAR(255),
     delay INT,
-    updatedTime VARCHAR(255),
+    createdTime VARCHAR(255),
     patient_id VARCHAR(255),
     doctor_name VARCHAR(255),
     doctor_specialization VARCHAR(255),

@@ -4,7 +4,7 @@ import { QueueIDSchema } from '../schemas/QueueIDSchema';
 
 const ajv = new Ajv();
 
-function addInQueueMiddleware(req, res, next) {
+function checkQueueIDMiddleware(req, res, next) {
   const validationResult = ajv.validate(QueueIDSchema, req.params);
   if (!validationResult) {
     res.status(STATUSES.BAD_REQUEST).json(NOT_AVAILABLE);
@@ -13,4 +13,4 @@ function addInQueueMiddleware(req, res, next) {
   }
 }
 
-export { addInQueueMiddleware };
+export { checkQueueIDMiddleware };

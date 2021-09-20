@@ -7,6 +7,10 @@ class DoctorRepository {
     this.connection = connection;
   }
 
+  /**
+   * Get all doctors specializations
+   * @returns {array} all specializations
+   */
   async getAllSpecializations() {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
@@ -18,6 +22,11 @@ class DoctorRepository {
     }
   }
 
+  /**
+   * Get all doctors by specializations
+   * @param {string} specializationsID
+   * @returns {array} array of doctors
+   */
   async allDoctorsBySpecializations(specializationsID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
@@ -33,6 +42,11 @@ class DoctorRepository {
     }
   }
 
+  /**
+   * Get doctor by ID
+   * @param {string} userID
+   * @returns {object} founded doctor
+   */
   async getDoctorByID(userID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);

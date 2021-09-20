@@ -8,6 +8,11 @@ class AuthenticationRepository {
     this.connection = connection;
   }
 
+  /**
+   * Create new user
+   * @param {object} user
+   * @returns {object} user info
+   */
   async create(user) {
     try {
       const uuid = uuidv1();
@@ -21,6 +26,10 @@ class AuthenticationRepository {
     }
   }
 
+  /**
+   * Get all users logins
+   * @returns {array} users logins
+   */
   async getAllLogins() {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
@@ -32,6 +41,12 @@ class AuthenticationRepository {
     }
   }
 
+  /**
+   * Get user info
+   * @param {string} login
+   * @param {string} role
+   * @returns {object} user
+   */
   async getUser(login, role) {
     try {
       let join = '';

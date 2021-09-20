@@ -8,6 +8,11 @@ class PatientRepository {
     this.connection = connection;
   }
 
+  /**
+   * Create new patient
+   * @param {object} patientData
+   * @returns {object} patient Data
+   */
   async create(patientData) {
     try {
       const uuid = uuidv1();
@@ -21,6 +26,12 @@ class PatientRepository {
     }
   }
 
+  /**
+   * Update patient
+   * @param {object} patient
+   * @param {string} patientName
+   * @returns {object} all founded patients with condition
+   */
   async update(patient, patientName) {
     try {
       const data = [patientName, patient.id];
@@ -33,6 +44,11 @@ class PatientRepository {
     }
   }
 
+  /**
+   * Get patient by name
+   * @param {string} patientName
+   * @returns {object} founded patient
+   */
   async getByName(patientName) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
@@ -44,6 +60,11 @@ class PatientRepository {
     }
   }
 
+  /**
+   * Get patient by ID
+   * @param {string} patientID
+   * @returns {object} founded patient
+   */
   async getByID(patientID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
@@ -55,6 +76,11 @@ class PatientRepository {
     }
   }
 
+  /**
+   * Get patient by user ID
+   * @param {string} userID
+   * @returns {object} founded patient
+   */
   async getByUserID(userID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
@@ -66,6 +92,11 @@ class PatientRepository {
     }
   }
 
+  /**
+   * Delete patient by ID
+   * @param {string} patientID
+   * @returns {object} deleted patient ID
+   */
   async delete(patientID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
@@ -77,6 +108,10 @@ class PatientRepository {
     }
   }
 
+  /**
+   * Get all patients ID
+   * @returns {array} founded patient IDs
+   */
   async getAllIDs() {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
@@ -88,6 +123,10 @@ class PatientRepository {
     }
   }
 
+  /**
+   * Get all patients names
+   * @returns {array} founded patient names
+   */
   async getAllNames() {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
@@ -99,6 +138,11 @@ class PatientRepository {
     }
   }
 
+  /**
+   * Get patients by part of his name or email
+   * @param {string} patientInfo
+   * @returns {array} founded patients
+   */
   async getAllPatients(patientInfo) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);

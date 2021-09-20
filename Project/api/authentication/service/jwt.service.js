@@ -5,6 +5,12 @@ import { STATUSES } from '../../../constants';
 const { sign, verify } = jwt;
 
 class JwtService {
+  /**
+   * Create jwt sign by user ID
+   * @param {string} userID
+   * @param {string} tokenKey
+   * @returns {object} jwt token
+   */
   async createSign(userID, tokenKey = process.env.TOKEN_KEY) {
     try {
       const token = sign({
@@ -16,6 +22,11 @@ class JwtService {
     }
   }
 
+  /**
+   * Verify jwt token
+   * @param {string} token
+   * @returns {string} userID
+   */
   verifySign(token) {
     try {
       const userID = verify(token, process.env.TOKEN_KEY);

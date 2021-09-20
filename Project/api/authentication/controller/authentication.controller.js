@@ -1,4 +1,4 @@
-import RequestResult from '../../RequestResult';
+import RequestResult from '../../helpers/RequestResult';
 import { STATUSES } from '../../../constants';
 
 class AuthenticationController {
@@ -8,6 +8,11 @@ class AuthenticationController {
     this.jwtService = jwtService;
   }
 
+  /**
+   * Register new user
+   * @param {object} user
+   * @returns {object} created user and status
+   */
   async registerUser(user) {
     const res = new RequestResult();
     try {
@@ -23,6 +28,12 @@ class AuthenticationController {
     }
   }
 
+  /**
+   * Check user login
+   * @param {object} user
+   * @param {string} role
+   * @returns {object} created jwt token and status
+   */
   async login(user, role) {
     const res = new RequestResult();
     try {
@@ -37,6 +48,11 @@ class AuthenticationController {
     }
   }
 
+  /**
+   * Check jwt token
+   * @param {string} token
+   * @returns {object} userID from jwt token and status
+   */
   async checkToken(token) {
     const res = new RequestResult();
     try {

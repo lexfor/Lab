@@ -1,4 +1,4 @@
-import RequestResult from '../../RequestResult';
+import RequestResult from '../../helpers/RequestResult';
 import { STATUSES } from '../../../constants';
 
 class DoctorController {
@@ -6,6 +6,10 @@ class DoctorController {
     this.doctorServices = doctorServices;
   }
 
+  /**
+   * Get all doctors specializations
+   * @returns {object} all specializations and status
+   */
   async getAllSpecialization() {
     const res = new RequestResult();
     try {
@@ -19,10 +23,15 @@ class DoctorController {
     }
   }
 
-  async allDoctorsBySpecializations(typeID) {
+  /**
+   * Get all doctors for specialization
+   * @param {string} specializationID
+   * @returns {object} doctors and status
+   */
+  async allDoctorsBySpecializations(specializationID) {
     const res = new RequestResult();
     try {
-      res.setValue = await this.doctorServices.allDoctorsBySpecializations(typeID);
+      res.setValue = await this.doctorServices.allDoctorsBySpecializations(specializationID);
       res.setStatus = STATUSES.OK;
       return res;
     } catch (e) {

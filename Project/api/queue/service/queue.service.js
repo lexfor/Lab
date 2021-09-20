@@ -6,16 +6,32 @@ class QueueService {
     this.queueRepository = queueRepository;
   }
 
+  /**
+   * Push patient in queue
+   * @param {string} patientID
+   * @param {string} doctorID
+   * @returns {string} patient ID
+   */
   async push(patientID, doctorID) {
     const result = await this.queueRepository.push(patientID, doctorID);
     return result;
   }
 
+  /**
+   * Shift patient from queue
+   * @param {string} doctorID
+   * @returns {object} prev patient ID
+   */
   async shift(doctorID) {
     const result = await this.queueRepository.shift(doctorID);
     return result;
   }
 
+  /**
+   * Get current patient from queue
+   * @param {string} doctorID
+   * @returns {string} current patient ID
+   */
   async getCurrent(doctorID) {
     const patientID = await this.queueRepository.getFirst(doctorID);
 
@@ -25,6 +41,11 @@ class QueueService {
     return patientID;
   }
 
+  /**
+   * Check is patient already in queue
+   * @param {string} value
+   * @param {string} doctorID
+   */
   async isExist(value, doctorID) {
     const patientsIDs = await this.queueRepository.getAll(doctorID);
     if (patientsIDs.indexOf(value) !== -1) {
@@ -32,6 +53,10 @@ class QueueService {
     }
   }
 
+  /**
+   * Check is queue empty
+   * @param {string} doctorID
+   */
   async isEmpty(doctorID) {
     const allPatientInQueue = await this.queueRepository.getAll(doctorID);
     if (allPatientInQueue.length === 0) {

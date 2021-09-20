@@ -7,6 +7,11 @@ class AuthenticationService {
     this.authenticationRepository = authenticationRepository;
   }
 
+  /**
+   * Register new user
+   * @param {object} user
+   * @returns {object} created user
+   */
   async register(user) {
     const cryptUser = {
       login: user.login,
@@ -16,6 +21,12 @@ class AuthenticationService {
     return createdUser;
   }
 
+  /**
+   * Check user login
+   * @param {object} user
+   * @param {string} role
+   * @returns {object} founded user
+   */
   async login(user, role) {
     const foundedUser = await this.authenticationRepository.getUser(user.login, role);
     if (!foundedUser) {
@@ -27,6 +38,10 @@ class AuthenticationService {
     throw new ApiError('wrong password', STATUSES.UNAUTHORISED);
   }
 
+  /**
+   *Check is user already exist
+   * @param {object} user
+   */
   async isExist(user) {
     const values = await this.authenticationRepository.getAllLogins();
     if (values.indexOf(user.login) !== -1) {

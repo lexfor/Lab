@@ -1,4 +1,4 @@
-import RequestResult from '../../RequestResult';
+import RequestResult from '../../helpers/RequestResult';
 import { STATUSES } from '../../../constants';
 
 class PatientController {
@@ -6,6 +6,11 @@ class PatientController {
     this.patientService = patientService;
   }
 
+  /**
+   * Get all patients
+   * @param {object} patient
+   * @returns {object} all founded patients with condition and status
+   */
   async findAllPatients({ patientInfo }) {
     const res = new RequestResult();
     try {

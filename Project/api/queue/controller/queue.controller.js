@@ -1,4 +1,4 @@
-import RequestResult from '../../RequestResult';
+import RequestResult from '../../helpers/RequestResult';
 import { STATUSES } from '../../../constants';
 
 class QueueController {
@@ -8,6 +8,12 @@ class QueueController {
     this.doctorService = doctorService;
   }
 
+  /**
+   * Add patient ID in queue
+   * @param {string} userID
+   * @param {string} doctorID
+   * @returns {object} patient Data and status
+   */
   async addValueInQueue(userID, doctorID) {
     const res = new RequestResult();
     try {
@@ -23,6 +29,11 @@ class QueueController {
     }
   }
 
+  /**
+   * Get current patient ID from queue
+   * @param {string} doctorID
+   * @returns {object} patient data and status
+   */
   async getCurrentInQueue(doctorID) {
     const res = new RequestResult();
     try {
@@ -38,6 +49,11 @@ class QueueController {
     }
   }
 
+  /**
+   * Get current patient by doctor ID
+   * @param {string} userID
+   * @returns {object} patient data and status
+   */
   async getCurrentInMyQueue(userID) {
     const res = new RequestResult();
     try {
@@ -54,6 +70,11 @@ class QueueController {
     }
   }
 
+  /**
+   * Take current patient and delete his from queue
+   * @param {string} userID
+   * @returns {object} patient data and status
+   */
   async takeNextValueInQueue(userID) {
     const res = new RequestResult();
     try {

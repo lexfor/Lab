@@ -5,7 +5,7 @@ import { IDSchema } from '../schemas/IDSchema';
 
 const ajv = new Ajv();
 
-function addResolutionMiddleware(req, res, next) {
+function checkResolutionMiddleware(req, res, next) {
   const validationResult = ajv.validate(ValueSchema, req.body);
   const validationUserResult = ajv.validate(IDSchema, req.params);
   if (validationResult && validationUserResult) {
@@ -15,4 +15,4 @@ function addResolutionMiddleware(req, res, next) {
   }
 }
 
-export { addResolutionMiddleware };
+export { checkResolutionMiddleware };

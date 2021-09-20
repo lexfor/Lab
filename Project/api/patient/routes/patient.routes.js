@@ -1,7 +1,7 @@
 import express from 'express';
 import { injector } from '../../../Injector';
 import {
-  addResolutionMiddleware,
+  checkResolutionMiddleware,
   authenticationMiddleware,
   checkIDMiddleware,
 } from '../../helpers/middleware';
@@ -22,7 +22,7 @@ router.get('/patient/me/resolutions', async (req, res, next) => {
 
 router.put('/patient/:id/resolution', async (req, res, next) => {
   await authenticationMiddleware(req, res);
-  addResolutionMiddleware(req, res, next);
+  checkResolutionMiddleware(req, res, next);
 }, async (req, res) => {
   const result = await resolutionController.setResolution(req.body, req.params, req.userID);
   res.status(result.getStatus).json(result.getValue);

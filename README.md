@@ -16,9 +16,9 @@ if you need change storage type - do it in .env file(NODE_ENV - patient and reso
 
     NODE_ENV=dev
 
-if you want to use redis:
-
-    open console and start redis-server
+if you want to use redis - open console and run:
+    
+    redis-server
 
 if you want to use MYSQL:
 
@@ -39,7 +39,7 @@ Then open:
 
     npm test
 
-**Get project from Docker:**
+**Start project on docker:**
 
     cd Docker
     docker-compose up -d
