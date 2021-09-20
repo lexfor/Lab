@@ -37,7 +37,7 @@ async function refreshTableContent() {
         addTD(element.doctor_specialization, tr);
         addTD(element.doctor_name, tr);
         addTD(element.value, tr);
-        addTD(new Date(+element.updatedTime).toISOString().substr(0, 10), tr);
+        addTD(new Date(+element.createdTime).toISOString().substr(0, 10), tr);
         id += 1;
 
         table.appendChild(tr);

@@ -85,7 +85,7 @@ async function refreshTableContent(patient_id) {
         addTD(element.doctor_specialization, tr);
         addTD(element.doctor_name, tr);
         addTD(element.value, tr);
-        addTD(new Date(+element.updatedTime).toISOString().substr(0, 10), tr);
+        addTD(new Date(+element.createdTime).toISOString().substr(0, 10), tr);
 
         const td = document.createElement('td');
         const button = document.createElement('button');
