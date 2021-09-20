@@ -1,6 +1,6 @@
-import { ResolutionService, ResolutionRepository } from '../api/resolutions';
+import { ResolutionService, ResolutionRepository } from '../index';
 
-jest.mock('../api/resolutions/repository/resolution.repository');
+jest.mock('../repository/resolution.repository');
 
 describe('resolution service unit tests', () => {
   const resolutionRepository = new ResolutionRepository();

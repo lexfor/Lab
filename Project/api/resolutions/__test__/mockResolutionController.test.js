@@ -1,14 +1,14 @@
-import { ResolutionService, ResolutionController } from '../api/resolutions';
-import { QueueService } from '../api/queue';
-import { PatientService } from '../api/patient';
-import { STATUSES } from '../constants';
-import ApiError from '../api/helpers/ApiError';
-import { DoctorService } from '../api/doctor';
+import { ResolutionService, ResolutionController } from '../index';
+import { QueueService } from '../../queue';
+import { PatientService } from '../../patient';
+import { STATUSES } from '../../../constants';
+import ApiError from '../../helpers/ApiError';
+import { DoctorService } from '../../doctor';
 
-jest.mock('../api/resolutions/service/resolution.service');
-jest.mock('../api/queue/service/queue.service');
-jest.mock('../api/patient/service/patient.service');
-jest.mock('../api/doctor/service/doctor.service');
+jest.mock('../service/resolution.service');
+jest.mock('../../queue/service/queue.service');
+jest.mock('../../patient/service/patient.service');
+jest.mock('../../doctor/service/doctor.service');
 
 describe('resolution controller unit tests', () => {
   const patientsService = new PatientService();

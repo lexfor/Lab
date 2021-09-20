@@ -1,6 +1,6 @@
-import { DoctorService, DoctorController } from '../api/doctor';
+import { DoctorService, DoctorController } from '../index';
 
-jest.mock('../api/doctor/service/doctor.service');
+jest.mock('../service/doctor.service');
 
 describe('doctor controller unit tests', () => {
   const doctorService = new DoctorService();
