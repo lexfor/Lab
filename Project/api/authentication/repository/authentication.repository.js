@@ -11,9 +11,9 @@ class AuthenticationRepository {
   /**
    * Create new user
    * @param {object} user
-   * @returns {object} user info
+   * @returns {Promise<object>} user info
    */
-  async create(user) {
+  async createUser(user) {
     try {
       const uuid = uuidv1();
       const data = { id: uuid, ...user };
@@ -27,25 +27,10 @@ class AuthenticationRepository {
   }
 
   /**
-   * Get all users logins
-   * @returns {array} users logins
-   */
-  async getAllLogins() {
-    try {
-      const queryAsync = promisify(this.connection.query).bind(this.connection);
-      const sql = 'SELECT login FROM users';
-      const result = await queryAsync(sql);
-      return result.map((item) => item.login);
-    } catch (e) {
-      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
-    }
-  }
-
-  /**
    * Get user info
    * @param {string} login
    * @param {string} role
-   * @returns {object} user
+   * @returns {Promise<object>} user
    */
   async getUser(login, role) {
     try {
@@ -60,8 +45,8 @@ class AuthenticationRepository {
         ${join}
         WHERE 
         login = ?`;
-      const result = await queryAsync(sql, login);
-      return result[0];
+      const [result] = await queryAsync(sql, login);
+      return result;
     } catch (e) {
       throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }

@@ -27,7 +27,7 @@ describe('authentication controller unit tests', () => {
       return false;
     });
 
-    authenticationService.register.mockImplementation((user) => {
+    authenticationService.registerUser.mockImplementation((user) => {
       expect(user.login).toEqual('thetim182001@mail.ru');
       expect(user.password).toEqual('123');
       expect(user.birthday).toEqual('2001-02-18');
@@ -39,7 +39,7 @@ describe('authentication controller unit tests', () => {
       };
     });
 
-    patientService.addPatient.mockImplementation((user, createdUser) => {
+    patientService.createPatient.mockImplementation((user, createdUser) => {
       expect(createdUser.id).toEqual('1111');
       expect(user.birthday).toEqual('2001-02-18');
       expect(user.gender).toEqual('male');

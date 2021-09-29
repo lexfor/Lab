@@ -11,9 +11,9 @@ class QueueRepository {
    * Push patient in queue
    * @param {string} patientID
    * @param {string} doctorID
-   * @returns {string} patient ID
+   * @returns {Promise<string>} patient ID
    */
-  async push(patientID, doctorID) {
+  async pushPatient(patientID, doctorID) {
     try {
       const rpushAsync = promisify(this.client.rpush).bind(this.client);
       await rpushAsync(`queueTo${doctorID}`, patientID);
@@ -26,9 +26,9 @@ class QueueRepository {
   /**
    * Shift patient from queue
    * @param {string} doctorID
-   * @returns {string} prev patient ID
+   * @returns {Promise<string>} prev patient ID
    */
-  async shift(doctorID) {
+  async shiftPatient(doctorID) {
     try {
       const result = this.getFirst(doctorID);
       const lpopAsync = promisify(this.client.lpop).bind(this.client);
@@ -42,7 +42,7 @@ class QueueRepository {
   /**
    * Get first patient from queue
    * @param {string} doctorID
-   * @returns {string} first in queue patient ID
+   * @returns {Promise<string>} first in queue patient ID
    */
   async getFirst(doctorID) {
     try {
@@ -57,9 +57,9 @@ class QueueRepository {
   /**
    * Get all patients in queue
    * @param {string} doctorID
-   * @returns {array} patient patients IDs
+   * @returns {Promise<array>} patient patients IDs
    */
-  async getAll(doctorID) {
+  async getAllPatient(doctorID) {
     try {
       const lrangeAsync = promisify(this.client.lrange).bind(this.client);
       const result = await lrangeAsync(`queueTo${doctorID}`, 0, -1);

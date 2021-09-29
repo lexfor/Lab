@@ -15,9 +15,9 @@ class ResolutionController {
    * @param {object} patient
    * @param {string} userID
    * @param {string} TTLDelay
-   * @returns {object} resolution data and status
+   * @returns {Promise<object>} resolution data and status
    */
-  async setResolution(values, patient, userID, TTLDelay = process.env.TTL_DELAY) {
+  async addResolution(values, patient, userID, TTLDelay = process.env.TTL_DELAY) {
     const res = new RequestResult();
     try {
       const doctor = await this.doctorService.getDoctorByID(userID);
@@ -41,15 +41,15 @@ class ResolutionController {
 
   /**
    * find patient resolution by name or user ID
-   * @param {object} user
-   * @returns {object} resolution data and status
+   * @param {string} userID
+   * @returns {Promise<object>} resolution data and status
    */
-  async findResolution(user) {
+  async getPatientResolutions(userID) {
     const res = new RequestResult();
     try {
-      await this.patientService.isExist(user);
-      const patientID = await this.patientService.findPatient(user);
-      res.setValue = await this.resolutionService.getAllResolutions(patientID);
+      const patient = await this.patientService.getPatientByUser(userID);
+      await this.patientService.isExist(patient.id);
+      res.setValue = await this.resolutionService.getAllResolutions(patient.id);
       res.setStatus = STATUSES.OK;
       return res;
     } catch (e) {
@@ -61,13 +61,13 @@ class ResolutionController {
 
   /**
    * Find all patient resolutions
-   * @param {object} patient
-   * @returns {object} resolution data and status
+   * @param {object} patientID
+   * @returns {Promise<object>} resolution data and status
    */
-  async findAllResolutions({ patientID }) {
+  async getAllResolutions(patientID) {
     const res = new RequestResult();
     try {
-      await this.patientService.isExist({ id: patientID });
+      await this.patientService.isExist(patientID);
       res.setValue = await this.resolutionService.getAllResolutions(patientID);
       res.setStatus = STATUSES.OK;
       return res;
@@ -81,7 +81,7 @@ class ResolutionController {
   /**
    * Delete resolution by ID
    * @param {string} resolutionID
-   * @returns {object} resolution data and status
+   * @returns {Promise<object>} resolution data and status
    */
   async deletePatientResolution(resolutionID) {
     const res = new RequestResult();

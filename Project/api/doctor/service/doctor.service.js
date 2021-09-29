@@ -8,7 +8,7 @@ class DoctorService {
 
   /**
    * Get all doctors specializations
-   * @returns {array} array of specializations
+   * @returns {Promise<array>} array of specializations
    */
   async getAllSpecializations() {
     const result = await this.doctorRepository.getAllSpecializations();
@@ -18,10 +18,10 @@ class DoctorService {
   /**
    * Get all doctors by specialization
    * @param {string} specializationsID
-   * @returns {array} array of doctors
+   * @returns {Promise<array>} array of doctors
    */
-  async allDoctorsBySpecializations(specializationsID) {
-    const result = await this.doctorRepository.allDoctorsBySpecializations(specializationsID);
+  async getAllDoctorsBySpecializations(specializationsID) {
+    const result = await this.doctorRepository.getAllDoctorsBySpecializations(specializationsID);
     if (!result) {
       throw new ApiError('no doctors with that specialization', STATUSES.NOT_FOUND);
     }
@@ -31,7 +31,7 @@ class DoctorService {
   /**
    * Get doctor by ID
    * @param {string} userID
-   * @returns {object} founded doctor
+   * @returns {Promise<object>} founded doctor
    */
   async getDoctorByID(userID) {
     const result = await this.doctorRepository.getDoctorByID(userID);

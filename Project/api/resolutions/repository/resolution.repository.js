@@ -11,9 +11,9 @@ class ResolutionRepository {
   /**
    * Create new resolution
    * @param {object} values
-   * @returns {object} resolution data
+   * @returns {Promise<object>} resolution data
    */
-  async create(values) {
+  async createResolution(values) {
     try {
       const uuid = uuidv1();
       const data = {
@@ -35,9 +35,9 @@ class ResolutionRepository {
    * @param {object} resolution
    * @param {string} resolutionValue
    * @param {string} time
-   * @returns {object} resolution data
+   * @returns {Promise<object>} resolution data
    */
-  async update(resolution, resolutionValue, time) {
+  async updateResolution(resolution, resolutionValue, time) {
     try {
       const data = [{
         value: resolutionValue,
@@ -56,7 +56,7 @@ class ResolutionRepository {
   /**
    * Get all patients resolutions
    * @param {string} patientID
-   * @returns {array} patient resolution data array
+   * @returns {Promise<array>} patient resolution data array
    */
   async getAllResolutions(patientID) {
     try {
@@ -73,29 +73,14 @@ class ResolutionRepository {
   /**
    * Delete resolution
    * @param {string} resolutionID
-   * @returns {object} resolution data
+   * @returns {Promise<object>} resolution data
    */
-  async delete(resolutionID) {
+  async deleteResolution(resolutionID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'DELETE FROM resolutions WHERE id = ?';
       await queryAsync(sql, resolutionID);
       return { id: resolutionID };
-    } catch (e) {
-      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
-    }
-  }
-
-  /**
-   * Get all resolutions
-   * @returns {object} all resolution data array
-   */
-  async getAll() {
-    try {
-      const queryAsync = promisify(this.connection.query).bind(this.connection);
-      const sql = 'SELECT * FROM resolutions';
-      const result = await queryAsync(sql);
-      return result;
     } catch (e) {
       throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }

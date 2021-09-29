@@ -14,11 +14,11 @@ describe('doctor service unit tests', () => {
   });
 
   test('get all doctors with that specialization', async () => {
-    doctorRepository.allDoctorsBySpecializations.mockResolvedValue([
+    doctorRepository.getAllDoctorsBySpecializations.mockResolvedValue([
       { id: '2222', name: 'Tim' },
       { id: '3333', name: 'Oleg' },
     ]);
-    const res = await doctorService.allDoctorsBySpecializations('1111');
+    const res = await doctorService.getAllDoctorsBySpecializations('1111');
     expect(res[0].id).toEqual('2222');
     expect(res[0].name).toEqual('Tim');
     expect(res[1].id).toEqual('3333');

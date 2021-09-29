@@ -9,91 +9,49 @@ class PatientService {
 
   /**
    * Add new patient
-   * @param {object} userInfo
+   * @param {object} user
    * @param {object} createdUser
-   * @returns {object} patient Data
+   * @returns {Promise<object>} patient Data
    */
-  async addPatient(userInfo, createdUser) {
+  async createPatient(user, createdUser) {
     const patientData = {
       user_id: createdUser.id,
-      mail: userInfo.login,
-      name: userInfo.name,
-      birthday: userInfo.birthday,
-      gender: userInfo.gender,
+      mail: user.login,
+      name: user.name,
+      birthday: user.birthday,
+      gender: user.gender,
     };
-    const patient = await this.patientRepository.create(patientData);
+    const patient = await this.patientRepository.createPatient(patientData);
     return patient;
   }
 
   /**
    * Find patient by user ID
    * @param {string} userID
-   * @returns {object} patient Data
+   * @returns {Promise<object>} patient Data
    */
-  async findPatientByUser(userID) {
-    const patient = await this.patientRepository.getByUserID(userID);
-    return patient;
-  }
-
-  /**
-   * Find patient by name
-   * @param {string} patientName
-   * @returns {object} patient Data
-   */
-  async findPatientByName(patientName) {
-    const patient = await this.patientRepository.getByName(patientName);
+  async getPatientByUser(userID) {
+    const patient = await this.patientRepository.getPatientByUserID(userID);
     return patient;
   }
 
   /**
    * Find patient by ID
    * @param {string} patientID
-   * @returns {object} patient Data
+   * @returns {Promise<object>} patient Data
    */
-  async findPatientByID(patientID) {
-    const patient = await this.patientRepository.getByID(patientID);
+  async getPatientByID(patientID) {
+    const patient = await this.patientRepository.getPatientByID(patientID);
     return patient;
   }
 
   /**
-   * Find patient by name or by ID
-   * @param {object} user name or ID
-   * @returns {object} patient ID
-   */
-  async findPatient(user) {
-    let patientID;
-    if (user.name) {
-      const patientInfo = await this.findPatientByName(user.name);
-      patientID = patientInfo.id;
-    } else {
-      const patient = await this.findPatientByUser(user.userID);
-      patientID = patient.id;
-    }
-    return patientID;
-  }
-
-  /**
    * Check is exist patient by name, user ID, ID
-   * @param {object} patient name or ID or user ID
+   * @param {string} patientID name or ID or user ID
    */
-  async isExist(patient) {
-    if (patient.name) {
-      const values = await this.patientRepository.getAllNames();
-      if (values.indexOf(patient.name) === -1) {
-        throw new ApiError('no such patient', STATUSES.NOT_FOUND);
-      }
-      return;
-    }
-    if (patient.userID) {
-      const patientInfo = await this.findPatientByUser(patient.userID);
-      const values = await this.patientRepository.getAllIDs();
-      if (values.indexOf(patientInfo.id) === -1) {
-        throw new ApiError('no such patient', STATUSES.NOT_FOUND);
-      }
-      return;
-    }
-    const values = await this.patientRepository.getAllIDs();
-    if (values.indexOf(patient.id) === -1) {
+  async isExist(patientID) {
+    const foundedPatient = await this.patientRepository.getPatientByID(patientID);
+    if (!foundedPatient) {
       throw new ApiError('no such patient', STATUSES.NOT_FOUND);
     }
   }
@@ -101,7 +59,7 @@ class PatientService {
   /**
    * Get all patients by part of data
    * @param {string} patientInfo
-   * @returns {array} founded patients
+   * @returns {Promise<array>} founded patients
    */
   async getAllPatients(patientInfo) {
     const allPatient = await this.patientRepository.getAllPatients(patientInfo);

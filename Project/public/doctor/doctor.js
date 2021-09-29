@@ -62,7 +62,7 @@ async function deleteButton(event) {
 }
 
 async function refreshTableContent(patient_id) {
-  const getResolutions = await fetch(`/patient/${patient_id}/resolutions`, {
+  const getResolutions = await fetch(`/resolutions/patient/${patient_id}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -153,7 +153,7 @@ async function setCurrentResolution() {
   const body = {
     value: resolution.value,
   };
-  const response = await fetch(`/patient/${window.sessionStorage.getItem('currentPatientID')}/resolution`, {
+  const response = await fetch(`/resolution/patient/${window.sessionStorage.getItem('currentPatientID')}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

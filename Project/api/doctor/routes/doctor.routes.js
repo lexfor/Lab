@@ -13,7 +13,7 @@ router.get('/doctor/specializations', async (req, res) => {
 router.get('/doctor/specialization/:id', (req, res, next) => {
   checkIDMiddleware(req, res, next);
 }, async (req, res) => {
-  const result = await doctorController.allDoctorsBySpecializations(req.params.id);
+  const result = await doctorController.getAllDoctorsBySpecializations(req.params.id);
   res.status(result.getStatus).json(result.getValue);
 });
 

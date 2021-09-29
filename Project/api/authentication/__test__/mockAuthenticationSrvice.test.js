@@ -15,11 +15,11 @@ describe('authentication service unit tests', () => {
   );
 
   test('create new user', async () => {
-    authenticationRepository.create.mockImplementation((user) => {
+    authenticationRepository.createUser.mockImplementation((user) => {
       expect(user.login).toEqual('thetim182001@mail.ru');
       return { id: '2222', login: 'thetim182001@mail.ru' };
     });
-    const res = await authenticationService.register({
+    const res = await authenticationService.registerUser({
       login: 'thetim182001@mail.ru',
       password: '123',
       name: 'Tim',

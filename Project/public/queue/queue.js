@@ -15,7 +15,7 @@ function addTD(key, tr) {
 }
 
 async function refreshTableContent() {
-  const getResolutions = await fetch('/patient/me/resolutions', {
+  const getResolutions = await fetch('/resolutions/patient/me', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

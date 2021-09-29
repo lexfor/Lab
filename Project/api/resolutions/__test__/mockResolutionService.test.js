@@ -38,7 +38,7 @@ describe('resolution service unit tests', () => {
   });
 
   test('added new resolution for patient', async () => {
-    resolutionRepository.create.mockImplementation((data) => {
+    resolutionRepository.createResolution.mockImplementation((data) => {
       expect(data.patient_id).toEqual('1111');
       expect(data.value).toEqual('aaaaaa');
       expect(data.delay).toEqual(process.env.TTL_DELAY);
@@ -54,7 +54,7 @@ describe('resolution service unit tests', () => {
   });
 
   test('deleted all resolutions for that patients', async () => {
-    resolutionRepository.delete.mockImplementation((resolutionID) => {
+    resolutionRepository.deleteResolution.mockImplementation((resolutionID) => {
       expect(resolutionID).toEqual('1111');
       return { id: resolutionID };
     });

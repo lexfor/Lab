@@ -14,7 +14,7 @@ describe('queue controller unit tests', () => {
       expect(patientInfo).toEqual('T');
       return { id: '2222', name: 'Tim' };
     });
-    const res = await patientController.findAllPatients({ patientInfo: 'T' });
+    const res = await patientController.getAllPatients('T');
     expect(res.getValue.id).toEqual('2222');
     expect(res.getStatus).toEqual(STATUSES.OK);
   });

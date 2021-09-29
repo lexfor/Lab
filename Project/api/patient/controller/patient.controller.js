@@ -8,10 +8,10 @@ class PatientController {
 
   /**
    * Get all patients
-   * @param {object} patient
-   * @returns {object} all founded patients with condition and status
+   * @param {string} patientInfo
+   * @returns {Promise<object>} all founded patients with condition and status
    */
-  async findAllPatients({ patientInfo }) {
+  async getAllPatients(patientInfo) {
     const res = new RequestResult();
     try {
       res.setValue = await this.patientService.getAllPatients(patientInfo);

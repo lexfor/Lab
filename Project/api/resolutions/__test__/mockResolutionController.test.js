@@ -38,7 +38,7 @@ describe('resolution controller unit tests', () => {
       expect(data.doctor_specialization).toEqual('surgeon');
       return { value: data.value, id: '123' };
     });
-    const res = await resolutionController.setResolution(
+    const res = await resolutionController.addResolution(
       { value: 'good' },
       { id: '1111' },
       '2222',
@@ -89,27 +89,6 @@ describe('resolution controller unit tests', () => {
     );
     expect(res.getValue.value).toEqual('good');
     expect(res.getStatus).toEqual(STATUSES.CREATED);
-  });
-
-  test('found patient resolution by id', async () => {
-    patientsService.isExist.mockImplementation((user) => {
-      expect(user.userID).toEqual('1111');
-    });
-    patientsService.findPatient.mockImplementation((user) => {
-      expect(user.userID).toEqual('1111');
-      return '2222';
-    });
-    resolutionService.getAllResolutions.mockImplementation((patientID) => {
-      expect(patientID).toEqual('2222');
-      return [
-        { value: 'good' },
-        { value: 'bad' },
-      ];
-    });
-    const res = await resolutionController.findResolution({ userID: '1111' });
-    expect(res.getValue[0].value).toEqual('good');
-    expect(res.getValue[1].value).toEqual('bad');
-    expect(res.getStatus).toEqual(STATUSES.OK);
   });
 
   test('deleted patient resolution', async () => {

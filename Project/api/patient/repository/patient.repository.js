@@ -11,9 +11,9 @@ class PatientRepository {
   /**
    * Create new patient
    * @param {object} patientData
-   * @returns {object} patient Data
+   * @returns {Promise<object>} patient Data
    */
-  async create(patientData) {
+  async createPatient(patientData) {
     try {
       const uuid = uuidv1();
       const data = { id: uuid, ...patientData };
@@ -30,9 +30,9 @@ class PatientRepository {
    * Update patient
    * @param {object} patient
    * @param {string} patientName
-   * @returns {object} all founded patients with condition
+   * @returns {Promise<object>} all founded patients with condition
    */
-  async update(patient, patientName) {
+  async updatePatient(patient, patientName) {
     try {
       const data = [patientName, patient.id];
       const queryAsync = promisify(this.connection.query).bind(this.connection);
@@ -45,27 +45,11 @@ class PatientRepository {
   }
 
   /**
-   * Get patient by name
-   * @param {string} patientName
-   * @returns {object} founded patient
-   */
-  async getByName(patientName) {
-    try {
-      const queryAsync = promisify(this.connection.query).bind(this.connection);
-      const sql = 'SELECT * FROM patients WHERE name = ?';
-      const result = await queryAsync(sql, patientName);
-      return result[0];
-    } catch (e) {
-      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
-    }
-  }
-
-  /**
    * Get patient by ID
    * @param {string} patientID
-   * @returns {object} founded patient
+   * @returns {Promise<object>} founded patient
    */
-  async getByID(patientID) {
+  async getPatientByID(patientID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'SELECT * FROM patients WHERE id = ?';
@@ -79,9 +63,9 @@ class PatientRepository {
   /**
    * Get patient by user ID
    * @param {string} userID
-   * @returns {object} founded patient
+   * @returns {Promise<object>} founded patient
    */
-  async getByUserID(userID) {
+  async getPatientByUserID(userID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'SELECT * FROM patients WHERE user_id = ?';
@@ -95,9 +79,9 @@ class PatientRepository {
   /**
    * Delete patient by ID
    * @param {string} patientID
-   * @returns {object} deleted patient ID
+   * @returns {Promise<object>} deleted patient ID
    */
-  async delete(patientID) {
+  async deletePatient(patientID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = 'DELETE FROM patients WHERE id = ?';
@@ -109,39 +93,9 @@ class PatientRepository {
   }
 
   /**
-   * Get all patients ID
-   * @returns {array} founded patient IDs
-   */
-  async getAllIDs() {
-    try {
-      const queryAsync = promisify(this.connection.query).bind(this.connection);
-      const sql = 'SELECT id FROM patients';
-      const result = await queryAsync(sql);
-      return result.map((item) => item.id);
-    } catch (e) {
-      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
-    }
-  }
-
-  /**
-   * Get all patients names
-   * @returns {array} founded patient names
-   */
-  async getAllNames() {
-    try {
-      const queryAsync = promisify(this.connection.query).bind(this.connection);
-      const sql = 'SELECT name FROM patients';
-      const result = await queryAsync(sql);
-      return result.map((item) => item.name);
-    } catch (e) {
-      throw new ApiError(e.message, STATUSES.SERVER_ERROR);
-    }
-  }
-
-  /**
    * Get patients by part of his name or email
    * @param {string} patientInfo
-   * @returns {array} founded patients
+   * @returns {Promise<array>} founded patients
    */
   async getAllPatients(patientInfo) {
     try {

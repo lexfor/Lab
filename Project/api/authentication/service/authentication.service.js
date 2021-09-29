@@ -10,14 +10,14 @@ class AuthenticationService {
   /**
    * Register new user
    * @param {object} user
-   * @returns {object} created user
+   * @returns {Promise<object>} created user
    */
-  async register(user) {
+  async registerUser(user) {
     const cryptUser = {
       login: user.login,
       password: await bcrypt.hashSync(user.password, +process.env.SALT),
     };
-    const createdUser = await this.authenticationRepository.create(cryptUser);
+    const createdUser = await this.authenticationRepository.createUser(cryptUser);
     return createdUser;
   }
 
@@ -25,7 +25,7 @@ class AuthenticationService {
    * Check user login
    * @param {object} user
    * @param {string} role
-   * @returns {object} founded user
+   * @returns {Promise<object>} founded user
    */
   async login(user, role) {
     const foundedUser = await this.authenticationRepository.getUser(user.login, role);
@@ -42,9 +42,9 @@ class AuthenticationService {
    *Check is user already exist
    * @param {object} user
    */
-  async isExist(user) {
-    const values = await this.authenticationRepository.getAllLogins();
-    if (values.indexOf(user.login) !== -1) {
+  async isExist(user, role = 'patient') {
+    const foundedUser = await this.authenticationRepository.getUser(user.login, role);
+    if (foundedUser) {
       throw new ApiError('user already exist', STATUSES.BAD_REQUEST);
     }
   }

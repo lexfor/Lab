@@ -9,7 +9,7 @@ class DoctorRepository {
 
   /**
    * Get all doctors specializations
-   * @returns {array} all specializations
+   * @returns {Promise<array>} all specializations
    */
   async getAllSpecializations() {
     try {
@@ -25,9 +25,9 @@ class DoctorRepository {
   /**
    * Get all doctors by specializations
    * @param {string} specializationsID
-   * @returns {array} array of doctors
+   * @returns {Promise<array>} array of doctors
    */
-  async allDoctorsBySpecializations(specializationsID) {
+  async getAllDoctorsBySpecializations(specializationsID) {
     try {
       const queryAsync = promisify(this.connection.query).bind(this.connection);
       const sql = `
@@ -45,7 +45,7 @@ class DoctorRepository {
   /**
    * Get doctor by ID
    * @param {string} userID
-   * @returns {object} founded doctor
+   * @returns {Promise<object>} founded doctor
    */
   async getDoctorByID(userID) {
     try {
@@ -57,8 +57,8 @@ class DoctorRepository {
       INNER JOIN specializations
       ON doctor_specialization.specialization_id = specializations.id
       WHERE user_id = ?`;
-      const result = await queryAsync(sql, userID);
-      return result[0];
+      const [result] = await queryAsync(sql, userID);
+      return result;
     } catch (e) {
       throw new ApiError(e.message, STATUSES.SERVER_ERROR);
     }

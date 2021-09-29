@@ -8,7 +8,7 @@ class DoctorController {
 
   /**
    * Get all doctors specializations
-   * @returns {object} all specializations and status
+   * @returns {Promise<object>} all specializations and status
    */
   async getAllSpecialization() {
     const res = new RequestResult();
@@ -26,12 +26,12 @@ class DoctorController {
   /**
    * Get all doctors for specialization
    * @param {string} specializationID
-   * @returns {object} doctors and status
+   * @returns {Promise<object>} doctors and status
    */
-  async allDoctorsBySpecializations(specializationID) {
+  async getAllDoctorsBySpecializations(specializationID) {
     const res = new RequestResult();
     try {
-      res.setValue = await this.doctorServices.allDoctorsBySpecializations(specializationID);
+      res.setValue = await this.doctorServices.getAllDoctorsBySpecializations(specializationID);
       res.setStatus = STATUSES.OK;
       return res;
     } catch (e) {

@@ -11,7 +11,7 @@ class JwtService {
    * @param {string} tokenKey
    * @returns {object} jwt token
    */
-  async createSign(userID, tokenKey = process.env.TOKEN_KEY) {
+  createSign(userID, tokenKey = process.env.TOKEN_KEY) {
     try {
       const token = sign({
         userID,

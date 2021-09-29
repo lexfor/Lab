@@ -14,7 +14,7 @@ describe('queue controller unit tests', () => {
   const queueController = new QueueController(queueService, patientService, doctorService);
 
   test('add value in queue', async () => {
-    patientService.findPatientByUser.mockImplementation((userID) => {
+    patientService.getPatientByUser.mockImplementation((userID) => {
       expect(userID).toEqual('1111');
       return { id: '3333', name: 'Tim' };
     });
@@ -22,7 +22,7 @@ describe('queue controller unit tests', () => {
       expect(patientID).toEqual('3333');
       expect(doctorID).toEqual('2222');
     });
-    queueService.push.mockImplementation((patientID, doctorID) => {
+    queueService.pushPatient.mockImplementation((patientID, doctorID) => {
       expect(patientID).toEqual('3333');
       expect(doctorID).toEqual('2222');
       return patientID;
@@ -40,7 +40,7 @@ describe('queue controller unit tests', () => {
       expect(id).toEqual('1111');
       return '2222';
     });
-    patientService.findPatientByID.mockImplementation((patientID) => {
+    patientService.getPatientByID.mockImplementation((patientID) => {
       expect(patientID).toEqual('2222');
       return { id: patientID, name: 'Tim' };
     });
@@ -58,7 +58,7 @@ describe('queue controller unit tests', () => {
     queueService.isEmpty.mockImplementation((id) => {
       expect(id).toEqual('2222');
     });
-    queueService.shift.mockImplementation((id) => {
+    queueService.shiftPatient.mockImplementation((id) => {
       expect(id).toEqual('2222');
       return '3333';
     });
@@ -79,7 +79,7 @@ describe('queue controller unit tests', () => {
       expect(id).toEqual('2222');
       return '3333';
     });
-    patientService.findPatientByID.mockImplementation((patientID) => {
+    patientService.getPatientByID.mockImplementation((patientID) => {
       expect(patientID).toEqual('3333');
       return { id: patientID, name: 'Tim' };
     });
