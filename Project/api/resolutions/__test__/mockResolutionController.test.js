@@ -57,7 +57,7 @@ describe('resolution controller unit tests', () => {
       expect(id).toEqual('3333');
       throw new ApiError('empty', STATUSES.CONFLICT);
     });
-    const res = await resolutionController.setResolution(
+    const res = await resolutionController.addResolution(
       { value: 'good' },
       { id: '1111' },
       '2222',
@@ -81,7 +81,7 @@ describe('resolution controller unit tests', () => {
       expect(data.doctor_specialization).toEqual('surgeon');
       return { value: data.value, id: '123' };
     });
-    const res = await resolutionController.setResolution(
+    const res = await resolutionController.addResolution(
       { value: 'good' },
       { id: '1111' },
       '2222',
